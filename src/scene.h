@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <vector>
+#include <GLFW/glfw3.h>
 #include "gameobject.h"
 #include "camera.h"
 
@@ -20,6 +21,7 @@ public:
     ~Scene() = default;
     virtual void Update(double dt);
     virtual void Draw() const;
+    virtual void OnKey(GLFWwindow* window, int key, int scancode, int action, int mod);
     void Instantiate(std::unique_ptr<GameObject> object);
 };
 

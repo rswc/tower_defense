@@ -13,6 +13,10 @@ void Scene::Draw() const {
         object->Draw(activeCamera);
 }
 
+void Scene::OnKey(GLFWwindow* window, int key, int scancode, int action, int mod) {
+    // ???
+}
+
 void Scene::Instantiate(std::unique_ptr<GameObject> object) {
     objects.push_back(std::move(object));
 }

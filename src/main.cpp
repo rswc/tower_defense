@@ -14,6 +14,10 @@ void error_callback(int error, const char* description) {
 	fputs(description, stderr);
 }
 
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod) {
+	scene->OnKey(window, key, scancode, action, mod);
+}
+
 int main(void)
 {
 	GLFWwindow* window; //Wskaźnik na obiekt reprezentujący okno
@@ -46,13 +50,22 @@ int main(void)
 	glEnable(GL_DEPTH_TEST);
 	initShaders();
 
-	SillyScene scn = SillyScene();
+	// SillyScene scn = SillyScene();
+	scene = std::make_unique<SillyScene>();
+
+	glfwSetKeyCallback(window, key_callback);
+
+	glfwSetTime(0);
+	double dt = 0.0;
 
 	//Główna pętla
 	while (!glfwWindowShouldClose(window))
 	{
-		// scn.Update(dt);
-        scn.Draw();
+		dt = glfwGetTime();
+		glfwSetTime(0);
+
+		scene->Update(dt);
+        scene->Draw();
 
         glfwSwapBuffers(window);
 		glfwPollEvents();
