@@ -2,13 +2,14 @@
 
 #include <memory>
 #include "material.h"
+#include "transform.h"
 #include "camera.h"
 
-class GameObject
+
+class GameObject : public Transformable
 {
 protected:
     std::shared_ptr<Material> material;
-    // transform
     // ??
 public:
     virtual void Update(double dt) {};

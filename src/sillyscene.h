@@ -6,7 +6,7 @@
 class SillyScene : public Scene
 {
 private:
-    
+    float speed_x, speed_y;
 public:
     SillyScene();
     SillyScene(const SillyScene&) = delete;
@@ -14,5 +14,7 @@ public:
     SillyScene(SillyScene&&) = default;
     SillyScene& operator=(SillyScene&&) = default;
     ~SillyScene() = default;
+    void Update(double dt);
+    void OnKey(GLFWwindow* window, int key, int scancode, int action, int mod) override;
 };
 

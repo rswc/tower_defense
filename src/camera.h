@@ -1,12 +1,14 @@
 #pragma once
 
 #include <glm/matrix.hpp>
+#include "transform.h"
 
 
-class Camera
+class Camera : public Transformable
 {
 private:
-    glm::mat4 v;
+    const glm::vec3 FORWARD = glm::vec3(1.0f, 0.0f, 0.0f);
+    const glm::vec3 UP = glm::vec3(0.0f, 1.0f, 0.0f);
     glm::mat4 p;
 public:
     Camera();
