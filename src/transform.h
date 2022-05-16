@@ -38,5 +38,6 @@ public:
     glm::vec3 GetPosition() const;
     glm::quat GetRotation() const;
     glm::vec3 GetScale() const;
+    glm::mat4 GetTransformMatrix() const;
 };
 

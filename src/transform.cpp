@@ -29,3 +29,7 @@ glm::vec3 Transformable::GetScale() const {
     return transform.scale;
 }
 
+glm::mat4 Transformable::GetTransformMatrix() const {
+    return transform.GetMatrix();
+}
+
