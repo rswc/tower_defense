@@ -16,7 +16,7 @@ struct Transform
     glm::quat rotation;
     glm::vec3 scale;
 
-    inline glm::mat4 GetMatrix() {
+    inline glm::mat4 GetMatrix() const {
         return glm::scale(
             glm::translate(glm::mat4(1.0), position) *
             glm::mat4_cast(rotation),
