@@ -1,12 +1,14 @@
 #pragma once
 
 #include "scene.h"
-
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 class SillyScene : public Scene
 {
 private:
-    float speed_x, speed_y;
+    float speed_x = 0, speed_y = 0;
 public:
     SillyScene();
     SillyScene(const SillyScene&) = delete;
