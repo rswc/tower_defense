@@ -7,7 +7,7 @@
 class Camera : public Transformable
 {
 private:
-    constexpr static glm::vec3 FORWARD = glm::vec3(1.0f, 0.0f, 0.0f);
+    constexpr static glm::vec4 FORWARD = glm::vec4(0.0f, 0.0f, -1.0f, 0.0f);
     constexpr static glm::vec3 UP = glm::vec3(0.0f, 1.0f, 0.0f);
     glm::mat4 p;
 public:

@@ -2,6 +2,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 
+constexpr glm::vec4 Camera::FORWARD;
+constexpr glm::vec3 Camera::UP;
+
 Camera::Camera() {
     // placeholder
     // v = glm::lookAt(glm::vec3(0.0f, 1.5f, -1.5f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -11,7 +14,7 @@ Camera::Camera() {
 glm::mat4 Camera::GetV() const {
     return glm::lookAt(
         GetPosition(),
-        GetPosition() + glm::conjugate(GetRotation()) * FORWARD * GetRotation(),
+        GetPosition() + glm::vec3(glm::mat4_cast(GetRotation()) * FORWARD),
         UP
     );
 }

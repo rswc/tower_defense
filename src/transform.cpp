@@ -13,6 +13,10 @@ void Transformable::SetScale(glm::vec3 scale) {
     transform.scale = scale;
 }
 
+void Transformable::Rotate(float angle, glm::vec3 axis) {
+    transform.rotation = glm::rotate(transform.rotation, angle, axis);
+}
+
 glm::vec3 Transformable::GetPosition() const {
     return transform.position;
 }

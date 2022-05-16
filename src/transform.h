@@ -34,6 +34,7 @@ public:
     void SetPosition(glm::vec3 pos);
     void SetRotation(glm::quat rot);
     void SetScale(glm::vec3 scale);
+    void Rotate(float angle, glm::vec3 axis);
     glm::vec3 GetPosition() const;
     glm::quat GetRotation() const;
     glm::vec3 GetScale() const;
