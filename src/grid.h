@@ -1,123 +1,106 @@
 #pragma once
 
+#include <cassert>
 #include <vector>
 #include <string>
 
-enum {
-    DIR_NONE    = -1,
-    DIR_RIGHT   = 0,
-    DIR_UP      = 1,
-    DIR_LEFT    = 2,
-    DIR_DOWN    = 3,
-    DIR_N       = 4,
-};
+#include "utility.h"
 
-enum {
-    GRID_ADJ_RIGHT  = 1 << DIR_RIGHT,
-    GRID_ADJ_UP     = 1 << DIR_UP,
-    GRID_ADJ_LEFT   = 1 << DIR_LEFT,
-    GRID_ADJ_DOWN   = 1 << DIR_DOWN,
-    GRID_OBSTACLE   = 1 << 4,
-    GRID_START      = 1 << 5,
-    GRID_EXIT       = 1 << 6,
-    GRID_VISITED    = 1 << 7,
-    GRID_PARENT     = 1 << 8,
-};
+// GridTest Class is used for effective testing Grid Class features 
+class GridTest;
 
-enum {
-    ERROR_NOERROR = 0,
-    ERROR_BAD_SIZE,
-};
-
-int get_reverse_direction(int direction) {
-    return (direction < DIR_N/2 ? direction + DIR_N/2 : direction - DIR_N/2);
-}
-
-
+// Grid Class is responsible for converting input game map into logical grid
+// Main functionalities are: 
+//  - creating a GridPath for mobs to traverse
+//  - generating GridMesh for in-game visualization 
 class Grid {
-
-    static constexpr int DIR_VEC_ROW[4] = {0, -1, 0, 1};
-    static constexpr int DIR_VEC_COL[4] = {1, 0, -1, 0};
-
-    static constexpr char MAP_OBSTACLE = 'X';
-    static constexpr char MAP_EMPTY = '.';
-    static constexpr char MAP_START = 'S';
-    static constexpr char MAP_EXIT = 'E';
+    friend GridTest;
     
-    struct position {
-        int row, col;
-        position(int r = 0, int c = 0) {}
+    // DirEnum is used for Grid representation of possible directions
+    using DirEnum = int;
+    // Represents binary flag indicating whether move in specified direction is possible
+    using DirFlag = int;
+    // Bitset of DirFlags
+    using DirBitset = int;
+    // Represents possible directions for every cell on the grid
+    using DirMatrix = std::vector<std::vector<DirBitset>>;
+
+    enum : DirEnum {
+        DIRECTION_NONE = -1,
+        DIRECTION_RIGHT, 
+        DIRECTION_UP,
+        DIRECTION_LEFT,
+        DIRECTION_DOWN,
+        DIRECTION_N, 
     };
 
-    position m_start, m_exit, m_size;
-    std::vector<std::vector<int>> m_grid;
+    enum : DirFlag {
+        AVAILABLE_RIGHT = 1 << DIRECTION_RIGHT,
+        AVAILABLE_UP    = 1 << DIRECTION_UP,
+        AVAILABLE_LEFT  = 1 << DIRECTION_LEFT,
+        AVAILABLE_DOWN  = 1 << DIRECTION_DOWN,
+    };
 
-    bool is_map_valid(std::vector<std::string>& map); 
-    bool is_position_valid(position p);
-    int build_grid_from_map(std::vector<std::string>& map); 
-    int build_grid_paths_bfs();
+    // Return DirectionEnum in opposite direction 
+    // Assume: dir is one of: DIRECTION_RIGHT, DIRECTION_UP, DIRECTION_LEFT, DIRECTION_DOWN,
+    DirEnum oppositeDirection(DirEnum dir) {
+        // Because of counter-clockwise ordering, opposite direction is (dir + 2) mod 4
+        return (dir < DIRECTION_N/2 ? dir + DIRECTION_N/2 : dir - DIRECTION_N/2);
+    }
+
+    // GridMap is input representation of Game Map
+    using GridMap = std::vector<std::string>;
+    using GridMapSymbol = char;
     
-    Grid() {}
+    enum : GridMapSymbol {
+        MAP_START = 'S', 
+        MAP_PATH = '.',
+        MAP_WALL = 'x',
+        MAP_EXIT = 'E',
+    };
 
-    // assume grid is ready
-    void build_grid_paths() {
+    // GridPosition is main representation of coordinates inside the grid
+    // - constexpr class: can be defined constant 
+    struct GridPosition {
+        int row, col;
+        constexpr GridPosition(int r = 0, int c = 0) : row(r), col(c) {}
+        constexpr GridPosition operator+(GridPosition p) { return { row + p.row, col + p.col }; }
+        constexpr GridPosition operator-(GridPosition p) { return { row + p.row, col + p.col }; }
+        constexpr bool operator==(const GridPosition& p) const { return row == p.row && col == p.col; }
+    };
+
+    // Return direction advanced by one cell in specified direction
+    GridPosition moveInDirection(GridPosition p, DirEnum dir) {
+        const GridPosition offset[4] = {{0, 1}, {-1, 0}, {0, -1}, {1, 0}};
+        return p + offset[dir];
     }
 
-    void init_grid(std::vector<std::string>& map) {
-        if (!is_map_valid(map)) 
-            return 1;
-        m_map = map;
-        build_grid();
+    bool isInsideGrid(GridPosition p) {
+        // dirty hack: casting to unsigned allows for faster implicit check for p.row > 0 and p.col > 0 
+        return (unsigned) p.row < (unsigned) m_rows && (unsigned) p.col < (unsigned) m_cols;
     }
 
-    bool is_valid(int row, int col) { return (unsigned) row < m_rows && (unsigned) col < m_cols; }
+    // GridPath Class stores path created by the grid class
+    // Assumption: GridPath does not contain branches
+    using GridPathPosition = std::pair<GridPosition, DirEnum>;
+    using GridPath = std::vector<GridPathPosition>;
 
-    void init(int height, int width) {
-        if (m_rows > 0 || m_width > 0) reset();
-
-        m_grid.assign(n);
-        for (int i = 0; i < m_rows; i++) {
-        }
-    }
-
-    void reset() { m_grid.clear(); m_rows = m_cols = 0; }
-
-    int parse_file_map(const std::vector<std::string>& map) {
-        // Assume cols and rows initialized
-
-        for (int i = 0; i < m_rows; i++) {
-        }
-    }
-
-    int load_map(std::) {
-        std::vector<string> map;
-        for (string &row : map) infile >> row;
-
-        int rows = 0, cols = 0;
-        rows = map.size();
-        if (rows > 0) cols = map[0].size();
-
-        if (rows == 0 || cols == 0) {
-            return ERROR_BAD_SIZE;
-        }
-
-        init(rows, cols);
-        parse_map(map);
-
-        return ERROR_NOERROR;
-    }
-    }
+    GridMap m_map;
+    int m_rows, m_cols;
+    DirMatrix m_available_dirs;
+    GridPath m_path;
+    
+    DirMatrix translateGridMapToDirMatrix(const GridMap &map);
+    GridPath findGridPath();
 
 public:
-    Grid(int height, int width, float scale = 1.f) { 
-        assert(height > 0 && width > 0 && "Grid constructor called with non-positive arguments!");
-        init(height, width);
+    Grid(const std::vector<std::string>& map) { 
+        m_map = map;
+        m_rows = map.size();
+        m_cols = map[0].size();
+        m_available_dirs = translateGridMapToDirMatrix(map);
+
+        m_path = findGridPath();
     }
-
-    getNextDirection(Point p) 
-    std:: getQuadraticBezier()
-
 };
 
-void test_map() {
-}
