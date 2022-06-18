@@ -12,7 +12,7 @@ protected:
     std::shared_ptr<Material> material;
     // ??
 public:
-    virtual void Update(double dt) {};
+    virtual void Update(double dt) = 0;
     virtual void Draw(const Camera& camera) const = 0;
 };
 
