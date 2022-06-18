@@ -4,17 +4,17 @@
 #include <vector>
 #include <string>
 
-#include "utility.h"
-
 // Grid Class is responsible for converting input game map into logical grid
 // Main functionalities are: 
+class GameGrid;
 //  - creating a GridPath for mobs to traverse
+class GridTest;
 //  - generating GridMesh for in-game visualization 
 class Grid {
     // GameGrid Class makes effective use of Grid class in Game World
-    template<int, int, int> friend class GameGrid; 
+    friend GameGrid; 
     // GridTest Class is used for effective testing Grid Class features 
-    friend class GridTest;
+    friend GridTest;
     
     // DirEnum is used for Grid representation of possible directions
     using DirEnum = int;

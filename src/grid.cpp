@@ -1,5 +1,6 @@
-
 #include "grid.h"
+
+#include "utility.h"
 
 Grid::DirMatrix Grid::translateGridMapToDirMatrix(const Grid::GridMap &map) {
     assert(map.size() > 0 && map[0].size() > 0);
