@@ -1,5 +1,5 @@
 #pragma once
-
+#include <iostream>
 #include "scene.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>

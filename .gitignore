@@ -5,3 +5,5 @@ include/*
 
 *.exe
 *.dll
+src/AssimpLoader/
+models/
