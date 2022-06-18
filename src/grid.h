@@ -6,15 +6,15 @@
 
 #include "utility.h"
 
-// GridTest Class is used for effective testing Grid Class features 
-class GridTest;
-
 // Grid Class is responsible for converting input game map into logical grid
 // Main functionalities are: 
 //  - creating a GridPath for mobs to traverse
 //  - generating GridMesh for in-game visualization 
 class Grid {
-    friend GridTest;
+    // GameGrid Class makes effective use of Grid class in Game World
+    template<int, int, int> friend class GameGrid; 
+    // GridTest Class is used for effective testing Grid Class features 
+    friend class GridTest;
     
     // DirEnum is used for Grid representation of possible directions
     using DirEnum = int;
@@ -55,7 +55,7 @@ class Grid {
     enum : GridMapSymbol {
         MAP_START = 'S', 
         MAP_PATH = '.',
-        MAP_WALL = 'x',
+        MAP_LAND = 'x',
         MAP_EXIT = 'E',
     };
 
@@ -70,14 +70,18 @@ class Grid {
     };
 
     // Return direction advanced by one cell in specified direction
-    GridPosition moveInDirection(GridPosition p, DirEnum dir) {
+    GridPosition moveInDirection(GridPosition p, DirEnum dir) const {
         const GridPosition offset[4] = {{0, 1}, {-1, 0}, {0, -1}, {1, 0}};
         return p + offset[dir];
     }
 
-    bool isInsideGrid(GridPosition p) {
+    bool isInsideGrid(GridPosition p) const {
         // dirty hack: casting to unsigned allows for faster implicit check for p.row > 0 and p.col > 0 
         return (unsigned) p.row < (unsigned) m_rows && (unsigned) p.col < (unsigned) m_cols;
+    }
+    
+    bool isLand(GridPosition p) const {
+        return m_map[p.row][p.col] == MAP_LAND;
     }
 
     // GridPath Class stores path created by the grid class
