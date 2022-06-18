@@ -8,6 +8,8 @@
 #include "sillyobject.h"
 #include "shaderprogram.h"
 
+#include "grid_test.h"
+
 std::unique_ptr<Scene> scene;
 
 void error_callback(int error, const char* description) {
@@ -20,6 +22,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 int main(void)
 {
+	GridTest();
+	
 	GLFWwindow* window; //Wskaźnik na obiekt reprezentujący okno
 
 	glfwSetErrorCallback(error_callback);//Zarejestruj procedurę obsługi błędów
