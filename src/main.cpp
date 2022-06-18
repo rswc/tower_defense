@@ -18,6 +18,11 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	scene->OnKey(window, key, scancode, action, mod);
 }
 
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+    glViewport(0, 0, width, height);
+}
+
 int main(void)
 {
 	GLFWwindow* window; //Wskaźnik na obiekt reprezentujący okno
@@ -29,7 +34,8 @@ int main(void)
 		exit(EXIT_FAILURE);
 	}
 
-	window = glfwCreateWindow(500, 500, "OpenGL", NULL, NULL);  //Utwórz okno 500x500 o tytule "OpenGL" i kontekst OpenGL.
+	window = glfwCreateWindow(500, 500, "OpenGL", NULL, NULL);
+	glViewport(0, 0, 500, 500);
 
 	if (!window) //Jeżeli okna nie udało się utworzyć, to zamknij program
 	{
@@ -54,6 +60,7 @@ int main(void)
 	scene = std::make_unique<SillyScene>();
 
 	glfwSetKeyCallback(window, key_callback);
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	glfwSetTime(0);
 	double dt = 0.0;
