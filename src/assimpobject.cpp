@@ -5,7 +5,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <GL/glew.h>
 
-
 #include "sillymaterial.h"
 #include "shaderprogram.h"
 #include "camera.h"
@@ -24,8 +23,6 @@ AssimpObject::~AssimpObject() {
 }
 
 void AssimpObject::Draw(const Camera& camera) const {
-    unsigned int vertexCount=36;
-
     //Activate the shader
     spLambertTextured->use();
 
@@ -37,22 +34,22 @@ void AssimpObject::Draw(const Camera& camera) const {
 
     //TODO: pass to Material class?? make separate Mesh class for holding attributes??
 	glEnableVertexAttribArray(spLambertTextured->a("vertex"));
-	glVertexAttribPointer(spLambertTextured->a("vertex"), 4, GL_FLOAT, false, 0, verts.data()); 
+	glVertexAttribPointer(spLambertTextured->a("vertex"), 4, GL_FLOAT, false, 0, objectMesh.vertices.data()); 
 
         
 	glEnableVertexAttribArray(spLambertTextured->a("texCoords"));
-	glVertexAttribPointer(spLambertTextured->a("texCoords"), 2, GL_FLOAT, false, 0, texCoords.data()); 
+	glVertexAttribPointer(spLambertTextured->a("texCoords"), 2, GL_FLOAT, false, 0, objectMesh.textures.data()); 
 
        
 	glEnableVertexAttribArray(spLambertTextured->a("normal"));
-	glVertexAttribPointer(spLambertTextured->a("normal"), 4, GL_FLOAT, false, 0, norms.data()); 
+	glVertexAttribPointer(spLambertTextured->a("normal"), 4, GL_FLOAT, false, 0, objectMesh.normals.data()); 
 
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
     glUniform1i(spLambertTextured->u("tex"), 0);
 
-    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, indices.data());
+    glDrawElements(GL_TRIANGLES, objectMesh.indices.size(), GL_UNSIGNED_INT, objectMesh.indices.data());
 
     //Disable vertex attribute array
 	glDisableVertexAttribArray(spLambertTextured->a("vertex"));
@@ -93,11 +90,11 @@ void AssimpObject::loadModel(std::string filename) {
     for(int i = 0; i< mesh->mNumVertices; i++){
         aiVector3D vertex = mesh->mVertices[i];
         //std::cout<<vertex.x << " " << vertex.y << " " << vertex.z << std::endl;
-        verts.push_back(glm::vec4(vertex.x, vertex.y, vertex.z, 1.0f));
+        objectMesh.vertices.push_back(glm::vec4(vertex.x, vertex.y, vertex.z, 1.0f));
 
         aiVector3D normal = mesh->mNormals[i];
         //std::cout<<normal.x << " " << normal.y << " " << normal.z << std::endl;
-        norms.push_back(glm::vec4(normal.x, normal.y, normal.z, 0.0f));
+        objectMesh.normals.push_back(glm::vec4(normal.x, normal.y, normal.z, 0.0f));
 
 
         //Number of defined sets of texture coordinates (max 8)
@@ -108,7 +105,7 @@ void AssimpObject::loadModel(std::string filename) {
         aiVector3D texCoord = mesh->mTextureCoords[0][i]; 
         //std::cout<<texCoord.x << " " << texCoord.y << " " <<std::endl;
         //texCoords.push_back(glm::vec4(texCoord.x, texCoord.y, texCoord.z, 0.0f));
-        texCoords.push_back(glm::vec2(texCoord.x, texCoord.y));
+        objectMesh.textures.push_back(glm::vec2(texCoord.x, texCoord.y));
     }
 
     std::cout<<"ExtractingFaces"<<std::endl;
@@ -117,10 +114,10 @@ void AssimpObject::loadModel(std::string filename) {
         aiFace& face = mesh->mFaces[i];
 
         for(int j = 0; j< face.mNumIndices; j++){
-            indices.push_back(face.mIndices[j]);
-            std::cout<<face.mIndices[j]<<" ";
+            objectMesh.indices.push_back(face.mIndices[j]);
+            //std::cout<<face.mIndices[j]<<" ";
         }
-        std::cout<<std::endl;
+        //std::cout<<std::endl;
     }
 }
 

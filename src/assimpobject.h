@@ -1,5 +1,6 @@
 #pragma once
 
+#include "BaseMesh.h"
 #include "gameobject.h"
 #include "lodepng.h"
 #include <assimp/Importer.hpp>
@@ -13,12 +14,9 @@ class AssimpObject : public GameObject
 {
 private:
     GLuint texture;
-    std::vector<glm::vec4> verts;
-    std::vector<glm::vec4> norms;
-    std::vector<glm::vec2> texCoords;
-    std::vector<unsigned int> indices;
     void importMesh();
 public:
+    BaseMesh objectMesh;
     AssimpObject();
     ~AssimpObject();
     void Draw(const Camera& camera) const override;
