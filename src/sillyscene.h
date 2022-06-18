@@ -1,9 +1,7 @@
 #pragma once
-#include <iostream>
 #include "scene.h"
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+
+#include <iostream>
 
 class SillyScene : public Scene
 {
