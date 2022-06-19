@@ -20,14 +20,19 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	scene->OnKey(window, key, scancode, action, mod);
 }
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
+void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
+}
+
+
+void runTests() {
+	// Run Test for logical Grid class
+	GridTest();
 }
 
 int main(void)
 {
-	GridTest();
+	runTests();
 	
 	GLFWwindow* window; //Wskaźnik na obiekt reprezentujący okno
 

@@ -3,9 +3,6 @@
 #include "BaseMesh.h"
 #include "gameobject.h"
 #include "lodepng.h"
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
 #include <vector>
 #include <iostream>
 
@@ -13,10 +10,10 @@ typedef unsigned int GLuint;
 class AssimpObject : public GameObject
 {
 private:
-    GLuint texture;
+    GLuint texture, textSpecular, textDiffuse;
     void importMesh();
 public:
-    BaseMesh objectMesh;
+    std::vector<BaseMesh> meshes;
     AssimpObject();
     ~AssimpObject();
     void Draw(const Camera& camera) const override;
