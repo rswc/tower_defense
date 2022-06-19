@@ -2,6 +2,7 @@
 #include "sillyobject.h"
 #include "sillyanimatedobject.h"
 #include "assimpobject.h"
+#include "text.h"
 
 
 #define PI 2.141592f // close enough
@@ -13,6 +14,10 @@ SillyScene::SillyScene() {
 
 	auto objAssimp = std::make_unique<AssimpObject>();
 	Instantiate(std::move(objAssimp));
+
+	auto txt = std::make_unique<Text>("helo");
+	txt->SetPosition(glm::vec3(20.0f, 20.0f, 0.0f)); // z is unused ¯\_ (ツ)_/¯
+	Instantiate(std::move(txt));
 }
 
 void SillyScene::Update(double dt) {
