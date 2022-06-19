@@ -14,12 +14,24 @@ Camera::Camera() {
 glm::mat4 Camera::GetV() const {
     return glm::lookAt(
         GetPosition(),
-        GetPosition() + glm::vec3(glm::mat4_cast(GetRotation()) * FORWARD),
+        GetPosition() + glm::vec3(GetForward()),
         UP
     );
 }
 
 glm::mat4 Camera::GetP() const {
     return p;
+}
+
+glm::vec3 Camera::GetForward() const {
+    return glm::mat4_cast(GetRotation()) * FORWARD;
+}
+
+glm::vec3 Camera::GetUp() const {
+    return glm::mat4_cast(GetRotation()) * glm::vec4(UP, 0.0f);
+}
+
+glm::vec3 Camera::GetRight() const {
+    return glm::cross(glm::vec3(GetForward()), glm::vec3(GetUp()));
 }
 

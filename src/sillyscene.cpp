@@ -2,7 +2,8 @@
 #include "sillyobject.h"
 #include "sillyanimatedobject.h"
 #include "assimpobject.h"
-
+#include "gamegrid.h"
+#include "gridobject.h"
 
 #define PI 2.141592f // close enough
 
@@ -16,8 +17,11 @@ SillyScene::SillyScene() {
 }
 
 void SillyScene::Update(double dt) {
-    activeCamera.Rotate((float)dt*speed_x, glm::vec3(1.0f, 0.0f, 0.0f));
-    activeCamera.Rotate((float)dt*speed_y, glm::vec3(0.0f, 1.0f, 0.0f));
+    activeCamera.Rotate((float)dt*speed_yaw, glm::vec3(1.0f, 0.0f, 0.0f));
+    activeCamera.Rotate((float)dt*speed_pitch, glm::vec3(0.0f, 1.0f, 0.0f));
+
+	activeCamera.SetPosition(activeCamera.GetPosition() + (float)dt * speed_fwd * activeCamera.GetForward());
+	activeCamera.SetPosition(activeCamera.GetPosition() + (float)dt * speed_right * activeCamera.GetRight());
 
     for (auto& object : objects)
         object->Update(dt);
@@ -26,24 +30,46 @@ void SillyScene::Update(double dt) {
 void SillyScene::OnKey(GLFWwindow* window, int key, int scancode, int action, int mod) {
     if (action == GLFW_PRESS) {
 		if (key == GLFW_KEY_LEFT) {
-			speed_y = PI;
+			speed_pitch = PI;
 		}
 		if (key == GLFW_KEY_RIGHT) {
-			speed_y = -PI;
+			speed_pitch = -PI;
 		}
 		if (key == GLFW_KEY_UP) {
-			speed_x = PI;
+			speed_yaw = PI;
 		}
 		if (key == GLFW_KEY_DOWN) {
-			speed_x = -PI;
+			speed_yaw = -PI;
+		}
+		if (key == GLFW_KEY_W)
+		{
+			speed_fwd = 2.0f;
+		}
+		if (key == GLFW_KEY_S)
+		{
+			speed_fwd = -2.0f;
+		}
+		if (key == GLFW_KEY_D)
+		{
+			speed_right = 2.0f;
+		}
+		if (key == GLFW_KEY_A)
+		{
+			speed_right = -2.0f;
 		}
 	}
 	if (action == GLFW_RELEASE) {
 		if (key == GLFW_KEY_LEFT || key == GLFW_KEY_RIGHT) {
-			speed_y = 0;
+			speed_pitch = 0;
 		}
 		if (key == GLFW_KEY_UP || key == GLFW_KEY_DOWN) {
-			speed_x = 0;
+			speed_yaw = 0;
+		}
+		if (key == GLFW_KEY_W || key == GLFW_KEY_S) {
+			speed_fwd = 0;
+		}
+		if (key == GLFW_KEY_D || key == GLFW_KEY_A) {
+			speed_right = 0;
 		}
     }
 }

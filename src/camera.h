@@ -14,5 +14,8 @@ public:
     Camera();
     glm::mat4 GetV() const;
     glm::mat4 GetP() const;
+    glm::vec3 GetForward() const;
+    glm::vec3 GetUp() const;
+    glm::vec3 GetRight() const;
 };
 

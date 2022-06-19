@@ -8,7 +8,7 @@
 class SillyScene : public Scene
 {
 private:
-    float speed_x = 0, speed_y = 0;
+    float speed_yaw = 0, speed_pitch = 0, speed_fwd = 0, speed_right = 0;
 public:
     SillyScene();
     SillyScene(const SillyScene&) = delete;
