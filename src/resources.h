@@ -9,7 +9,7 @@ namespace Resources
     
     struct Character
     {
-        GLuint texture;
+        glm::vec4 texCoords;
         glm::ivec2 size;
         glm::ivec2 bearing;
         long int advance;
@@ -18,6 +18,7 @@ namespace Resources
     struct Font
     {
         bool ready = false;
+        GLuint texture;
         std::map<unsigned char, Character> characters;
     };
 
