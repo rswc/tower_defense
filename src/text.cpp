@@ -13,16 +13,16 @@ Text::Text(std::string text) {
 
 void Text::Draw(const Camera& camera) const {
     spText->use();
+
     glUniform4fv(spText->u("textColor"), 1, glm::value_ptr(color));
+    glUniform2fv(spText->u("offset"), 1, glm::value_ptr(origin * camera.GetScreenSize()));
 
     glActiveTexture(GL_TEXTURE0);
 
     // render glyph texture over quads
     glBindTexture(GL_TEXTURE_2D, Resources::ft_OpenSans.texture);
 
-    glm::mat4 P = glm::ortho(0.0f, 500.0f, 0.0f, 500.0f);
-
-    glUniformMatrix4fv(spText->u("P"), 1, false, glm::value_ptr(P));
+    glUniformMatrix4fv(spText->u("P"), 1, false, glm::value_ptr(camera.GetOrtho()));
 
     glEnableVertexAttribArray(spText->a("vertex"));
     glVertexAttribPointer(spText->a("vertex"), 4, GL_FLOAT, false, 0, &vertices[0]);
@@ -33,8 +33,8 @@ void Text::Draw(const Camera& camera) const {
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void Text::SetPosition(glm::vec2 pos) {
-    screenPosition = pos;
+void Text::SetOrigin(glm::vec2 pos) {
+    origin = pos;
     updateMesh();
 }
 
@@ -54,14 +54,8 @@ void Text::SetColor(glm::vec4 color) {
 
 // Adapted from https://learnopengl.com/In-Practice/Text-Rendering
 void Text::updateMesh() {
-
-    spText->use();
-    glUniform3f(spText->u("textColor"), 1.0f, 1.0f, 1.0f);
-
-    glActiveTexture(GL_TEXTURE0);
-
-    float x = screenPosition.x;
-    float y = screenPosition.y;
+    float x = 0;
+    float y = 0;
 
     vertices.clear();
 
@@ -69,7 +63,7 @@ void Text::updateMesh() {
     for (it = text.begin(); it != text.end(); it++) {
         if (*it == '\n') {
             y -= Resources::ft_OpenSans.glyphHeight * scale;
-            x = screenPosition.x;
+            x = 0;
         }
 
         Resources::Character ch = Resources::ft_OpenSans.characters[*it];

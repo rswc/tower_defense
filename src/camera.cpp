@@ -11,6 +11,14 @@ Camera::Camera() {
     p = glm::perspective(glm::radians(50.0f), 1.0f, 0.01f, 50.0f);
 }
 
+void Camera::SetScreenSize(float width, float height) {
+    screenSize = glm::vec2(width, height);
+}
+
+glm::vec2 Camera::GetScreenSize() const {
+    return screenSize;
+}
+
 glm::mat4 Camera::GetV() const {
     return glm::lookAt(
         GetPosition(),
@@ -21,5 +29,9 @@ glm::mat4 Camera::GetV() const {
 
 glm::mat4 Camera::GetP() const {
     return p;
+}
+
+glm::mat4 Camera::GetOrtho() const {
+    return glm::ortho(0.0f, screenSize.x, 0.0f, screenSize.y);
 }
 

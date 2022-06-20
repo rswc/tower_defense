@@ -22,6 +22,7 @@ public:
     virtual void Update(double dt);
     virtual void Draw() const;
     virtual void OnKey(GLFWwindow* window, int key, int scancode, int action, int mod);
+    void SetScreenSize(float width, float height);
     void Instantiate(std::unique_ptr<GameObject> object);
 };
 

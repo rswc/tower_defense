@@ -23,6 +23,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
+	if (scene)
+		scene->SetScreenSize((float)width, (float)height);
 }
 
 
@@ -70,8 +72,8 @@ int main(void)
 
 	Resources::Initialize();
 
-	// SillyScene scn = SillyScene();
 	scene = std::make_unique<SillyScene>();
+	scene->SetScreenSize(500.0f, 500.0f);
 
 	glfwSetKeyCallback(window, key_callback);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);

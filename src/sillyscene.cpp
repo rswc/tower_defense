@@ -15,9 +15,9 @@ SillyScene::SillyScene()
 	Instantiate(std::move(objAssimp));
 
 	auto txt = std::make_unique<Text>("Graphics programming\nis my passion");
-	txt->SetPosition(glm::vec2(5.0f, 300.0f));
+	txt->SetOrigin(glm::vec2(0.0f, 0.5f));
 	txt->SetColor(glm::vec4(1.0f, 0.2f, 0.3f, 0.7f));
-	// txt->SetScale(0.8f);
+	txt->SetScale(0.8f);
 	Instantiate(std::move(txt));
 }
 
