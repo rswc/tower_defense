@@ -48,6 +48,13 @@ namespace Resources
 
         }
 
+        GLint maxSize;
+        glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxSize);
+        if (combinedWidth > maxSize)
+        {
+            std::cerr << "WARNING: This system can't suppport textures large enough for this font!" << std::endl;
+        }
+
         GLuint texture;
         glGenTextures(1, &texture);
         font.texture = texture;
@@ -131,5 +138,4 @@ namespace Resources
     }
 
 } // namespace Resources
-
 
