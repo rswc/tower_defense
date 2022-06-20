@@ -18,6 +18,7 @@ namespace Resources
     struct Font
     {
         bool ready = false;
+        unsigned int glyphHeight;
         GLuint texture;
         std::map<unsigned char, Character> characters;
     };

@@ -10,8 +10,9 @@ namespace Resources
     Font ft_OpenSans;
 
     // Adapted from https://learnopengl.com/In-Practice/Text-Rendering
-    Font LoadFont(const char* path) {
+    Font LoadFont(const char* path, FT_UInt glyphHeight = 48) {
         Font font;
+        font.glyphHeight = glyphHeight;
 
         FT_Library ft;
         if (FT_Init_FreeType(&ft))
@@ -27,7 +28,7 @@ namespace Resources
             return font;
         }
 
-        FT_Set_Pixel_Sizes(face, 0, 48);
+        FT_Set_Pixel_Sizes(face, 0, glyphHeight);
 
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 

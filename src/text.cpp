@@ -12,10 +12,8 @@ Text::Text(std::string text) {
 }
 
 void Text::Draw(const Camera& camera) const {
-    // updateMesh();
-
     spText->use();
-    glUniform3f(spText->u("textColor"), 1.0f, 1.0f, 1.0f);
+    glUniform4fv(spText->u("textColor"), 1, glm::value_ptr(color));
 
     glActiveTexture(GL_TEXTURE0);
 
@@ -35,6 +33,11 @@ void Text::Draw(const Camera& camera) const {
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+void Text::SetPosition(glm::vec2 pos) {
+    screenPosition = pos;
+    updateMesh();
+}
+
 void Text::SetText(std::string text) {
     this->text = text;
     updateMesh();
@@ -45,6 +48,10 @@ void Text::SetScale(float scale) {
     updateMesh();
 }
 
+void Text::SetColor(glm::vec4 color) {
+    this->color = color;
+}
+
 // Adapted from https://learnopengl.com/In-Practice/Text-Rendering
 void Text::updateMesh() {
 
@@ -53,13 +60,18 @@ void Text::updateMesh() {
 
     glActiveTexture(GL_TEXTURE0);
 
-    float x = GetPosition().x;
-    float y = GetPosition().y;
+    float x = screenPosition.x;
+    float y = screenPosition.y;
 
     vertices.clear();
 
     std::string::const_iterator it;
     for (it = text.begin(); it != text.end(); it++) {
+        if (*it == '\n') {
+            y -= Resources::ft_OpenSans.glyphHeight * scale;
+            x = screenPosition.x;
+        }
+
         Resources::Character ch = Resources::ft_OpenSans.characters[*it];
 
         float xpos = x + ch.bearing.x * scale;
@@ -77,16 +89,6 @@ void Text::updateMesh() {
             xpos + w, ypos,       ch.texCoords.y, ch.texCoords.w,
             xpos + w, ypos + h,   ch.texCoords.y, ch.texCoords.z
         });
-        
-        // float vert[] = {
-        //     xpos,     ypos + h,   0.0f, 0.0f,            
-        //     xpos,     ypos,       0.0f, 1.0f,
-        //     xpos + w, ypos,       1.0f, 1.0f,
-
-        //     xpos,     ypos + h,   0.0f, 0.0f,
-        //     xpos + w, ypos,       1.0f, 1.0f,
-        //     xpos + w, ypos + h,   1.0f, 0.0f
-        // };
 
         x += (ch.advance >> 6) * scale;
     }
