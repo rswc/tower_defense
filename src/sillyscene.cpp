@@ -17,8 +17,10 @@ SillyScene::SillyScene() {
 }
 
 void SillyScene::Update(double dt) {
-    activeCamera.Rotate((float)dt*speed_yaw, glm::vec3(1.0f, 0.0f, 0.0f));
-    activeCamera.Rotate((float)dt*speed_pitch, glm::vec3(0.0f, 1.0f, 0.0f));
+    // activeCamera.Rotate((float)dt*speed_yaw, glm::vec3(1.0f, 0.0f, 0.0f));
+    // activeCamera.Rotate((float)dt*speed_pitch, glm::vec3(0.0f, 1.0f, 0.0f));
+	activeCamera.CumulativeRotation((float)dt*speed_yaw, glm::vec3(1.0f, 0.0f, 0.0f));
+    activeCamera.CumulativeRotation((float)dt*speed_pitch, glm::vec3(0.0f, 1.0f, 0.0f));
 
 	activeCamera.SetPosition(activeCamera.GetPosition() + (float)dt * speed_fwd * activeCamera.GetForward());
 	activeCamera.SetPosition(activeCamera.GetPosition() + (float)dt * speed_right * activeCamera.GetRight());

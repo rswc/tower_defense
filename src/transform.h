@@ -29,12 +29,14 @@ class Transformable
 {
 private:
     Transform transform;
+    float rotX =0.0f, rotY=0.0f;
 public:
     Transformable() : transform() {};
     void SetPosition(glm::vec3 pos);
     void SetRotation(glm::quat rot);
     void SetScale(glm::vec3 scale);
     void Rotate(float angle, glm::vec3 axis);
+    void CumulativeRotation(float angle, glm::vec3 axis);
     glm::vec3 GetPosition() const;
     glm::quat GetRotation() const;
     glm::vec3 GetScale() const;
