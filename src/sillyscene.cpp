@@ -27,7 +27,7 @@ SillyScene::SillyScene() {
                 "xxxxxx"
             }}});
 	// GameGrid grid({{{"xxx", "xSx", "x.x", "xEx", "xxx"}}});
-	BaseMesh mesh = grid.generateBaseMesh(GameGrid::MESH_V_SECOND);
+	GameGrid::GameGridMesh mesh = grid.generateBaseMesh(GameGrid::MESH_V_SECOND);
 	std::cerr << "n of mesh vertices: " << mesh.vertices.size() << std::endl;
 	auto objGrid = std::make_unique<GridObject>(mesh);
 	Instantiate(std::move(objGrid));

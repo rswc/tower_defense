@@ -6,10 +6,13 @@ uniform mat4 M;
 
 in vec4 vertex;
 in vec4 normal;
+in vec3 texture;
 
 out vec4 iNormal;
+out vec3 iTexture;
 
 void main(void) {
     iNormal = normalize(M * normal);
+    iTexture = texture;
     gl_Position = P * V * M * vertex;
 }

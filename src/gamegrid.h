@@ -7,6 +7,21 @@
 #include <glm/glm.hpp>
 
 class GameGrid {
+public:
+    struct GameGridMesh {
+        std::vector<glm::vec4> vertices;
+        std::vector<glm::vec4> normals;
+        std::vector<glm::vec3> textures;
+
+        operator BaseMesh() {
+            BaseMesh baseMesh;
+            baseMesh.vertices = vertices;
+            baseMesh.normals = normals;
+            return baseMesh;
+        }
+    };
+
+private:
     Grid logicalGrid;
 
     using MeshVersion = int;
@@ -25,11 +40,6 @@ class GameGrid {
         GAME_DIR_DOWN,
         GAME_DIR_DOWNRIGHT,
         GAME_DIR_N
-    };
-
-    struct GameGridMesh {
-        std::vector<glm::vec4> vertices;
-        std::vector<glm::vec4> normals;
     };
 
     const float halfRowScale = 0.5f;
@@ -51,16 +61,20 @@ class GameGrid {
     GameGridPosition gridToModelPosition(Grid::GridPosition p);
     inline float cellElevation(Grid::GridPosition p);
     float cornerElevation(Grid::GridPosition a, Grid::GridPosition b, Grid::GridPosition c);
+
     void appendTriangle(std::vector<glm::vec4>& vertexArray, GameGridPosition a, GameGridPosition b, GameGridPosition c);
+    void appendTriangle(std::vector<glm::vec3>& vertexArray, GameGridPosition a, GameGridPosition b, GameGridPosition c);
     void appendRectangle(
-        GameGridMesh& mesh,
+        GameGrid::GameGridMesh& mesh,
         GameGridPosition upperRight,
         GameGridPosition lowerRight,
         GameGridPosition upperLeft,
         GameGridPosition lowerLeft
     );
+    
     void makeFlatCell(GameGridMesh& mesh, int row, int column);
     void makeCanyonCell(GameGridMesh& mesh, int row, int column);
+    
     GameGridMesh generateSimpleMesh();
     GameGridMesh generateWalledMesh();
 
@@ -71,6 +85,6 @@ public:
         MESH_V_SECOND = 2,
         MESH_V_THIRD = 3,
     };
-    BaseMesh generateBaseMesh(MeshVersion version);
+    GameGridMesh generateBaseMesh(MeshVersion version);
     GameGrid(const std::vector<std::string>& map) : logicalGrid(map) {}
 };

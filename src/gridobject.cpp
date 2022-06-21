@@ -17,8 +17,8 @@ void GridObject::Draw(const Camera& camera) const {
 	glUniformMatrix4fv(spTerrain->u("V"), 1, false, glm::value_ptr(camera.GetV()));
 	glUniformMatrix4fv(spTerrain->u("M"), 1, false, glm::value_ptr(GetTransformMatrix()));
 
-	glUniform4f(spTerrain->u("ambientColor"), 0.7f, 0.7f, 0.7f, 1.0f);
-	glUniform4f(spTerrain->u("diffuseColor"), 0.2f, 0.8f, 0.2f, 1.0f);
+	glUniform4f(spTerrain->u("ambientColor"), 0.2f, 0.2f, 0.2f, 1.0f);
+	glUniform4f(spTerrain->u("diffuseColor"), 0.5f, 0.5f, 0.5f, 1.0f);
 	glUniform4f(spTerrain->u("lightDir"), 0.2f, -1.0f, 0.0f, 0.0f);
 
 
@@ -29,11 +29,15 @@ void GridObject::Draw(const Camera& camera) const {
 	glEnableVertexAttribArray(spTerrain->a("normal"));
 	glVertexAttribPointer(spTerrain->a("normal"), 4, GL_FLOAT, false, 0, m_mesh.normals.data()); 
 
+	glEnableVertexAttribArray(spTerrain->a("texture"));
+	glVertexAttribPointer(spTerrain->a("texture"), 3, GL_FLOAT, false, 0, m_mesh.textures.data()); 
+
 	glDrawArrays(GL_TRIANGLES, 0, m_mesh.vertices.size());
 
     //Disable vertex attribute array
 	glDisableVertexAttribArray(spTerrain->a("vertex"));
 	glDisableVertexAttribArray(spTerrain->a("normal"));
+	glDisableVertexAttribArray(spTerrain->a("texture"));
 }
 
 void GridObject::Update(double deltaTime){}

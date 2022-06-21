@@ -39,6 +39,12 @@ void GameGrid::appendTriangle(std::vector<glm::vec4>& vertexArray, GameGrid::Gam
     vertexArray.emplace_back(b, 1.f);
     vertexArray.emplace_back(c, 1.f);
 }
+    
+void GameGrid::appendTriangle(std::vector<glm::vec3>& vertexArray, GameGridPosition a, GameGridPosition b, GameGridPosition c) {
+    vertexArray.emplace_back(a);
+    vertexArray.emplace_back(b);
+    vertexArray.emplace_back(c);
+}
 
 void GameGrid::appendRectangle(
     GameGridMesh& mesh,
@@ -53,6 +59,14 @@ void GameGrid::appendRectangle(
         calculateTriangleNormal(upperLeft, lowerRight, upperRight),
         calculateTriangleNormal(lowerRight, upperRight, upperLeft),
         calculateTriangleNormal(upperRight, upperLeft, lowerRight));
+    
+    // HACK: This could break very easily, I think
+    appendTriangle(
+        mesh.textures,
+        {0.f, 1.f, (upperLeft.y > 0.1f) * 1.f},
+        {0.f, 1.f, (lowerRight.y > 0.1f) * 1.f},
+        {0.f, 1.f, (upperRight.y > 0.1f) * 1.f}
+    );
 
     // Lower-Left triangle
     appendTriangle(mesh.vertices, upperLeft, lowerLeft, lowerRight);
@@ -60,6 +74,12 @@ void GameGrid::appendRectangle(
         calculateTriangleNormal(upperLeft, lowerLeft, lowerRight),
         calculateTriangleNormal(lowerLeft, lowerRight, upperLeft),
         calculateTriangleNormal(lowerRight, upperLeft, lowerLeft));
+    appendTriangle(
+        mesh.textures,
+        {0.f, 1.f, (upperLeft.y > 0.1f) * 1.f},
+        {0.f, 1.f, (lowerLeft.y > 0.1f) * 1.f},
+        {0.f, 1.f, (lowerRight.y > 0.1f) * 1.f}
+    );
 }
 
 void GameGrid::makeFlatCell(GameGridMesh& mesh, int row, int column) {
@@ -196,16 +216,13 @@ GameGrid::GameGridMesh GameGrid::generateWalledMesh() {
     return mesh;
 }
     
-BaseMesh GameGrid::generateBaseMesh(GameGrid::MeshVersion version) {
+GameGrid::GameGridMesh GameGrid::generateBaseMesh(GameGrid::MeshVersion version) {
     GameGridMesh mesh;
-    BaseMesh baseMesh;
 
     switch (version) {
         case MESH_V_FIRST: mesh = generateSimpleMesh(); break;
         case MESH_V_SECOND: mesh = generateWalledMesh(); break;
     }
     
-    baseMesh.vertices = mesh.vertices;
-    baseMesh.normals = mesh.normals;
-    return baseMesh;
+    return mesh;
 }
