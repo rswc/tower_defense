@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <memory>
 
+#include "resources.h"
 #include "sillyscene.h"
 #include "sillyobject.h"
 #include "shaderprogram.h"
@@ -59,6 +60,8 @@ int main(void)
 	glEnable(GL_DEPTH_TEST);
 	initShaders();
 
+	Resources::Initialize();
+
 	// SillyScene scn = SillyScene();
 	scene = std::make_unique<SillyScene>();
 
@@ -81,6 +84,7 @@ int main(void)
 	}
 
 	freeShaders();
+	Resources::Free();
 	glfwDestroyWindow(window); //Usuń kontekst OpenGL i okno
 	glfwTerminate(); //Zwolnij zasoby zajęte przez GLFW
 	exit(EXIT_SUCCESS);
