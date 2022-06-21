@@ -50,6 +50,7 @@ class GameGrid {
     
     GameGridPosition gridToModelPosition(Grid::GridPosition p);
     inline float cellElevation(Grid::GridPosition p);
+    float cornerElevation(Grid::GridPosition a, Grid::GridPosition b, Grid::GridPosition c);
     void appendTriangle(std::vector<glm::vec4>& vertexArray, GameGridPosition a, GameGridPosition b, GameGridPosition c);
     void appendRectangle(
         GameGridMesh& mesh,
@@ -59,7 +60,9 @@ class GameGrid {
         GameGridPosition lowerLeft
     );
     void makeFlatCell(GameGridMesh& mesh, int row, int column);
+    void makeCanyonCell(GameGridMesh& mesh, int row, int column);
     GameGridMesh generateSimpleMesh();
+    GameGridMesh generateWalledMesh();
 
     
 public:
