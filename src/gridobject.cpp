@@ -3,6 +3,7 @@
 #include "shaderprogram.h"
 #include "camera.h"
 
+#include "resources.h"
 #include "BaseMesh.h"
 #include "gameobject.h"
 
@@ -29,15 +30,19 @@ void GridObject::Draw(const Camera& camera) const {
 	glEnableVertexAttribArray(spTerrain->a("normal"));
 	glVertexAttribPointer(spTerrain->a("normal"), 4, GL_FLOAT, false, 0, m_mesh.normals.data()); 
 
-	glEnableVertexAttribArray(spTerrain->a("texture"));
-	glVertexAttribPointer(spTerrain->a("texture"), 3, GL_FLOAT, false, 0, m_mesh.textures.data()); 
+	glEnableVertexAttribArray(spTerrain->a("texParams"));
+	glVertexAttribPointer(spTerrain->a("texParams"), 3, GL_FLOAT, false, 0, m_mesh.textures.data());
+
+	glActiveTexture(GL_TEXTURE0); 
+    glBindTexture(GL_TEXTURE_2D, Resources::ta_Terrain.id);
+	glUniform1i(spTerrain->u("texMain"), 0);
 
 	glDrawArrays(GL_TRIANGLES, 0, m_mesh.vertices.size());
 
     //Disable vertex attribute array
 	glDisableVertexAttribArray(spTerrain->a("vertex"));
 	glDisableVertexAttribArray(spTerrain->a("normal"));
-	glDisableVertexAttribArray(spTerrain->a("texture"));
+	glDisableVertexAttribArray(spTerrain->a("texParams"));
 }
 
 void GridObject::Update(double deltaTime){}
