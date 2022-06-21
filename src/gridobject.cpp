@@ -11,26 +11,26 @@
 
 void GridObject::Draw(const Camera& camera) const {
     //Activate the shader
-    spLambert->use();
+    spWireframe->use();
 
     //TODO: move to Material class??
-	glUniformMatrix4fv(spLambert->u("P"), 1, false, glm::value_ptr(camera.GetP()));
-	glUniformMatrix4fv(spLambert->u("V"), 1, false, glm::value_ptr(camera.GetV()));
-	glUniformMatrix4fv(spLambert->u("M"), 1, false, glm::value_ptr(GetTransformMatrix()));
+	glUniformMatrix4fv(spWireframe->u("P"), 1, false, glm::value_ptr(camera.GetP()));
+	glUniformMatrix4fv(spWireframe->u("V"), 1, false, glm::value_ptr(camera.GetV()));
+	glUniformMatrix4fv(spWireframe->u("M"), 1, false, glm::value_ptr(GetTransformMatrix()));
 
 
     //TODO: pass to Material class?? make separate Mesh class for holding attributes??
-	glEnableVertexAttribArray(spLambert->a("vertex"));
-	glVertexAttribPointer(spLambert->a("vertex"), 4, GL_FLOAT, false, 0, m_mesh.vertices.data()); 
+	glEnableVertexAttribArray(spWireframe->a("vertex"));
+	glVertexAttribPointer(spWireframe->a("vertex"), 4, GL_FLOAT, false, 0, m_mesh.vertices.data()); 
 
-	glEnableVertexAttribArray(spLambert->a("normal"));
-	glVertexAttribPointer(spLambert->a("normal"), 4, GL_FLOAT, false, 0, m_mesh.normals.data()); 
+	glEnableVertexAttribArray(spWireframe->a("normal"));
+	glVertexAttribPointer(spWireframe->a("normal"), 4, GL_FLOAT, false, 0, m_mesh.normals.data()); 
 
 	glDrawArrays(GL_TRIANGLES, 0, m_mesh.vertices.size());
 
     //Disable vertex attribute array
-	glDisableVertexAttribArray(spLambert->a("vertex"));
-	glDisableVertexAttribArray(spLambert->a("normal"));
+	glDisableVertexAttribArray(spWireframe->a("vertex"));
+	glDisableVertexAttribArray(spWireframe->a("normal"));
 
 }
 

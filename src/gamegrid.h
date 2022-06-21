@@ -31,10 +31,35 @@ class GameGrid {
         std::vector<glm::vec4> vertices;
         std::vector<glm::vec4> normals;
     };
+
+    const float halfRowScale = 0.5f;
+    const float halfColScale = 0.5f;
+
+    const float innerSquareFactor = 0.6f;
+
+    const GameGridPosition dirVector[GAME_DIR_N] = {
+        { 0.f, 0.f, halfColScale }, 
+        { -halfRowScale, 0.f, halfColScale }, 
+        { -halfRowScale, 0.f, 0.f }, 
+        { -halfRowScale, 0.f, -halfColScale }, 
+        { 0.f, 0.f, -halfColScale }, 
+        { halfRowScale, 0.f, -halfColScale }, 
+        { halfRowScale, 0.f, 0.f }, 
+        { halfRowScale, 0.f, halfColScale }, 
+    };
     
-    GameGridPosition translateGridToGamePosition(Grid::GridPosition p, GameDirEnum dir); 
-    void appendTriangle(std::vector<glm::vec4>& vertexArray, GameGridPosition a, GameGridPosition b, GameGridPosition c); 
-    GameGridMesh generateSimpleMesh(); 
+    GameGridPosition gridToModelPosition(Grid::GridPosition p);
+    inline float cellElevation(Grid::GridPosition p);
+    void appendTriangle(std::vector<glm::vec4>& vertexArray, GameGridPosition a, GameGridPosition b, GameGridPosition c);
+    void appendRectangle(
+        GameGridMesh& mesh,
+        GameGridPosition upperRight,
+        GameGridPosition lowerRight,
+        GameGridPosition upperLeft,
+        GameGridPosition lowerLeft
+    );
+    void makeFlatCell(GameGridMesh& mesh, int row, int column);
+    GameGridMesh generateSimpleMesh();
 
     
 public:
