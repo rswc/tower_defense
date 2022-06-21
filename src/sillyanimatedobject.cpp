@@ -7,7 +7,6 @@
 
 
 #include "sillyanimatedobject.h"
-#include "sillymaterial.h"
 #include "shaderprogram.h"
 #include "camera.h"
 #include "lodepng.h"

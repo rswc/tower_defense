@@ -5,7 +5,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <GL/glew.h>
 
-#include "sillymaterial.h"
 #include "shaderprogram.h"
 #include "camera.h"
 #include "assimploader.h"
