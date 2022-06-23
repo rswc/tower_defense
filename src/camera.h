@@ -29,7 +29,7 @@ public:
             ) {};
 
     virtual void SetCameraRotationBlock(bool block) {};
-    virtual void SetCameraHeightCap(float cap) {};
+    virtual void SetCameraHeightCap(bool toggle, float cap) {};
     virtual void ZoomCamera(float fov) {};
 };
 

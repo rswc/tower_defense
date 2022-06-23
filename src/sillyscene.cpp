@@ -9,6 +9,7 @@
 #define cameraMoveSpeed 2.5f
 #define mouseSensitivity 0.3f
 #define startCameraPosition glm::vec3(0.0f, 3.0f, 3.0f)
+#define cameraHeightCap 3.0f
 
 SillyScene::SillyScene() {
     activeCamera = RTSCamera(startCameraPosition);
@@ -28,17 +29,20 @@ void SillyScene::Update(double dt) {
 
 void SillyScene::OnKey(GLFWwindow* window, int key, int scancode, int action, int mod) {
     if (action == GLFW_PRESS) {
-		if (key == GLFW_KEY_LEFT) {
-			pitch = PI;
-		}
-		if (key == GLFW_KEY_RIGHT) {
-			pitch = -PI;
-		}
-		if (key == GLFW_KEY_UP) {
-			yaw = PI;
-		}
-		if (key == GLFW_KEY_DOWN) {
-			yaw = -PI;
+		// if (key == GLFW_KEY_LEFT) {
+		// 	pitch = PI;
+		// }
+		// if (key == GLFW_KEY_RIGHT) {
+		// 	pitch = -PI;
+		// }
+		// if (key == GLFW_KEY_UP) {
+		// 	yaw = PI;
+		// }
+		// if (key == GLFW_KEY_DOWN) {
+		// 	yaw = -PI;
+		// }
+		if(key == GLFW_KEY_C) {
+			activeCamera.SetCameraHeightCap(true, cameraHeightCap);
 		}
 		if (key == GLFW_KEY_W)
 		{

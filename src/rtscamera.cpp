@@ -56,7 +56,8 @@ void RTSCamera::MoveCamera(
         cameraFront = glm::normalize(direction);
     }
 
-    cameraPos.y = heightCap;
+    if (useHeightCap)
+        cameraPos.y = heightCap;
 
     view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
@@ -75,7 +76,9 @@ void RTSCamera::SetCameraRotationBlock(bool block){
     blockRotation = block;
 }
 
-void RTSCamera::SetCameraHeightCap(float cap){
+void RTSCamera::SetCameraHeightCap(bool toggle, float cap){
+    if(toggle)
+        useHeightCap = !useHeightCap;
     heightCap = cap;
 }
 

@@ -28,6 +28,7 @@ class RTSCamera : public Camera
 
         bool blockRotation = false;
         float heightCap = 3.0f;
+        bool useHeightCap = true;
 
     public:
         RTSCamera();
@@ -43,7 +44,7 @@ class RTSCamera : public Camera
             ) override;
 
         void SetCameraRotationBlock(bool block) override;
-        void SetCameraHeightCap(float cap) override;
+        void SetCameraHeightCap(bool toggle, float cap) override;
         void ZoomCamera(float fov) override;
         
 
