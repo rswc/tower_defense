@@ -17,6 +17,17 @@ void Scene::OnKey(GLFWwindow* window, int key, int scancode, int action, int mod
     // ???
 }
 
+void Scene::OnMouse(GLFWwindow* window, double xpos, double ypos) {
+    // ???
+}
+void Scene::OnMouseButton(GLFWwindow* window, int button, int action, int mods) {
+    // ???
+}
+
+void Scene::OnScroll(GLFWwindow* window, double xoffset, double yoffset) {
+    // ???
+}
+
 void Scene::Instantiate(std::unique_ptr<GameObject> object) {
     objects.push_back(std::move(object));
 }

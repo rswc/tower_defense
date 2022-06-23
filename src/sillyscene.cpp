@@ -6,24 +6,21 @@
 #include "gridobject.h"
 
 #define PI 2.141592f // close enough
-
+#define cameraMoveSpeed 2.5f
+#define mouseSensitivity 0.3f
+#define startCameraPosition glm::vec3(0.0f, 3.0f, 3.0f)
 
 SillyScene::SillyScene() {
-    activeCamera = Camera();
-    activeCamera.SetPosition(glm::vec3(0, 1.0f, 2.0f));
+    activeCamera = RTSCamera(startCameraPosition);
 
 	auto objAssimp = std::make_unique<AssimpObject>();
 	Instantiate(std::move(objAssimp));
 }
 
-void SillyScene::Update(double dt) {
-    // activeCamera.Rotate((float)dt*speed_yaw, glm::vec3(1.0f, 0.0f, 0.0f));
-    // activeCamera.Rotate((float)dt*speed_pitch, glm::vec3(0.0f, 1.0f, 0.0f));
-	activeCamera.CumulativeRotation((float)dt*speed_yaw, glm::vec3(1.0f, 0.0f, 0.0f));
-    activeCamera.CumulativeRotation((float)dt*speed_pitch, glm::vec3(0.0f, 1.0f, 0.0f));
 
-	activeCamera.SetPosition(activeCamera.GetPosition() + (float)dt * speed_fwd * activeCamera.GetForward());
-	activeCamera.SetPosition(activeCamera.GetPosition() + (float)dt * speed_right * activeCamera.GetRight());
+void SillyScene::Update(double dt) {
+	//roll inactive for now
+	activeCamera.MoveCamera(speed_fwd, speed_right, pitch, yaw, 0, (float)dt);
 
     for (auto& object : objects)
         object->Update(dt);
@@ -32,40 +29,46 @@ void SillyScene::Update(double dt) {
 void SillyScene::OnKey(GLFWwindow* window, int key, int scancode, int action, int mod) {
     if (action == GLFW_PRESS) {
 		if (key == GLFW_KEY_LEFT) {
-			speed_pitch = PI;
+			pitch = PI;
 		}
 		if (key == GLFW_KEY_RIGHT) {
-			speed_pitch = -PI;
+			pitch = -PI;
 		}
 		if (key == GLFW_KEY_UP) {
-			speed_yaw = PI;
+			yaw = PI;
 		}
 		if (key == GLFW_KEY_DOWN) {
-			speed_yaw = -PI;
+			yaw = -PI;
 		}
 		if (key == GLFW_KEY_W)
 		{
-			speed_fwd = 2.0f;
+			speed_fwd = cameraMoveSpeed;
 		}
 		if (key == GLFW_KEY_S)
 		{
-			speed_fwd = -2.0f;
+			speed_fwd = -cameraMoveSpeed;
 		}
 		if (key == GLFW_KEY_D)
 		{
-			speed_right = 2.0f;
+			speed_right = cameraMoveSpeed;
 		}
 		if (key == GLFW_KEY_A)
 		{
-			speed_right = -2.0f;
+			speed_right = -cameraMoveSpeed;
 		}
+		if (key == GLFW_KEY_ESCAPE)
+		{
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); 
+			activeCamera.SetCameraRotationBlock(true); 
+		}
+		
 	}
 	if (action == GLFW_RELEASE) {
 		if (key == GLFW_KEY_LEFT || key == GLFW_KEY_RIGHT) {
-			speed_pitch = 0;
+			pitch = 0;
 		}
 		if (key == GLFW_KEY_UP || key == GLFW_KEY_DOWN) {
-			speed_yaw = 0;
+			yaw = 0;
 		}
 		if (key == GLFW_KEY_W || key == GLFW_KEY_S) {
 			speed_fwd = 0;
@@ -76,3 +79,45 @@ void SillyScene::OnKey(GLFWwindow* window, int key, int scancode, int action, in
     }
 }
 
+void SillyScene::OnMouse(GLFWwindow* window, double xpos, double ypos) {
+    if (firstMouse)
+    {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+
+	float xoffset = xpos - lastX;
+	float yoffset = lastY - ypos; // reversed since y-coordinates range from bottom to top
+	lastX = xpos;
+	lastY = ypos;
+	
+	xoffset *= mouseSensitivity;
+	yoffset *= mouseSensitivity;
+
+	yaw   += xoffset;
+	pitch += yoffset;  
+
+	if(pitch > 89.0f)
+		pitch =  89.0f;
+	if(pitch < -89.0f)
+		pitch = -89.0f;
+}
+
+void SillyScene::OnMouseButton(GLFWwindow* window, int button, int action, int mods) {
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		firstMouse = true;
+		activeCamera.SetCameraRotationBlock(false); //unblock
+		
+	}
+}
+
+void SillyScene::OnScroll(GLFWwindow* window, double xoffset, double yoffset) {
+	fov -= (float)yoffset;
+    if (fov < 15.0f)
+        fov = 15.0f;
+    if (fov > 50.0f)
+        fov = 50.0f; 
+	activeCamera.ZoomCamera(yoffset);
+}

@@ -4,14 +4,14 @@
 #include <vector>
 #include <GLFW/glfw3.h>
 #include "gameobject.h"
-#include "camera.h"
+#include "rtscamera.h"
 
 
 class Scene
 {
 protected:
     std::vector<std::unique_ptr<GameObject>> objects;
-    Camera activeCamera;
+    RTSCamera activeCamera;
 public:
     Scene() = default;
     Scene(const Scene&) = delete;
@@ -22,6 +22,9 @@ public:
     virtual void Update(double dt);
     virtual void Draw() const;
     virtual void OnKey(GLFWwindow* window, int key, int scancode, int action, int mod);
+    virtual void OnMouse(GLFWwindow* window, double xpos, double ypos);
+    virtual void OnMouseButton(GLFWwindow* window, int button, int action, int mods);
+    virtual void OnScroll(GLFWwindow* window, double xoffset, double yoffset);
     void Instantiate(std::unique_ptr<GameObject> object);
 };
 
