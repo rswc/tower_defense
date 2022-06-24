@@ -16,11 +16,29 @@ SillyScene::SillyScene()
 	auto objAssimp = std::make_unique<AssimpObject>();
 	Instantiate(std::move(objAssimp));
 
+	// remove if annoying
 	auto txt = std::make_unique<Text>("Graphics programming\nis my passion");
 	txt->SetOrigin(glm::vec2(0.02f, 0.5f));
 	txt->SetColor(glm::vec4(1.0f, 0.2f, 0.3f, 0.7f));
 	txt->SetScale(0.8f);
 	Instantiate(std::move(txt));
+	
+	GameGrid grid({{{
+                "xxxxxx",
+                "xS...x",
+                "xxxx.x",
+                "x....x",
+                "x.xxxx",
+                "x.x.Ex",
+                "x.x.xx",
+                "x...xx",
+                "xxxxxx"
+            }}});
+	// GameGrid grid({{{"xxx", "xSx", "x.x", "xEx", "xxx"}}});
+	GameGrid::GameGridMesh mesh = grid.generateBaseMesh(GameGrid::MESH_V_SECOND);
+	std::cerr << "n of mesh vertices: " << mesh.vertices.size() << std::endl;
+	auto objGrid = std::make_unique<GridObject>(mesh);
+	Instantiate(std::move(objGrid));
 }
 
 void SillyScene::Update(double dt) {
