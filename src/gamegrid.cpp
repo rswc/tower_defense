@@ -20,8 +20,8 @@ GameGrid::GameGridPosition GameGrid::gridToModelPosition(Grid::GridPosition p) {
 
 inline float GameGrid::cellElevation(Grid::GridPosition p) {
     if (logicalGrid.isInsideGrid(p))
-        return logicalGrid.isLand(p) ? .3f : 0;
-    return .3f;
+        return logicalGrid.isLand(p) ? elevationStep : 0;
+    return elevationStep;
 }
 
 float GameGrid::cornerElevation(Grid::GridPosition a, Grid::GridPosition b, Grid::GridPosition c) {
@@ -97,97 +97,149 @@ void GameGrid::makeFlatCell(GameGridMesh& mesh, int row, int column) {
 void GameGrid::makeCanyonCell(GameGridMesh& mesh, int row, int column) {
     GameGridPosition cellCenter = gridToModelPosition({row, column});
 
-    GameGridPosition innerDownRight = cellCenter + innerSquareFactor * dirVector[GAME_DIR_DOWNRIGHT];
-    GameGridPosition innerUpRight = cellCenter + innerSquareFactor * dirVector[GAME_DIR_UPRIGHT];
-    GameGridPosition innerDownLeft = cellCenter + innerSquareFactor * dirVector[GAME_DIR_DOWNLEFT];
-    GameGridPosition innerUpLeft = cellCenter + innerSquareFactor * dirVector[GAME_DIR_UPLEFT];
+    GameGridPosition innerLowerRight = cellCenter + innerSquareFactor * dirVector[GAME_DIR_DOWNRIGHT];
+    GameGridPosition innerUpperRight = cellCenter + innerSquareFactor * dirVector[GAME_DIR_UPRIGHT];
+    GameGridPosition innerLowerLeft = cellCenter + innerSquareFactor * dirVector[GAME_DIR_DOWNLEFT];
+    GameGridPosition innerUpperLeft = cellCenter + innerSquareFactor * dirVector[GAME_DIR_UPLEFT];
 
-    GameGridPosition outerDownRight = cellCenter + dirVector[GAME_DIR_DOWNRIGHT];
-    GameGridPosition outerUpRight = cellCenter + dirVector[GAME_DIR_UPRIGHT];
-    GameGridPosition outerDownLeft = cellCenter + dirVector[GAME_DIR_DOWNLEFT];
-    GameGridPosition outerUpLeft = cellCenter + dirVector[GAME_DIR_UPLEFT];
+    GameGridPosition outerLowerRight = cellCenter + dirVector[GAME_DIR_DOWNRIGHT];
+    GameGridPosition outerUpperRight = cellCenter + dirVector[GAME_DIR_UPRIGHT];
+    GameGridPosition outerLowerLeft = cellCenter + dirVector[GAME_DIR_DOWNLEFT];
+    GameGridPosition outerUpperLeft = cellCenter + dirVector[GAME_DIR_UPLEFT];
 
     // Blessh this mesh
     
     // Inner square
     appendRectangle(
         mesh,
-        innerUpRight,
-        innerDownRight,
-        innerUpLeft,
-        innerDownLeft
+        innerUpperRight,
+        innerLowerRight,
+        innerUpperLeft,
+        innerLowerLeft
     );
 
     // Upper edge strip
     appendRectangle(
         mesh,
-        { outerUpRight.x, cellElevation({row - 1, column}), innerUpRight.z },
-        innerUpRight,
-        { outerUpLeft.x, cellElevation({row - 1, column}), innerUpLeft.z },
-        innerUpLeft
+        { outerUpperRight.x, cellElevation({row - 1, column}), innerUpperRight.z },
+        innerUpperRight,
+        { outerUpperLeft.x, cellElevation({row - 1, column}), innerUpperLeft.z },
+        innerUpperLeft
     );
 
     // Right edge strip
     appendRectangle(
         mesh,
-        { innerDownRight.x, cellElevation({row, column + 1}), outerDownRight.z },
-        innerDownRight,
-        { innerUpRight.x, cellElevation({row, column + 1}), outerUpRight.z },
-        innerUpRight
+        { innerLowerRight.x, cellElevation({row, column + 1}), outerLowerRight.z },
+        innerLowerRight,
+        { innerUpperRight.x, cellElevation({row, column + 1}), outerUpperRight.z },
+        innerUpperRight
     );
 
     // Lower edge strip
     appendRectangle(
         mesh,
-        { outerDownLeft.x, cellElevation({row + 1, column}), innerDownLeft.z },
-        innerDownLeft,
-        { outerDownRight.x, cellElevation({row + 1, column}), innerDownRight.z },
-        innerDownRight
+        { outerLowerLeft.x, cellElevation({row + 1, column}), innerLowerLeft.z },
+        innerLowerLeft,
+        { outerLowerRight.x, cellElevation({row + 1, column}), innerLowerRight.z },
+        innerLowerRight
     );
 
     // Left edge strip
     appendRectangle(
         mesh,
-        { innerUpLeft.x, cellElevation({row, column - 1}), outerUpLeft.z },
-        innerUpLeft,
-        { innerDownLeft.x, cellElevation({row, column - 1}), outerDownLeft.z },
-        innerDownLeft
+        { innerUpperLeft.x, cellElevation({row, column - 1}), outerUpperLeft.z },
+        innerUpperLeft,
+        { innerLowerLeft.x, cellElevation({row, column - 1}), outerLowerLeft.z },
+        innerLowerLeft
     );
 
     // Upper-right corner
     appendRectangle(
         mesh,
-        { innerUpRight.x, cellElevation({row, column + 1}), outerUpRight.z },
-        innerUpRight,
-        { outerUpRight.x, cornerElevation({row, column + 1}, {row - 1, column}, {row - 1, column + 1}), outerUpRight.z },
-        { outerUpRight.x, cellElevation({row - 1, column}), innerUpRight.z }
+        { innerUpperRight.x, cellElevation({row, column + 1}), outerUpperRight.z },
+        innerUpperRight,
+        { outerUpperRight.x, cornerElevation({row, column + 1}, {row - 1, column}, {row - 1, column + 1}), outerUpperRight.z },
+        { outerUpperRight.x, cellElevation({row - 1, column}), innerUpperRight.z }
     );
 
     // Lower-right corner
     appendRectangle(
         mesh,
-        { innerDownRight.x, cellElevation({row, column + 1}), outerDownRight.z },
-        { outerDownRight.x, cornerElevation({row, column + 1}, {row + 1, column}, {row + 1, column + 1}), outerDownRight.z },
-        innerDownRight,
-        { outerDownRight.x, cellElevation({row + 1, column}), innerDownRight.z }
+        { innerLowerRight.x, cellElevation({row, column + 1}), outerLowerRight.z },
+        { outerLowerRight.x, cornerElevation({row, column + 1}, {row + 1, column}, {row + 1, column + 1}), outerLowerRight.z },
+        innerLowerRight,
+        { outerLowerRight.x, cellElevation({row + 1, column}), innerLowerRight.z }
     );
 
     // Upper-left corner
     appendRectangle(
         mesh,
-        { outerUpLeft.x, cellElevation({row - 1, column}), innerUpLeft.z },
-        innerUpLeft,
-        { outerUpLeft.x, cornerElevation({row, column - 1}, {row - 1, column}, {row - 1, column - 1}), outerUpLeft.z },
-        { innerUpLeft.x, cellElevation({row, column - 1}), outerUpLeft.z }
+        { outerUpperLeft.x, cellElevation({row - 1, column}), innerUpperLeft.z },
+        innerUpperLeft,
+        { outerUpperLeft.x, cornerElevation({row, column - 1}, {row - 1, column}, {row - 1, column - 1}), outerUpperLeft.z },
+        { innerUpperLeft.x, cellElevation({row, column - 1}), outerUpperLeft.z }
     );
 
     // Lower-left corner
     appendRectangle(
         mesh,
-        { outerDownLeft.x, cellElevation({row + 1, column}), innerDownLeft.z },
-        { outerDownLeft.x, cornerElevation({row, column - 1}, {row + 1, column}, {row + 1, column - 1}), outerDownLeft.z },
-        innerDownLeft,
-        { innerDownLeft.x, cellElevation({row, column - 1}), outerDownLeft.z }
+        { outerLowerLeft.x, cellElevation({row + 1, column}), innerLowerLeft.z },
+        { outerLowerLeft.x, cornerElevation({row, column - 1}, {row + 1, column}, {row + 1, column - 1}), outerLowerLeft.z },
+        innerLowerLeft,
+        { innerLowerLeft.x, cellElevation({row, column - 1}), outerLowerLeft.z }
+    );
+}
+
+void GameGrid::makeGridBorder(GameGridMesh& mesh, int rows, int columns) {
+    GameGridPosition innerLowerRight = gridToModelPosition({rows - 1, columns - 1}) + dirVector[GAME_DIR_DOWNRIGHT];
+    GameGridPosition innerUpperRight = gridToModelPosition({0, columns - 1}) + dirVector[GAME_DIR_UPRIGHT];
+    GameGridPosition innerLowerLeft = gridToModelPosition({rows - 1, 0}) + dirVector[GAME_DIR_DOWNLEFT];
+    GameGridPosition innerUpperLeft = gridToModelPosition({0, 0}) + dirVector[GAME_DIR_UPLEFT];
+
+    GameGridPosition outerLowerRight = innerLowerRight + borderExtrusionParallel * dirVector[GAME_DIR_DOWNRIGHT]
+        + borderExtrusionPerpendicular * depthVector;
+    GameGridPosition outerUpperRight = innerUpperRight + borderExtrusionParallel * dirVector[GAME_DIR_UPRIGHT]
+        + borderExtrusionPerpendicular * depthVector;
+    GameGridPosition outerLowerLeft = innerLowerLeft + borderExtrusionParallel * dirVector[GAME_DIR_DOWNLEFT]
+        + borderExtrusionPerpendicular * depthVector;
+    GameGridPosition outerUpperLeft = innerUpperLeft + borderExtrusionParallel * dirVector[GAME_DIR_UPLEFT]
+        + borderExtrusionPerpendicular * depthVector;
+
+    // Lower edge
+    appendRectangle(
+        mesh,
+        innerLowerRight,
+        outerLowerRight,
+        innerLowerLeft,
+        outerLowerLeft
+    );
+
+    // Right edge
+    appendRectangle(
+        mesh,
+        innerUpperRight,
+        outerUpperRight,
+        innerLowerRight,
+        outerLowerRight
+    );
+
+    // Upper edge
+    appendRectangle(
+        mesh,
+        innerUpperLeft,
+        outerUpperLeft,
+        innerUpperRight,
+        outerUpperRight
+    );
+
+    // Left edge
+    appendRectangle(
+        mesh,
+        innerLowerLeft,
+        outerLowerLeft,
+        innerUpperLeft,
+        outerUpperLeft
     );
 }
     
@@ -213,6 +265,9 @@ GameGrid::GameGridMesh GameGrid::generateWalledMesh() {
             makeCanyonCell(mesh, r, c);
         }
     }
+
+    makeGridBorder(mesh, logicalGrid.m_rows, logicalGrid.m_cols);
+
     return mesh;
 }
     

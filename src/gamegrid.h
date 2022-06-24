@@ -46,6 +46,10 @@ private:
     const float halfColScale = 0.5f;
 
     const float innerSquareFactor = 0.6f;
+    const float elevationStep = .3f;
+
+    const float borderExtrusionParallel = .8f;
+    const float borderExtrusionPerpendicular = 1.4f;
 
     const GameGridPosition dirVector[GAME_DIR_N] = {
         { 0.f, 0.f, halfColScale }, 
@@ -57,6 +61,8 @@ private:
         { halfRowScale, 0.f, 0.f }, 
         { halfRowScale, 0.f, halfColScale }, 
     };
+
+    const GameGridPosition depthVector = { 0.f, -elevationStep, 0.f};
     
     GameGridPosition gridToModelPosition(Grid::GridPosition p);
     inline float cellElevation(Grid::GridPosition p);
@@ -74,6 +80,7 @@ private:
     
     void makeFlatCell(GameGridMesh& mesh, int row, int column);
     void makeCanyonCell(GameGridMesh& mesh, int row, int column);
+    void makeGridBorder(GameGridMesh& mesh, int rows, int columns);
     
     GameGridMesh generateSimpleMesh();
     GameGridMesh generateWalledMesh();
