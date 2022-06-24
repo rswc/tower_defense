@@ -4,16 +4,23 @@
 #include "assimpobject.h"
 #include "gamegrid.h"
 #include "gridobject.h"
+#include "text.h"
 
 #define PI 2.141592f // close enough
 
-
-SillyScene::SillyScene() {
-    activeCamera = Camera();
-    activeCamera.SetPosition(glm::vec3(0, 1.0f, 2.0f));
+SillyScene::SillyScene()
+{
+	activeCamera = Camera();
+	activeCamera.SetPosition(glm::vec3(0, 1.0f, 2.0f));
 
 	auto objAssimp = std::make_unique<AssimpObject>();
 	Instantiate(std::move(objAssimp));
+
+	auto txt = std::make_unique<Text>("Graphics programming\nis my passion");
+	txt->SetOrigin(glm::vec2(0.02f, 0.5f));
+	txt->SetColor(glm::vec4(1.0f, 0.2f, 0.3f, 0.7f));
+	txt->SetScale(0.8f);
+	Instantiate(std::move(txt));
 }
 
 void SillyScene::Update(double dt) {
@@ -25,8 +32,8 @@ void SillyScene::Update(double dt) {
 	activeCamera.SetPosition(activeCamera.GetPosition() + (float)dt * speed_fwd * activeCamera.GetForward());
 	activeCamera.SetPosition(activeCamera.GetPosition() + (float)dt * speed_right * activeCamera.GetRight());
 
-    for (auto& object : objects)
-        object->Update(dt);
+	for (auto &object : objects)
+		object->Update(dt);
 }
 
 void SillyScene::OnKey(GLFWwindow* window, int key, int scancode, int action, int mod) {
@@ -73,6 +80,5 @@ void SillyScene::OnKey(GLFWwindow* window, int key, int scancode, int action, in
 		if (key == GLFW_KEY_D || key == GLFW_KEY_A) {
 			speed_right = 0;
 		}
-    }
+	}
 }
-

@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <memory>
 
+#include "resources.h"
 #include "sillyscene.h"
 #include "sillyobject.h"
 #include "shaderprogram.h"
@@ -19,6 +20,13 @@ void error_callback(int error, const char* description) {
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod) {
 	scene->OnKey(window, key, scancode, action, mod);
 }
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+    glViewport(0, 0, width, height);
+	if (scene)
+		scene->SetScreenSize((float)width, (float)height);
+}
+
 
 void runTests() {
 	// Run Test for logical Grid class
@@ -38,7 +46,8 @@ int main(void)
 		exit(EXIT_FAILURE);
 	}
 
-	window = glfwCreateWindow(500, 500, "OpenGL", NULL, NULL);  //Utwórz okno 500x500 o tytule "OpenGL" i kontekst OpenGL.
+	window = glfwCreateWindow(500, 500, "OpenGL", NULL, NULL);
+	glViewport(0, 0, 500, 500);
 
 	if (!window) //Jeżeli okna nie udało się utworzyć, to zamknij program
 	{
@@ -57,12 +66,17 @@ int main(void)
 
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	initShaders();
 
-	// SillyScene scn = SillyScene();
+	Resources::Initialize();
+
 	scene = std::make_unique<SillyScene>();
+	scene->SetScreenSize(500.0f, 500.0f);
 
 	glfwSetKeyCallback(window, key_callback);
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	glfwSetTime(0);
 	double dt = 0.0;
@@ -81,6 +95,7 @@ int main(void)
 	}
 
 	freeShaders();
+	Resources::Free();
 	glfwDestroyWindow(window); //Usuń kontekst OpenGL i okno
 	glfwTerminate(); //Zwolnij zasoby zajęte przez GLFW
 	exit(EXIT_SUCCESS);
