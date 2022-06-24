@@ -25,10 +25,12 @@ void Text::Draw(const Camera& camera) const {
     glUniformMatrix4fv(spText->u("P"), 1, false, glm::value_ptr(camera.GetOrtho()));
 
     glEnableVertexAttribArray(spText->a("vertex"));
-    glVertexAttribPointer(spText->a("vertex"), 4, GL_FLOAT, false, 0, &vertices[0]);
+    glVertexAttribPointer(spText->a("vertex"), 4, GL_FLOAT, false, 0, vertices.data());
 
     // render quads
-    glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+    glDrawArrays(GL_TRIANGLES, 0, vertices.size() / 4);
+
+    glDisableVertexAttribArray(spText->a("vertex"));
 
     glBindTexture(GL_TEXTURE_2D, 0);
 }
