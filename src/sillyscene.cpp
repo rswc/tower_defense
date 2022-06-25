@@ -7,7 +7,7 @@
 
 #define PI 2.141592f // close enough
 #define cameraMoveSpeed 2.5f
-#define mouseSensitivity 0.3f
+#define mouseSensitivity 0.25f
 #define startCameraPosition glm::vec3(0.0f, 3.0f, 3.0f)
 #define cameraHeightCap 3.0f
 
@@ -62,8 +62,9 @@ void SillyScene::OnKey(GLFWwindow* window, int key, int scancode, int action, in
 		}
 		if (key == GLFW_KEY_ESCAPE)
 		{
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); 
+			focus = false;
 			activeCamera.SetCameraRotationBlock(true); 
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); 
 		}
 		
 	}
@@ -91,29 +92,32 @@ void SillyScene::OnMouse(GLFWwindow* window, double xpos, double ypos) {
         firstMouse = false;
     }
 
-	float xoffset = xpos - lastX;
-	float yoffset = lastY - ypos; // reversed since y-coordinates range from bottom to top
-	lastX = xpos;
-	lastY = ypos;
-	
-	xoffset *= mouseSensitivity;
-	yoffset *= mouseSensitivity;
+	if (focus == true) 
+	{
+		float xoffset = xpos - lastX;
+		float yoffset = lastY - ypos; // reversed since y-coordinates range from bottom to top
+		lastX = xpos;
+		lastY = ypos;
+		
+		xoffset *= mouseSensitivity;
+		yoffset *= mouseSensitivity;
 
-	yaw   += xoffset;
-	pitch += yoffset;  
+		yaw   += xoffset;
+		pitch += yoffset;  
 
-	if(pitch > 89.0f)
-		pitch =  89.0f;
-	if(pitch < -89.0f)
-		pitch = -89.0f;
+		if(pitch > 89.0f)
+			pitch =  89.0f;
+		if(pitch < -89.0f)
+			pitch = -89.0f;
+	}
 }
 
 void SillyScene::OnMouseButton(GLFWwindow* window, int button, int action, int mods) {
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		firstMouse = true;
+		focus = true;
 		activeCamera.SetCameraRotationBlock(false); //unblock
-		
 	}
 }
 

@@ -15,8 +15,8 @@ RTSCamera::RTSCamera(glm::vec3 startPosition){
 
     view = glm::lookAt(
         startPosition, 
-        glm::vec3(0.0f, 0.0f, 0.0f), 
-        glm::vec3(0.0f, 1.0f, 0.0f));
+        glm::vec3(0.0f, 0.0f, -1.0f), 
+        glm::vec3(0.0f, 0.0f, 1.0f));
 }
 
 void RTSCamera::CameraUpdate(double deltaTime){
@@ -47,6 +47,9 @@ void RTSCamera::MoveCamera(
     cameraPos += deltaTime * frontSpeedMove * cameraFront;
     cameraPos += deltaTime * rightSpeedMove * glm::normalize(glm::cross(cameraFront, cameraUp));
     
+     if (useHeightCap)
+        cameraPos.y = heightCap;
+
     if (blockRotation == false){
         //Mouse camera rotation
         glm::vec3 direction;
@@ -54,14 +57,11 @@ void RTSCamera::MoveCamera(
         direction.y = sin(glm::radians(pitch));
         direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
         cameraFront = glm::normalize(direction);
+        //std::cout<<"yaw"<<yaw<<"pitch"<<pitch<<std::endl;
+        std::cout<<direction.x<<" "<<direction.y<<" "<<direction.z<<std::endl;
     }
 
-    if (useHeightCap)
-        cameraPos.y = heightCap;
-
     view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-
-    std::cout<<"yaw"<<yaw<<"pitch"<<pitch<<std::endl;
 }
 
 glm::mat4 RTSCamera::GetP() const{

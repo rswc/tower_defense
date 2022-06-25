@@ -8,10 +8,10 @@
 class SillyScene : public Scene
 {
 private:
-    float yaw = 0, pitch = 0, speed_fwd = 0, speed_right = 0;
+    float yaw = -90, pitch = -45, speed_fwd = 0, speed_right = 0;
     float lastX = 0, lastY = 0;
     float fov = 50.0f;
-    bool firstMouse = true;
+    bool firstMouse = true, focus = true;
 public:
     SillyScene();
     SillyScene(const SillyScene&) = delete;
