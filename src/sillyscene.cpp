@@ -148,10 +148,10 @@ void SillyScene::OnMouseButton(GLFWwindow* window, int button, int action, int m
 }
 
 void SillyScene::OnScroll(GLFWwindow* window, double xoffset, double yoffset) {
-	fov -= (float)yoffset;
-    if (fov < 15.0f)
-        fov = 15.0f;
-    if (fov > 50.0f)
-        fov = 50.0f; 
-	activeCamera.ZoomCamera(yoffset);
+	fov -= (float)yoffset * 5;
+    if (fov < 30.0f)
+        fov = 30.0f;
+    if (fov > 90.0f)
+        fov = 90.0f; 
+	activeCamera.ZoomCamera(fov);
 }

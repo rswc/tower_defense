@@ -91,7 +91,7 @@ int main(void)
 
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetMouseButtonCallback(window, mouse_button_callback);
-	glfwSetScrollCallback(window, mouse_callback);
+	glfwSetScrollCallback(window, scroll_callback);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  
 
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);

@@ -83,5 +83,6 @@ void RTSCamera::SetCameraHeightCap(bool toggle, float cap){
 }
 
 void RTSCamera::ZoomCamera(float fov){
+    std::cerr<<"Zoom: "<<fov<<std::endl;
     P = glm::perspective(glm::radians(fov), 1.0f, 0.01f, 100.0f);
 }
