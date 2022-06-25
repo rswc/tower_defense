@@ -16,6 +16,14 @@ Camera::Camera() {
     cameraDirection = glm::normalize(GetPosition() - glm::vec3(0.0f, 0.0f, 0.0f));
 }
 
+void Camera::SetScreenSize(float width, float height) {
+    screenSize = glm::vec2(width, height);
+}
+
+glm::vec2 Camera::GetScreenSize() const {
+    return screenSize;
+}
+
 glm::mat4 Camera::GetV() const {
     return glm::lookAt(
         GetPosition(),
@@ -48,3 +56,6 @@ glm::vec3 Camera::GetRight() const {
 }
 
 
+glm::mat4 Camera::GetOrtho() const {
+    return glm::ortho(0.0f, screenSize.x, 0.0f, screenSize.y);
+}

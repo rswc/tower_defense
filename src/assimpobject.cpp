@@ -43,8 +43,8 @@ void AssimpObject::Draw(const Camera& camera) const {
 	glVertexAttribPointer(spLambertTextured->a("vertex"), 4, GL_FLOAT, false, 0, meshes[0].vertices.data()); 
 
         
-	glEnableVertexAttribArray(spLambertTextured->a("texCoords"));
-	glVertexAttribPointer(spLambertTextured->a("texCoords"), 2, GL_FLOAT, false, 0, meshes[0].textures.data()); 
+	glEnableVertexAttribArray(spLambertTextured->a("texCoord"));
+	glVertexAttribPointer(spLambertTextured->a("texCoord"), 2, GL_FLOAT, false, 0, meshes[0].textures.data()); 
 
        
 	glEnableVertexAttribArray(spLambertTextured->a("normal"));
@@ -53,7 +53,7 @@ void AssimpObject::Draw(const Camera& camera) const {
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
-    glUniform1i(spLambertTextured->u("textureMap0"), 0);
+    glUniform1i(spLambertTextured->u("tex"), 0);
 
     // glActiveTexture(GL_TEXTURE1);
     // glBindTexture(GL_TEXTURE_2D, textSpecular);
@@ -63,7 +63,7 @@ void AssimpObject::Draw(const Camera& camera) const {
 
     //Disable vertex attribute array
 	glDisableVertexAttribArray(spLambertTextured->a("vertex"));
-	glDisableVertexAttribArray(spLambertTextured->a("texCoords"));
+	glDisableVertexAttribArray(spLambertTextured->a("texCoord"));
 	glDisableVertexAttribArray(spLambertTextured->a("normal"));
 
 }

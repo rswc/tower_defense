@@ -7,3 +7,5 @@ include/*
 *.dll
 src/AssimpLoader/
 models/
+
+ta_Test*.png
