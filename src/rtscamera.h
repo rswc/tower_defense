@@ -3,9 +3,6 @@
 #include <glm/matrix.hpp>
 #include "camera.h"
 
-
-
-
 class RTSCamera : public Camera
 {
     private:
@@ -33,7 +30,7 @@ class RTSCamera : public Camera
     public:
         RTSCamera();
         RTSCamera(glm::vec3 startPosition);
-        void CameraUpdate(double deltaTime);
+        void CameraUpdate(double deltaTime) {};
         void MoveCamera(
             float frontSpeedMove,
             float rightSpeedMove, 
