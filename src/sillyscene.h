@@ -8,7 +8,10 @@
 class SillyScene : public Scene
 {
 private:
-    float speed_yaw = 0, speed_pitch = 0, speed_fwd = 0, speed_right = 0;
+    float yaw = -90, pitch = -45, speed_fwd = 0, speed_right = 0;
+    float lastX = 0, lastY = 0;
+    float fov = 50.0f;
+    bool firstMouse = true, focus = true;
 public:
     SillyScene();
     SillyScene(const SillyScene&) = delete;
@@ -18,5 +21,8 @@ public:
     ~SillyScene() = default;
     void Update(double dt);
     void OnKey(GLFWwindow* window, int key, int scancode, int action, int mod) override;
+    void OnMouse(GLFWwindow* window, double xpos, double ypos) override;
+    void OnMouseButton(GLFWwindow* window, int button, int action, int mods) override;
+    void OnScroll(GLFWwindow* window, double xoffset, double yoffset) override;
 };
 

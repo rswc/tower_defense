@@ -21,12 +21,24 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	scene->OnKey(window, key, scancode, action, mod);
 }
 
+
+void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
+	scene->OnMouse(window, xpos, ypos);
+}
+
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
+	scene->OnMouseButton(window, button, action, mods);
+}
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
+	scene->OnScroll(window, xoffset, yoffset);
+}
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 	if (scene)
 		scene->SetScreenSize((float)width, (float)height);
 }
-
 
 void runTests() {
 	// Run Test for logical Grid class
@@ -76,7 +88,14 @@ int main(void)
 	scene->SetScreenSize(500.0f, 500.0f);
 
 	glfwSetKeyCallback(window, key_callback);
+
+	glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetMouseButtonCallback(window, mouse_button_callback);
+	glfwSetScrollCallback(window, mouse_callback);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  
+
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
 
 	glfwSetTime(0);
 	double dt = 0.0;
