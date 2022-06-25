@@ -35,7 +35,3 @@ void Scene::Instantiate(std::unique_ptr<GameObject> object) {
 void Scene::SetScreenSize(float width, float height) {
     activeCamera.SetScreenSize(width, height);
 }
-
-void Scene::Instantiate(std::unique_ptr<GameObject> object) {
-    objects.push_back(std::move(object));
-}

@@ -58,7 +58,7 @@ void RTSCamera::MoveCamera(
         direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
         cameraFront = glm::normalize(direction);
         //std::cout<<"yaw"<<yaw<<"pitch"<<pitch<<std::endl;
-        std::cout<<direction.x<<" "<<direction.y<<" "<<direction.z<<std::endl;
+        //std::cout<<direction.x<<" "<<direction.y<<" "<<direction.z<<std::endl;
     }
 
     view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
