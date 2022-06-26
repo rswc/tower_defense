@@ -281,3 +281,35 @@ GameGrid::GameGridMesh GameGrid::generateBaseMesh(GameGrid::MeshVersion version)
     
     return mesh;
 }
+
+GameGrid::GamePath GameGrid::generateGamePath(const Grid& grid) {
+    GamePath path;
+    
+    GameDirEnum last_dir = GAME_DIR_NONE;
+    GameDirEnum next_dir = GAME_DIR_NONE;
+    for (auto &p : grid.m_path) {
+        Grid::GridPosition logical_pos = p.first;
+        Grid::DirEnum logical_dir = p.second;
+
+        GameGridPosition center = gridToModelPosition(logical_pos);
+        next_dir = (logical_dir == Grid::DIRECTION_NONE ? GAME_DIR_NONE : logical_dir * 2);
+
+        if (last_dir == GAME_DIR_NONE)  {
+            GameDirEnum opp_dir = grid.oppositeDirection(logical_dir) * 2;
+            path.points.emplace_back(center + dirVector[opp_dir], 1);
+        }
+
+        path.points.emplace_back(center, 1);
+        
+        if (next_dir == GAME_DIR_NONE) { 
+            path.points.emplace_back(center + dirVector[last_dir], 1);
+        }
+        else {
+            path.points.emplace_back(center + dirVector[next_dir], 1);
+        }
+        
+        last_dir = next_dir;
+    }
+
+    return path;
+}

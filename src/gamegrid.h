@@ -21,6 +21,13 @@ public:
         }
     };
 
+
+    struct GamePath {
+        float start_time = 0.5f;
+        float end_time = 0.5f;
+        std::vector<glm::vec4> points;
+    };
+
 private:
     Grid logicalGrid;
 
@@ -84,7 +91,8 @@ private:
     
     GameGridMesh generateSimpleMesh();
     GameGridMesh generateWalledMesh();
-
+    
+    GamePath generateGamePath(const Grid& grid);
     
 public:
     enum : MeshVersion {
@@ -92,6 +100,9 @@ public:
         MESH_V_SECOND = 2,
         MESH_V_THIRD = 3,
     };
+
+    GamePath gamePath;
     GameGridMesh generateBaseMesh(MeshVersion version);
-    GameGrid(const std::vector<std::string>& map) : logicalGrid(map) {}
+    GameGrid(const std::vector<std::string>& map) 
+        : logicalGrid(map), gamePath(generateGamePath(logicalGrid)) {}
 };
