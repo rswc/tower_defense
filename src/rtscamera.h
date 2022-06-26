@@ -25,6 +25,7 @@ class RTSCamera : public Camera
 
         bool blockRotation = false;
         float heightCap = 3.0f;
+        float pitchCapLower = -70.0f, pitchCapUpper = -30.0f;
         bool useHeightCap = true;
 
     public:

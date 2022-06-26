@@ -12,6 +12,8 @@
 #define mouseSensitivity 0.25f
 #define startCameraPosition glm::vec3(0.0f, 3.0f, 3.0f)
 #define cameraHeightCap 3.0f
+#define pitchLowerBound -70.0f
+#define pitchUpperBound -30.0f
 
 SillyScene::SillyScene() {
   activeCamera = RTSCamera(startCameraPosition);
@@ -131,10 +133,10 @@ void SillyScene::OnMouse(GLFWwindow* window, double xpos, double ypos) {
 		yaw   += xoffset;
 		pitch += yoffset;  
 
-		if(pitch > 89.0f)
-			pitch =  89.0f;
-		if(pitch < -89.0f)
-			pitch = -89.0f;
+		if(pitch > pitchUpperBound)
+			pitch =  pitchUpperBound;
+		if(pitch < pitchLowerBound)
+			pitch = pitchLowerBound;
 	}
 }
 

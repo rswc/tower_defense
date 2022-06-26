@@ -28,11 +28,21 @@ void RTSCamera::MoveCamera(
     float deltaTime
     ){
     
+    //Cast forward vector onto the xz plane
+    cameraFront.y = 0;
+    cameraFront = glm::normalize(cameraFront);
+
     cameraPos += deltaTime * frontSpeedMove * cameraFront;
     cameraPos += deltaTime * rightSpeedMove * glm::normalize(glm::cross(cameraFront, cameraUp));
     
-     if (useHeightCap)
+    //RTS mode on
+    if (useHeightCap){
         cameraPos.y = heightCap;
+        if (pitch > pitchCapUpper)
+            pitch = pitchCapUpper;
+        if (pitch < pitchCapLower)
+            pitch = pitchCapLower;
+    }
 
     if (blockRotation == false){
         //Mouse camera rotation
