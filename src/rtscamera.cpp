@@ -27,33 +27,31 @@ void RTSCamera::MoveCamera(
     float roll, 
     float deltaTime
     ){
-    
-    //Cast forward vector onto the xz plane
-    cameraFront.y = 0;
-    cameraFront = glm::normalize(cameraFront);
-
-    cameraPos += deltaTime * frontSpeedMove * cameraFront;
-    cameraPos += deltaTime * rightSpeedMove * glm::normalize(glm::cross(cameraFront, cameraUp));
-    
-    //RTS mode on
-    if (useHeightCap){
-        cameraPos.y = heightCap;
-        if (pitch > pitchCapUpper)
-            pitch = pitchCapUpper;
-        if (pitch < pitchCapLower)
-            pitch = pitchCapLower;
-    }
-
     if (blockRotation == false){
-        //Mouse camera rotation
-        glm::vec3 direction;
-        direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-        direction.y = sin(glm::radians(pitch));
-        direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-        cameraFront = glm::normalize(direction);
-    }
+        //RTS mode on
+        if (useHeightCap){
+            //Cast forward vector onto the xz plane
+            cameraFront.y = 0;
+            cameraFront = glm::normalize(cameraFront);
 
-    view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+            if (pitch > pitchCapUpper)
+                pitch = pitchCapUpper;
+            if (pitch < pitchCapLower)
+                pitch = pitchCapLower;
+        }
+    
+        cameraPos += deltaTime * frontSpeedMove * cameraFront;
+        cameraPos += deltaTime * rightSpeedMove * glm::normalize(glm::cross(cameraFront, cameraUp));
+        
+            //Mouse camera rotation
+            glm::vec3 direction;
+            direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+            direction.y = sin(glm::radians(pitch));
+            direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+            cameraFront = glm::normalize(direction);
+        
+        view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+    }
 }
 
 glm::mat4 RTSCamera::GetP() const{
@@ -69,9 +67,11 @@ void RTSCamera::SetCameraRotationBlock(bool block){
 }
 
 void RTSCamera::SetCameraHeightCap(bool toggle, float cap){
-    if(toggle)
-        useHeightCap = !useHeightCap;
     heightCap = cap;
+    if(toggle){
+        useHeightCap = !useHeightCap;
+        cameraPos.y = heightCap;
+    }
 }
 
 void RTSCamera::ZoomCamera(float fov){

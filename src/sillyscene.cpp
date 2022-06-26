@@ -17,6 +17,7 @@
 
 SillyScene::SillyScene() {
   activeCamera = RTSCamera(startCameraPosition);
+  activeCamera.SetCameraHeightCap(true, cameraHeightCap);
 
 	auto objAssimp = std::make_unique<AssimpObject>();
 	Instantiate(std::move(objAssimp));
@@ -71,6 +72,7 @@ void SillyScene::OnKey(GLFWwindow* window, int key, int scancode, int action, in
 		// }
 		if(key == GLFW_KEY_C) {
 			activeCamera.SetCameraHeightCap(true, cameraHeightCap);
+			freeFlight = !freeFlight;
 		}
 		if (key == GLFW_KEY_W)
 		{
@@ -133,10 +135,13 @@ void SillyScene::OnMouse(GLFWwindow* window, double xpos, double ypos) {
 		yaw   += xoffset;
 		pitch += yoffset;  
 
-		if(pitch > pitchUpperBound)
-			pitch =  pitchUpperBound;
-		if(pitch < pitchLowerBound)
-			pitch = pitchLowerBound;
+		if(freeFlight == false)
+		{
+			if(pitch > pitchUpperBound)
+				pitch =  pitchUpperBound;
+			if(pitch < pitchLowerBound)
+				pitch = pitchLowerBound;
+		}
 	}
 }
 
