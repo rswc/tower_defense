@@ -2,8 +2,8 @@
 #include "sillyobject.h"
 #include "sillyanimatedobject.h"
 #include "assimpobject.h"
-#include "gamegrid.h"
 #include "gridobject.h"
+#include "mobobject.h"
 #include "text.h"
 
 #define PI 2.141592f // close enough
@@ -21,6 +21,7 @@ SillyScene::SillyScene() {
 	auto objAssimp = std::make_unique<AssimpObject>();
 	Instantiate(std::move(objAssimp));
 
+
 	// remove if annoying
 	auto txt = std::make_unique<Text>("Graphics programming\nis my passion");
 	txt->SetOrigin(glm::vec2(0.02f, 0.5f));
@@ -28,7 +29,8 @@ SillyScene::SillyScene() {
 	txt->SetScale(0.8f);
 	Instantiate(std::move(txt));
 	
-	GameGrid grid({{{
+	// awful, change it later
+	grid = new GameGrid({{{
                 "xxxxxx",
                 "xS...x",
                 "xxxx.x",
@@ -39,11 +41,15 @@ SillyScene::SillyScene() {
                 "x...xx",
                 "xxxxxx"
             }}});
+
 	// GameGrid grid({{{"xxx", "xSx", "x.x", "xEx", "xxx"}}});
-	GameGrid::GameGridMesh mesh = grid.generateBaseMesh(GameGrid::MESH_V_SECOND);
+	GameGrid::GameGridMesh mesh = grid->generateBaseMesh(GameGrid::MESH_V_SECOND);
 	std::cerr << "n of mesh vertices: " << mesh.vertices.size() << std::endl;
 	auto objGrid = std::make_unique<GridObject>(mesh);
 	Instantiate(std::move(objGrid));
+
+	auto mobObj = std::make_unique<MobObject>(grid);
+	Instantiate(std::move(mobObj));
 }
 
 

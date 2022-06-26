@@ -5,6 +5,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "gamegrid.h"
+
 class SillyScene : public Scene
 {
 private:
@@ -12,6 +14,8 @@ private:
     float lastX = 0, lastY = 0;
     float fov = 50.0f;
     bool firstMouse = true, focus = true;
+    
+    GameGrid *grid;
 public:
     SillyScene();
     SillyScene(const SillyScene&) = delete;
