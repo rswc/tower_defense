@@ -41,5 +41,6 @@ public:
     glm::quat GetRotation() const;
     glm::vec3 GetScale() const;
     glm::mat4 GetTransformMatrix() const;
+    float GetDistanceTo(glm::vec3 point) const;
 };
 

@@ -1,5 +1,8 @@
 #include "scene.h"
+
 #include <GLFW/glfw3.h>
+#include <algorithm>
+
 
 void Scene::Update(double dt) {
     for (auto& object : objects)
@@ -35,3 +38,16 @@ void Scene::Instantiate(std::unique_ptr<GameObject> object) {
 void Scene::SetScreenSize(float width, float height) {
     activeCamera.SetScreenSize(width, height);
 }
+
+void Scene::UpdateDrawOrder() {
+    RTSCamera& camera = activeCamera;
+
+    std::sort(
+        objects.begin(),
+        objects.end(),
+        [camera](const std::unique_ptr<GameObject>& a, const std::unique_ptr<GameObject>& b) -> bool {
+            return a->GetOrder(camera) > b->GetOrder(camera);
+        }
+    );
+}
+

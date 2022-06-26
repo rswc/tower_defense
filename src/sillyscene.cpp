@@ -45,6 +45,12 @@ SillyScene::SillyScene() {
 	std::cerr << "n of mesh vertices: " << mesh.vertices.size() << std::endl;
 	auto objGrid = std::make_unique<GridObject>(mesh);
 	Instantiate(std::move(objGrid));
+
+	// HACK: We can get away with only doing this at scene init, SO LONG AS:
+	//     1) No transparent objects exist in the scene besides Text objects
+	//        -> world-space distance to camera does not matter
+	//     2) No runtime instantiation of objects occurs
+	UpdateDrawOrder();
 }
 
 

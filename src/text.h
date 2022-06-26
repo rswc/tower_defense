@@ -12,6 +12,7 @@ private:
     glm::vec2 origin;
     std::string text;
     float scale = 1.0f;
+    float zIndex = -1.0f;
     glm::vec4 color = glm::vec4(1.0f);
     std::vector<float> vertices;
     void updateMesh();
@@ -23,5 +24,6 @@ public:
     void SetColor(glm::vec4 color);
     void Update(double dt) {};
     void Draw(const Camera& camera) const;
+    float GetOrder(const Camera& camera) const override;
 };
 

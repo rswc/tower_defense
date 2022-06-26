@@ -46,3 +46,7 @@ glm::mat4 Transformable::GetTransformMatrix() const {
     return transform.GetMatrix();
 }
 
+float Transformable::GetDistanceTo(glm::vec3 point) const {
+    return glm::distance(transform.position, point);
+}
+

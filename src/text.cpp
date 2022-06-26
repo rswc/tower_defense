@@ -90,3 +90,7 @@ void Text::updateMesh() {
     }
 }
 
+float Text::GetOrder(const Camera& camera) const {
+    return zIndex;
+}
+
