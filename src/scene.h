@@ -26,4 +26,5 @@ class Scene
       virtual void OnScroll(GLFWwindow* window, double xoffset, double yoffset);
       void Instantiate(std::unique_ptr<GameObject> object);
       void SetScreenSize(float width, float height);
+      void UpdateDrawOrder();
 };
