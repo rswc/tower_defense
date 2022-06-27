@@ -5,6 +5,7 @@
 #include "gamegrid.h"
 #include "gridobject.h"
 #include "text.h"
+#include "skybox.h"
 
 #define PI 2.141592f // close enough
 
@@ -45,6 +46,8 @@ SillyScene::SillyScene() {
 	std::cerr << "n of mesh vertices: " << mesh.vertices.size() << std::endl;
 	auto objGrid = std::make_unique<GridObject>(mesh);
 	Instantiate(std::move(objGrid));
+
+	Instantiate(std::move(std::make_unique<Skybox>()));
 
 	// HACK: We can get away with only doing this at scene init, SO LONG AS:
 	//     1) No transparent objects exist in the scene besides Text objects
