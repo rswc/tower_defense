@@ -37,6 +37,7 @@ namespace Resources
 
     extern Font ft_OpenSans;
     extern TextureArray ta_Terrain;
+    extern Cubemap cmp_Skybox;
 
     void Initialize();
     void Free();

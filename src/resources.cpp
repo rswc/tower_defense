@@ -12,6 +12,7 @@ namespace Resources
 {
     Font ft_OpenSans;
     TextureArray ta_Terrain;
+    Cubemap cmp_Skybox;
 
     // Adapted from https://learnopengl.com/In-Practice/Text-Rendering
     Font LoadFont(const char* path, FT_UInt glyphHeight = 48) {
@@ -216,14 +217,62 @@ namespace Resources
         return ta;
     }
 
+    Cubemap LoadCubemap(std::vector<std::string> images) {
+        Cubemap cmp;
+        glGenTextures(1, &cmp.id);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, cmp.id);
+        glActiveTexture(GL_TEXTURE0);
+
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+        for (int i = 0; i < images.size(); i++)
+        {
+            std::vector<unsigned char> image;
+            unsigned width, height;
+
+            unsigned error = lodepng::decode(image, width, height, images[i].c_str());
+            if (error != 0) {
+                std::cerr << "ERROR: Lodepng: " << lodepng_error_text(error) << std::endl;
+                return cmp;
+            } else {
+                glTexImage2D(
+                    GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+                    0,
+                    GL_RGB,
+                    width,
+                    height,
+                    0,
+                    GL_RGBA,
+                    GL_UNSIGNED_BYTE,
+                    image.data() 
+                );
+            }
+        }
+
+        return cmp;
+    }
+
     void Initialize() {
         ft_OpenSans = LoadFont("assets\\OpenSans\\OpenSans-Regular.ttf");
-        ta_Terrain = LoadTextureArray({"assets/ta_Terrain_0.png", "assets/ta_Terrain_1.png"});
+        ta_Terrain = LoadTextureArray({"assets\\ta_Terrain_0.png", "assets\\ta_Terrain_1.png"});
+        cmp_Skybox = LoadCubemap({
+            "assets\\DaylightBox\\Right.png",
+            "assets\\DaylightBox\\Left.png",
+            "assets\\DaylightBox\\Top.png",
+            "assets\\DaylightBox\\Bottom.png",
+            "assets\\DaylightBox\\Front.png",
+            "assets\\DaylightBox\\Back.png",
+        });
     }
 
     void Free() {
         glDeleteTextures(1, &ft_OpenSans.texture);
         glDeleteTextures(1, &ta_Terrain.id);
+        glDeleteTextures(1, &cmp_Skybox.id);
     }
 
 } // namespace Resources
