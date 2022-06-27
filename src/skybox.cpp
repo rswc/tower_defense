@@ -25,7 +25,7 @@ void Skybox::Draw(const Camera& camera) const {
     glDepthFunc(GL_LESS);
 }
 
-float Skybox::GetOrder(const Camera& camera) const {
-    return -0.1f;
+GameObject::DrawOrderPosition Skybox::GetOrder(const Camera& camera) const {
+    return { LAYER_SKYBOX, 0.0f };
 }
 

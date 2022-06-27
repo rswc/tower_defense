@@ -24,6 +24,6 @@ public:
     void SetColor(glm::vec4 color);
     void Update(double dt) {};
     void Draw(const Camera& camera) const;
-    float GetOrder(const Camera& camera) const override;
+    DrawOrderPosition GetOrder(const Camera& camera) const override;
 };
 

@@ -53,6 +53,6 @@ private:
 public:
     void Update(double dt) override {};
     void Draw(const Camera& camera) const override;
-    float GetOrder(const Camera& camera) const override;
+    DrawOrderPosition GetOrder(const Camera& camera) const override;
 };
 
