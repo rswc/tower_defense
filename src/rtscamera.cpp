@@ -1,3 +1,8 @@
+/*
+Credits:
+    Math in RTSCamera class is inspired by learnopengl tutorial. 
+    Source: https://learnopengl.com/Getting-started/Camera
+*/
 #include "rtscamera.h"
 #include <GLFW/glfw3.h>
 #include <iostream>
