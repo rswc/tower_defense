@@ -218,7 +218,7 @@ namespace Resources
 
     void Initialize() {
         ft_OpenSans = LoadFont("assets\\OpenSans\\OpenSans-Regular.ttf");
-        ta_Terrain = LoadTextureArray({"assets/ta_Test_0.png", "assets/ta_Test_1.png"});
+        ta_Terrain = LoadTextureArray({"assets/ta_Terrain_0.png", "assets/ta_Terrain_1.png"});
     }
 
     void Free() {
