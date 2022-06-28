@@ -13,8 +13,7 @@ private:
     float yaw = -90, pitch = -45, speed_fwd = 0, speed_right = 0;
     float lastX = 0, lastY = 0;
     float fov = 50.0f;
-    bool firstMouse = true, focus = true;
-    
+    bool firstMouse = true, focus = true, freeFlight = false;
     GameGrid *grid;
 public:
     SillyScene();

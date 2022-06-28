@@ -90,3 +90,7 @@ void Text::updateMesh() {
     }
 }
 
+GameObject::DrawOrderPosition Text::GetOrder(const Camera& camera) const {
+    return { LAYER_UI, zIndex };
+}
+

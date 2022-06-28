@@ -24,14 +24,20 @@ namespace Resources
         std::map<unsigned char, Character> characters;
     };
 
-    extern Font ft_OpenSans;
     struct TextureArray
     {
         GLuint id;
         unsigned int width, height, layers;
     };
 
+    struct Cubemap
+    {
+        GLuint id;
+    };
+
+    extern Font ft_OpenSans;
     extern TextureArray ta_Terrain;
+    extern Cubemap cmp_Skybox;
 
     void Initialize();
     void Free();

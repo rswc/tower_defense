@@ -5,6 +5,7 @@
 #include "gridobject.h"
 #include "mobobject.h"
 #include "text.h"
+#include "skybox.h"
 
 #define PI 2.141592f // close enough
 
@@ -17,6 +18,7 @@
 
 SillyScene::SillyScene() {
   activeCamera = RTSCamera(startCameraPosition);
+  activeCamera.SetCameraHeightCap(true, cameraHeightCap);
 
 	auto objAssimp = std::make_unique<AssimpObject>();
 	Instantiate(std::move(objAssimp));
@@ -50,6 +52,13 @@ SillyScene::SillyScene() {
 
 	auto mobObj = std::make_unique<MobObject>(grid);
 	Instantiate(std::move(mobObj));
+	Instantiate(std::move(std::make_unique<Skybox>()));
+
+	// HACK: We can get away with only doing this at scene init, SO LONG AS:
+	//     1) No transparent objects exist in the scene besides Text objects
+	//        -> world-space distance to camera does not matter
+	//     2) No runtime instantiation of objects occurs
+	UpdateDrawOrder();
 }
 
 
@@ -77,6 +86,7 @@ void SillyScene::OnKey(GLFWwindow* window, int key, int scancode, int action, in
 		// }
 		if(key == GLFW_KEY_C) {
 			activeCamera.SetCameraHeightCap(true, cameraHeightCap);
+			freeFlight = !freeFlight;
 		}
 		if (key == GLFW_KEY_W)
 		{
@@ -139,10 +149,13 @@ void SillyScene::OnMouse(GLFWwindow* window, double xpos, double ypos) {
 		yaw   += xoffset;
 		pitch += yoffset;  
 
-		if(pitch > pitchUpperBound)
-			pitch =  pitchUpperBound;
-		if(pitch < pitchLowerBound)
-			pitch = pitchLowerBound;
+		if(freeFlight == false)
+		{
+			if(pitch > pitchUpperBound)
+				pitch =  pitchUpperBound;
+			if(pitch < pitchLowerBound)
+				pitch = pitchLowerBound;
+		}
 	}
 }
 
