@@ -13,6 +13,7 @@ private:
     float fov = 50.0f;
     bool firstMouse = true, focus = true, freeFlight = false, doCameraRotation = false;
     void updateCursorState(GLFWwindow* window);
+    std::shared_ptr<GameObject> gridObj;
 public:
     SillyScene();
     SillyScene(const SillyScene&) = delete;

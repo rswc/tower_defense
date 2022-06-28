@@ -7,7 +7,7 @@
 #include "text.h"
 #include "skybox.h"
 
-#define PI 2.141592f // close enough
+#define PI 3.141592f // close enough
 
 #define cameraMoveSpeed 2.5f
 #define mouseSensitivity 0.25f
@@ -44,8 +44,14 @@ SillyScene::SillyScene() {
 	// GameGrid grid({{{"xxx", "xSx", "x.x", "xEx", "xxx"}}});
 	GameGrid::GameGridMesh mesh = grid.generateBaseMesh(GameGrid::MESH_V_SECOND);
 	std::cerr << "n of mesh vertices: " << mesh.vertices.size() << std::endl;
-	auto objGrid = std::make_shared<GridObject>(mesh, Plane({0.f, 0.f, 0.f}, {0.f, 1.f, 0.f}));
-	Instantiate(std::move(objGrid));
+
+	gridObj = std::make_shared<GridObject>(
+		mesh,
+		grid.GetMousePickPlane(),
+		grid.GetLogical()
+	);
+
+	Instantiate(gridObj);
 
 	Instantiate(std::move(std::make_shared<Skybox>()));
 

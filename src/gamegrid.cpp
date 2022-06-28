@@ -3,6 +3,7 @@
 #include "utility.h"
 #include "grid.h"
 #include "BaseMesh.h"
+#include "gridobject.h"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -10,7 +11,7 @@
 
 #include <vector>
 
-GameGrid::GameGridPosition GameGrid::gridToModelPosition(Grid::GridPosition p) {
+GameGrid::GameGridPosition GameGrid::gridToModelPosition(Grid::GridPosition p) const {
     if (!logicalGrid.isInsideGrid(p)) {
         return {-1, -1, -1};
     }
@@ -18,7 +19,7 @@ GameGrid::GameGridPosition GameGrid::gridToModelPosition(Grid::GridPosition p) {
     return { p.row + halfRowScale, cellElevation(p), p.col + halfColScale };
 }
 
-inline float GameGrid::cellElevation(Grid::GridPosition p) {
+inline float GameGrid::cellElevation(Grid::GridPosition p) const {
     if (logicalGrid.isInsideGrid(p))
         return logicalGrid.isLand(p) ? elevationStep : 0;
     return elevationStep;
@@ -280,4 +281,15 @@ GameGrid::GameGridMesh GameGrid::generateBaseMesh(GameGrid::MeshVersion version)
     }
     
     return mesh;
+}
+
+Plane GameGrid::GetMousePickPlane() const {
+    return Plane(
+        gridToModelPosition({0, 0}),
+        glm::normalize(depthVector)
+    );
+}
+
+Grid& GameGrid::GetLogical() {
+    return logicalGrid;
 }

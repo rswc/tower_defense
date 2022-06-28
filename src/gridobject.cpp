@@ -46,3 +46,7 @@ void GridObject::Draw(const Camera& camera) const {
 }
 
 void GridObject::Update(double deltaTime){}
+
+Grid& GridObject::GetLogical() {
+	return m_grid;
+}
