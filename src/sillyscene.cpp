@@ -20,11 +20,11 @@ SillyScene::SillyScene() {
   activeCamera = RTSCamera(startCameraPosition);
   activeCamera.SetCameraHeightCap(true, cameraHeightCap);
 
-	auto objAssimp = std::make_unique<AssimpObject>();
+	auto objAssimp = std::make_shared<AssimpObject>();
 	Instantiate(std::move(objAssimp));
 
 	// remove if annoying
-	auto txt = std::make_unique<Text>("Graphics programming\nis my passion");
+	auto txt = std::make_shared<Text>("Graphics programming\nis my passion");
 	txt->SetOrigin(glm::vec2(0.02f, 0.5f));
 	txt->SetColor(glm::vec4(1.0f, 0.2f, 0.3f, 0.7f));
 	txt->SetScale(0.8f);
@@ -44,10 +44,10 @@ SillyScene::SillyScene() {
 	// GameGrid grid({{{"xxx", "xSx", "x.x", "xEx", "xxx"}}});
 	GameGrid::GameGridMesh mesh = grid.generateBaseMesh(GameGrid::MESH_V_SECOND);
 	std::cerr << "n of mesh vertices: " << mesh.vertices.size() << std::endl;
-	auto objGrid = std::make_unique<GridObject>(mesh);
+	auto objGrid = std::make_shared<GridObject>(mesh);
 	Instantiate(std::move(objGrid));
 
-	Instantiate(std::move(std::make_unique<Skybox>()));
+	Instantiate(std::move(std::make_shared<Skybox>()));
 
 	// HACK: We can get away with only doing this at scene init, SO LONG AS:
 	//     1) No transparent objects exist in the scene besides Text objects
