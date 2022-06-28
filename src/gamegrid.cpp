@@ -296,16 +296,16 @@ GameGrid::GamePath GameGrid::generateGamePath(const Grid& grid) {
 
         if (last_dir == GAME_DIR_NONE)  {
             GameDirEnum opp_dir = grid.oppositeDirection(logical_dir) * 2;
-            path.points.emplace_back(center + dirVector[opp_dir], 1);
+            path.emplace_back(center + dirVector[opp_dir]);
         }
 
-        path.points.emplace_back(center, 1);
+        path.emplace_back(center);
         
         if (next_dir == GAME_DIR_NONE) { 
-            path.points.emplace_back(center + dirVector[last_dir], 1);
+            path.emplace_back(center + dirVector[last_dir]);
         }
         else {
-            path.points.emplace_back(center + dirVector[next_dir], 1);
+            path.emplace_back(center + dirVector[next_dir]);
         }
         
         last_dir = next_dir;
