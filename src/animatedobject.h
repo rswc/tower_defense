@@ -1,5 +1,6 @@
 #pragma once
 #include "assimpobject.h"
+#include "assimploaderanimated.h"
 #include "Animator.h"
 
 
@@ -8,7 +9,7 @@ class AnimatedObject : public AssimpObject
     private: 
         std::vector<AnimatedMesh> meshes;
         //Animation danceAnimation;
-        //Animator animator;
+        Animator* animator;
 
     public: 
         void Draw(const Camera& camera) const override;

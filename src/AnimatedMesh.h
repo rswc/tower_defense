@@ -1,6 +1,8 @@
 #pragma once
-#include <vector>
+
 #include <glm/glm.hpp>
+#include <vector>
+
 
 #define MAX_BONE_INFLUENCE 4
 
@@ -29,14 +31,23 @@ struct BoneInfo
     glm::mat4 offset;
 
 };
+
+struct singleBone {
+    int ids[MAX_BONE_INFLUENCE];
+};
+
+struct singleWeight {
+    float weights[MAX_BONE_INFLUENCE];
+};
+
 class AnimatedMesh{
     public: 
         std::vector<glm::vec3> vertices;
         std::vector<glm::vec3> normals;
         std::vector<glm::vec2> textures;
         std::vector<unsigned int> indices;
-        std::vector<int[MAX_BONE_INFLUENCE]> boneIDs;
-        std::vector<float[MAX_BONE_INFLUENCE]> weights;
+        std::vector<glm::vec4> boneIDs;
+        std::vector<glm::vec4> weights;
         std::vector<Vertex> vertices_animated;
 
 };

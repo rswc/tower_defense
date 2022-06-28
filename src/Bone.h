@@ -23,14 +23,10 @@ struct KeyScale
     glm::vec3 scale;
     float timeStamp;
 };
-glm::vec3 GetGLMVec(const aiVector3D& vec) 
-{ 
-    return glm::vec3(vec.x, vec.y, vec.z); 
-}
-glm::quat GetGLMQuat(const aiQuaternion& pOrientation)
-{
-    return glm::quat(pOrientation.w, pOrientation.x, pOrientation.y, pOrientation.z);
-}
+
+glm::vec3 GetGLMVec(const aiVector3D& vec);
+glm::quat GetGLMQuat1(const aiQuaternion& pOrientation);
+
 class Bone
 {
     private:
@@ -72,7 +68,7 @@ class Bone
             aiQuaternion aiOrientation = channel->mRotationKeys[rotationIndex].mValue;
             float timeStamp = channel->mRotationKeys[rotationIndex].mTime;
             KeyRotation data;
-            data.orientation = GetGLMQuat(aiOrientation);
+            data.orientation = GetGLMQuat1(aiOrientation);
             data.timeStamp = timeStamp;
             m_Rotations.push_back(data);
         }

@@ -8,6 +8,8 @@ out vec4 pixelColor; //Zmienna wyjsciowa fragment shadera. Zapisuje sie do niej 
 //Zmienne interpolowane
 in vec2 texCoords;
 
+
 void main(void) {
 	pixelColor=texture(tex,texCoords);
+	//pixelColor=vec4(color,1.0);
 }

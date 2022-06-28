@@ -1,11 +1,15 @@
 #pragma once
-#include <functional>
+
+#include "assimploaderanimated.h"
 #include "Bone.h"
+
+#include <functional>
+
 #include <vector>
 #include <map>
 #include <glm/glm.hpp>
 
-#include "assimploaderanimated.h"
+#include <assimp/Importer.hpp>
 
 struct AssimpNodeData
 {
@@ -14,19 +18,17 @@ struct AssimpNodeData
     int childrenCount;
     std::vector<AssimpNodeData> children;
 };
-glm::mat4 ConvertMatrixToGLMFormat(const aiMatrix4x4& from)
-{
-    glm::mat4 to;
-    //the a,b,c,d in assimp is the row ; the 1,2,3,4 is the column
-    to[0][0] = from.a1; to[1][0] = from.a2; to[2][0] = from.a3; to[3][0] = from.a4;
-    to[0][1] = from.b1; to[1][1] = from.b2; to[2][1] = from.b3; to[3][1] = from.b4;
-    to[0][2] = from.c1; to[1][2] = from.c2; to[2][2] = from.c3; to[3][2] = from.c4;
-    to[0][3] = from.d1; to[1][3] = from.d2; to[2][3] = from.d3; to[3][3] = from.d4;
-    return to;
-}
+
+glm::mat4 ConvertMatrixToGLMFormat(const aiMatrix4x4& from);
 
 class Animation
 {
+    private:
+        float m_Duration;
+        int m_TicksPerSecond;
+        std::vector<Bone> m_Bones;
+        AssimpNodeData m_RootNode;
+        std::map<std::string, BoneInfo> m_BoneInfoMap;
     public:
         Animation() = default;
 
@@ -40,6 +42,26 @@ class Animation
             m_TicksPerSecond = animation->mTicksPerSecond;
             ReadHeirarchyData(m_RootNode, scene->mRootNode);
             ReadMissingBones(animation, *model);
+            // std::cout<<"Animation duration: "<<m_Duration<<std::endl;
+            // std::cout<<"Animation ticks per second: "<<m_TicksPerSecond<<std::endl;
+            // std::cout<<"Root node name: "<<m_RootNode.name<<std::endl;
+            // std::cout<<"Root node children count: "<<m_RootNode.childrenCount<<std::endl;
+            // std::cout<<"Root node children vector size: "<<m_RootNode.children.size()<<std::endl;
+            // for(auto p : m_BoneInfoMap){
+            //     std::cout<<p.first<<std::endl;
+            //     std::cout<<"m_BoneInfoMap matrix"<<std::endl;
+            //     // for(int i = 0; i < 4; i++)
+            //     // {
+            //     //     for(int j = 0; j < 4; j++)
+            //     //     {
+            //     //         std::cout<<p.second.offset[i][j]<<" ";
+            //     //     }
+            //     //     std::cout<<std::endl;
+            //     // }
+            // }
+         
+      
+
         }
 
         ~Animation()
@@ -102,7 +124,23 @@ class Animation
 
             dest.name = src->mName.data;
             dest.transformation = ConvertMatrixToGLMFormat(src->mTransformation);
+            //dest.transformation = glm::mat4(1.0f);
             dest.childrenCount = src->mNumChildren;
+
+            // std::cout<<"Node name: "<<dest.name<<std::endl;
+            // std::cout<<"Node children count: "<<dest.childrenCount<<std::endl;
+            // std::cout<<"Transformation matrices"<<std::endl;
+            // for(int i = 0; i < 4; i++)
+            // {
+            //     for(int j = 0; j < 4; j++)
+            //     {
+            //         std::cout<<dest.transformation[i][j]<<" ";
+            //     }
+            //     std::cout<<std::endl;
+            // }
+            
+            // std::cout<<std::endl;
+            // std::cout<<std::endl;
 
             for (int i = 0; i < src->mNumChildren; i++)
             {
@@ -110,10 +148,8 @@ class Animation
                 ReadHeirarchyData(newData, src->mChildren[i]);
                 dest.children.push_back(newData);
             }
+
+            
         }
-        float m_Duration;
-        int m_TicksPerSecond;
-        std::vector<Bone> m_Bones;
-        AssimpNodeData m_RootNode;
-        std::map<std::string, BoneInfo> m_BoneInfoMap;
+
 };

@@ -1,12 +1,14 @@
 #pragma once
 
-#include <assimp/Importer.hpp>
+#include "AnimatedMesh.h"
+
+
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 #include <vector>
 #include <map>
 #include <iostream>
-#include "AnimatedMesh.h"
+
 
 class AnimatedAssimpLoader
 {
