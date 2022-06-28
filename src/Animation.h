@@ -4,9 +4,8 @@
 #include <vector>
 #include <map>
 #include <glm/glm.hpp>
-#include <assimp/scene.h>
 
-#include "animatedobject.h"
+#include "assimploaderanimated.h"
 
 struct AssimpNodeData
 {

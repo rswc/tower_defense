@@ -3,6 +3,7 @@
 #include "BaseMesh.h"
 #include "gameobject.h"
 #include "lodepng.h"
+#include "assimploader.h"
 #include <vector>
 #include <iostream>
 

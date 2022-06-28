@@ -31,10 +31,12 @@ struct BoneInfo
 };
 class AnimatedMesh{
     public: 
-        std::vector<glm::vec4> vertices;
-        std::vector<glm::vec4> normals;
+        std::vector<glm::vec3> vertices;
+        std::vector<glm::vec3> normals;
         std::vector<glm::vec2> textures;
         std::vector<unsigned int> indices;
+        std::vector<int[MAX_BONE_INFLUENCE]> boneIDs;
+        std::vector<float[MAX_BONE_INFLUENCE]> weights;
         std::vector<Vertex> vertices_animated;
 
 };

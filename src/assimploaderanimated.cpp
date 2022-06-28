@@ -1,5 +1,35 @@
 #include "assimploaderanimated.h"
 
+void SetVertexBoneDataToDefault(Vertex& vertex)
+{
+    for (int i = 0; i < MAX_BONE_INFLUENCE; i++)
+    {
+        vertex.m_BoneIDs[i] = -1;
+        vertex.m_Weights[i] = 0.0f;
+    }
+}
+void SetVertexBoneData(Vertex& vertex, int boneID, float weight)
+{
+    for (int i = 0; i < MAX_BONE_INFLUENCE; ++i)
+    {
+        if (vertex.m_BoneIDs[i] < 0)
+        {
+            vertex.m_Weights[i] = weight;
+            vertex.m_BoneIDs[i] = boneID;
+            break;
+        }
+    }
+}
+glm::mat4 ConvertMatrixToGLMFormat(const aiMatrix4x4& from)
+{
+    glm::mat4 to;
+    //the a,b,c,d in assimp is the row ; the 1,2,3,4 is the column
+    to[0][0] = from.a1; to[1][0] = from.a2; to[2][0] = from.a3; to[3][0] = from.a4;
+    to[0][1] = from.b1; to[1][1] = from.b2; to[2][1] = from.b3; to[3][1] = from.b4;
+    to[0][2] = from.c1; to[1][2] = from.c2; to[2][2] = from.c3; to[3][2] = from.c4;
+    to[0][3] = from.d1; to[1][3] = from.d2; to[2][3] = from.d3; to[3][3] = from.d4;
+    return to;
+}
 
 void AnimatedAssimpLoader::loadModel(std::string filename){
     Assimp::Importer importer;
@@ -55,6 +85,16 @@ void AnimatedAssimpLoader::loadModel(std::string filename){
                     newMesh.indices.push_back(face.mIndices[j]);
                 }
             }
+
+            for (int i = 0; i < newMesh.vertices_animated.size(); i++)
+            {
+                newMesh.vertices.push_back(newMesh.vertices_animated[i].Position);
+                newMesh.normals.push_back(newMesh.vertices_animated[i].Normal);  
+                newMesh.textures.push_back(newMesh.vertices_animated[i].TexCoords);
+                newMesh.boneIDs.push_back(newMesh.vertices_animated[i].m_BoneIDs);
+                newMesh.weights.push_back(newMesh.vertices_animated[i].m_Weights);
+            }
+
             meshes.push_back(newMesh);
         }
     }
@@ -64,37 +104,6 @@ void AnimatedAssimpLoader::loadModel(std::string filename){
 
 std::vector<AnimatedMesh> AnimatedAssimpLoader::getMeshes(){
     return meshes;
-}
-
-void SetVertexBoneDataToDefault(Vertex& vertex)
-{
-    for (int i = 0; i < MAX_BONE_INFLUENCE; i++)
-    {
-        vertex.m_BoneIDs[i] = -1;
-        vertex.m_Weights[i] = 0.0f;
-    }
-}
-void SetVertexBoneData(Vertex& vertex, int boneID, float weight)
-{
-    for (int i = 0; i < MAX_BONE_INFLUENCE; ++i)
-    {
-        if (vertex.m_BoneIDs[i] < 0)
-        {
-            vertex.m_Weights[i] = weight;
-            vertex.m_BoneIDs[i] = boneID;
-            break;
-        }
-    }
-}
-glm::mat4 ConvertMatrixToGLMFormat(const aiMatrix4x4& from)
-{
-    glm::mat4 to;
-    //the a,b,c,d in assimp is the row ; the 1,2,3,4 is the column
-    to[0][0] = from.a1; to[1][0] = from.a2; to[2][0] = from.a3; to[3][0] = from.a4;
-    to[0][1] = from.b1; to[1][1] = from.b2; to[2][1] = from.b3; to[3][1] = from.b4;
-    to[0][2] = from.c1; to[1][2] = from.c2; to[2][2] = from.c3; to[3][2] = from.c4;
-    to[0][3] = from.d1; to[1][3] = from.d2; to[2][3] = from.d3; to[3][3] = from.d4;
-    return to;
 }
 
 void AnimatedAssimpLoader::ExtractBoneWeightForVertices(std::vector<Vertex>& vertices, aiMesh* mesh, const aiScene* scene)

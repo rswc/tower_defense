@@ -7,7 +7,7 @@
 
 #include "shaderprogram.h"
 #include "camera.h"
-#include "assimploader.h"
+
 
 
 AssimpObject::AssimpObject() {
