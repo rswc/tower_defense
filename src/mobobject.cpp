@@ -10,7 +10,10 @@
 #include "assimploader.h"
 #include "utility.h"
 
-MobObject::MobObject(GameGrid *gameGridPtr) : gameGrid(gameGridPtr) {
+MobObject::MobObject(GameGrid *gameGridPtr, int id) {
+    gameGrid = gameGridPtr;
+    m_id = id;
+
     Rotate(-AI_MATH_PI/2, glm::vec3(1.0f, 0.0f, 0.0f));
     // Rotate(30.0f, glm::vec3(1.0f, 0.0f, 0.0f));
     SetScale(glm::vec3(0.05, 0.05f, 0.05f));
@@ -24,6 +27,7 @@ MobObject::MobObject(GameGrid *gameGridPtr) : gameGrid(gameGridPtr) {
     auto loader = AssimpLoader();
     loader.loadModel("assets/baloon.fbx");
     meshes = loader.getMeshes();
+    
 }
 
 MobObject::~MobObject() {
@@ -87,8 +91,8 @@ void MobObject::Update(double deltaTime) {
     Rotate(AI_MATH_PI * deltaTime, glm::vec3(0, 0, 1));
 
     if (finished()) {
-        restart();
-        // deactivate();
+        // restart();
+        deactivate();
     }
 }
 
@@ -97,7 +101,7 @@ MobObject::MobPosition MobObject::advanceInTime(MobObject::MobPosition curr, flo
     int pathSegments = getPathSegments();
 
     MobPosition next;
-    float segmentsFrac = (curr.timeLeft + time) / timePerSegment;
+    float segmentsFrac = curr.timeLeft + time / timePerSegment;
     next.timeLeft = segmentsFrac - floor(segmentsFrac);
     next.segment = std::min(curr.segment + (int) floor(segmentsFrac), pathSegments);
     return next;

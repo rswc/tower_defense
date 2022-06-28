@@ -1,5 +1,5 @@
 #pragma once
-#
+
 #include "BaseMesh.h"
 #include "gameobject.h"
 #include "lodepng.h"
@@ -8,8 +8,13 @@
 #include <iostream>
 
 typedef unsigned int GLuint;
+
+class MobManager;
+
 class MobObject : public GameObject
 {
+    friend MobManager;
+
 private:
     GLuint texture, textSpecular, textDiffuse;
     void importMesh();
@@ -28,20 +33,20 @@ private:
     };
 
     static constexpr float EPS = 1e-9;
-
-    GameGrid * gameGrid;
-    MobPosition currentPos;
-    float timePerSegment = 1.0f;
-    bool active = true;
-    
-    // Vector in model space 
+    static constexpr float timePerSegment = 0.2f;
     static constexpr float modelHeight = 1.0f;
     static constexpr MobPosition startingPosition = { 0, 0.5f };
+
+    GameGrid * gameGrid = nullptr;
+    MobPosition currentPos = startingPosition;
+    bool active = false;
+    int m_id;
     
 public:
 
     inline void restart() {
         currentPos = startingPosition;
+        active = true;
     }
 
     inline bool finished() const {
@@ -60,9 +65,11 @@ public:
     MobPosition advanceInTime(MobPosition curr, float time);
     GamePosition getModelHitCoordinates(float afterTime);
     GamePosition translateToGamePosition(MobPosition pos);
+    
+    inline int id() const { return m_id; }
 
     std::vector<BaseMesh> meshes;
-    MobObject(GameGrid * gameGridPointer);
+    MobObject(GameGrid * gameGridPointer, int id);
     ~MobObject();
     void Draw(const Camera& camera) const override;
     void Update(double deltaTime)  override;
