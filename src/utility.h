@@ -21,4 +21,9 @@ void initializeMatrix(std::vector<std::vector<T>>& matrix, int rows, int cols, T
 // Assume: A, B,C are given in counter-clockwise order
 glm::vec3 calculateTriangleNormal(glm::vec3 A, glm::vec3 B, glm::vec3 C);
 
+// Calculate Point on Quadratic Bezier Curve using linear interpolation - glm::mix
+// time argument is in range [0, 1]
+// Assume: A, B, C are given in correct order -> Bezier Curve between A - C with B as point inbetween
+glm::vec3 quadraticBezierCurve(glm::vec3 A, glm::vec3 B, glm::vec3 C, float time);
+
 #endif
