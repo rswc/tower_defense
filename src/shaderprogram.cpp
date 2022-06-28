@@ -28,6 +28,7 @@ ShaderProgram* spLambertTextured;
 ShaderProgram* spWireframe;
 ShaderProgram* spText;
 ShaderProgram* spTerrain;
+ShaderProgram* spAnimated;
 
 
 void initShaders() {
@@ -39,6 +40,7 @@ void initShaders() {
 	spWireframe = new ShaderProgram("v_wireframe.glsl", "g_wireframe.glsl", "f_wireframe.glsl");
 	spText = new ShaderProgram("v_text.glsl", NULL, "f_text.glsl");
 	spTerrain = new ShaderProgram("v_terrain.glsl", NULL, "f_terrain.glsl");
+	spAnimated = new ShaderProgram("v_animated.glsl", NULL, "f_animated.glsl");
 }
 
 void freeShaders() {
@@ -50,6 +52,7 @@ void freeShaders() {
 	delete spWireframe;
 	delete spText;
 	delete spTerrain;
+	delete spAnimated;
 }
 
 //Procedura wczytuje plik do tablicy znaków.

@@ -53,6 +53,7 @@ extern ShaderProgram* spLambertTextured;
 extern ShaderProgram* spWireframe;
 extern ShaderProgram* spText;
 extern ShaderProgram* spTerrain;
+extern ShaderProgram* spAnimated;
 
 void initShaders();
 void freeShaders();
