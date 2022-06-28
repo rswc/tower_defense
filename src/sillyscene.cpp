@@ -50,8 +50,6 @@ SillyScene::SillyScene() {
 	auto objGrid = std::make_unique<GridObject>(mesh);
 	Instantiate(std::move(objGrid));
 
-	auto mobObj = std::make_unique<MobObject>(grid);
-	Instantiate(std::move(mobObj));
 	Instantiate(std::move(std::make_unique<Skybox>()));
 
 	// HACK: We can get away with only doing this at scene init, SO LONG AS:
@@ -109,6 +107,15 @@ void SillyScene::OnKey(GLFWwindow* window, int key, int scancode, int action, in
 			focus = false;
 			activeCamera.SetCameraRotationBlock(true); 
 			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); 
+		}
+		
+		if (key == GLFW_KEY_M) {
+			
+			if (mobManager.countFreeMobs() > 0) {
+				mobManager.reactivateMob();
+			} else {
+				Instantiate(std::move(mobManager.createMob(grid)));
+			}
 		}
 		
 	}

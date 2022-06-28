@@ -6,6 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "gamegrid.h"
+#include "mobmanager.h"
 
 class SillyScene : public Scene
 {
@@ -15,6 +16,8 @@ private:
     float fov = 50.0f;
     bool firstMouse = true, focus = true, freeFlight = false;
     GameGrid *grid;
+    MobManager mobManager; 
+
 public:
     SillyScene();
     SillyScene(const SillyScene&) = delete;
