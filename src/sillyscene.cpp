@@ -165,6 +165,23 @@ void SillyScene::OnMouseButton(GLFWwindow* window, int button, int action, int m
 		}
 
 		// do mouse pick
+		Ray ray = activeCamera.ViewportToRay(lastX, lastY);
+		glm::vec3 hit;
+		if (ray.Intersect(gridObj->GetMousePickPlane(), hit))
+		{
+			std::cerr << "Hit: X: " << hit.x << " Y: " << hit.y << " Z: " << hit.z << std::endl;
+			
+			// gridObj->GetLogical()
+			// world to grid position
+			// Check money/whatever
+			// Place tower
+		}
+		else
+		{
+			std::cerr << "No hit!\n";
+		}
+		
+
 	}
 	else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
 	{

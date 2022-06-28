@@ -50,3 +50,7 @@ void GridObject::Update(double deltaTime){}
 Grid& GridObject::GetLogical() {
 	return m_grid;
 }
+
+Plane GridObject::GetMousePickPlane() const {
+	return m_plane.ToWorldSpace(GetTransformMatrix());
+}

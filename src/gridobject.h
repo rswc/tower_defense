@@ -16,8 +16,9 @@ public:
         const Plane& pickPlane,
         const Grid& logicalGrid
     ) : m_mesh(mesh), m_plane(pickPlane), m_grid(logicalGrid) {}
-    
+
     void Draw(const Camera& camera) const override;
     void Update(double deltaTime) override;
     Grid& GetLogical();
+    Plane GetMousePickPlane() const;
 };

@@ -286,7 +286,7 @@ GameGrid::GameGridMesh GameGrid::generateBaseMesh(GameGrid::MeshVersion version)
 Plane GameGrid::GetMousePickPlane() const {
     return Plane(
         gridToModelPosition({0, 0}),
-        glm::normalize(depthVector)
+        glm::normalize(-depthVector)
     );
 }
 
