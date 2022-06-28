@@ -8,20 +8,21 @@
 #include "shaderprogram.h"
 #include "camera.h"
 #include "assimploader.h"
+#include "utility.h"
 
 MobObject::MobObject(GameGrid *gameGridPtr) : gameGrid(gameGridPtr) {
-    Rotate(AI_MATH_PI/2, glm::vec3(1.0f, 0.0f, 0.0f));
+    Rotate(-AI_MATH_PI/2, glm::vec3(1.0f, 0.0f, 0.0f));
     // Rotate(30.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-    SetScale(glm::vec3(0.5f, 0.5f, 0.5f));
+    SetScale(glm::vec3(0.05, 0.05f, 0.05f));
     auto pos = GetPosition();
     pos += glm::vec3(0, 1.f, 0.f);
     SetPosition(pos);
 
-    texture = readTexture("assets/wall.png");
-    textSpecular = readTexture("assets/wall_specular.png");
+    texture = readTexture("assets/baloon_color.png");
+    textSpecular = readTexture("assets/baloon_metal.png");
 
     auto loader = AssimpLoader();
-    loader.loadModel("assets/wall.fbx");
+    loader.loadModel("assets/baloon.fbx");
     meshes = loader.getMeshes();
 }
 
@@ -32,6 +33,8 @@ MobObject::~MobObject() {
 }
 
 void MobObject::Draw(const Camera& camera) const {
+    if (!active) return;
+
     //Activate the shader
     spLambertTextured->use();
 
@@ -72,37 +75,56 @@ void MobObject::Draw(const Camera& camera) const {
 }
 
 void MobObject::Update(double deltaTime) {
+    if (!active) return;
 
-    static int i = 0;
-    const float timePerSegment = 2.0f;
-    static float timeInSegment = 0; 
-    
-    timeInSegment += deltaTime;
-    while (timeInSegment > timePerSegment) {
-        timeInSegment -= timePerSegment;
-        i += 2;
-        
-        if (i + 2 >= gameGrid->gamePath.points.size()) {
-            i = 0;
-        }
+    // std::cerr << "Current Pos: " << currentPos.segment << " " << currentPos.timeLeft << std::endl;
+    currentPos = advanceInTime(currentPos, deltaTime);
+    // std::cerr << "Next Pos: " << currentPos.segment << " " << currentPos.timeLeft << std::endl;
+    GamePosition nextGamePos = translateToGamePosition(currentPos); 
+    // std::cerr << "Game Pos: " << nextGamePos.x << " " << nextGamePos.y << " " << nextGamePos.z << std::endl;
+    SetPosition(nextGamePos);
+
+    Rotate(AI_MATH_PI * deltaTime, glm::vec3(0, 0, 1));
+
+    if (finished()) {
+        restart();
+        // deactivate();
     }
+}
 
-    
-    // lerp:
-    auto p1 = gameGrid->gamePath.points[i];
-    auto p2 = gameGrid->gamePath.points[i + 1];
-    auto p3 = gameGrid->gamePath.points[i + 2];
-    
-    // [0, 1)
-    float normTimeInSegment = timeInSegment / timePerSegment;
-    
-    auto p12 = p2 * normTimeInSegment + p1 * (1 - normTimeInSegment);
-    auto p23 = p3 * normTimeInSegment + p2 * (1 - normTimeInSegment);
+// Truncates to last + 1 segment
+MobObject::MobPosition MobObject::advanceInTime(MobObject::MobPosition curr, float time) {
+    int pathSegments = getPathSegments();
 
-    auto p123 = p23 * normTimeInSegment + p12 * (1 - normTimeInSegment);
-    // std::cerr << "Setting Position to: " << p123.x << " " << p123.z << ", " << i << ", " << timeInSegment << std::endl;
-    auto pos = p123 + glm::vec4(0, 0.5f, 0, 0);
-    SetPosition(pos);
+    MobPosition next;
+    float segmentsFrac = (curr.timeLeft + time) / timePerSegment;
+    next.timeLeft = segmentsFrac - floor(segmentsFrac);
+    next.segment = std::min(curr.segment + (int) floor(segmentsFrac), pathSegments);
+    return next;
+}
+
+MobObject::GamePosition MobObject::getModelHitCoordinates(float afterTime = 0.0f) {
+    MobPosition futurePosition = (afterTime < EPS ? currentPos : advanceInTime(currentPos, afterTime));
+    GamePosition futureInGame = translateToGamePosition(futurePosition);
+    futureInGame.z += modelHeight;
+    return futureInGame;
+}
+
+// Assume: pos is valid in terms of path length
+// -> timeLeft c [0, 1], segment c [0, pathSegments]
+MobObject::GamePosition MobObject::translateToGamePosition(MobObject::MobPosition pos) {
+    PathIndex pindex = translateToPathIndex(pos.segment);
+    // std::cerr << "Translating: " << pos.segment << " (seg) => " << pindex - 1 << " " << pindex << " " << pindex + 1 << std::endl;
+    auto first = gameGrid->gamePathNode(pindex - 1);
+    // std::cerr << "First: " << first.x << " " << first.y << " " << first.z << std::endl;
+    GamePosition bezierCurvePoint = quadraticBezierCurve(
+
+        gameGrid->gamePathNode(pindex - 1),
+        gameGrid->gamePathNode(pindex),
+        gameGrid->gamePathNode(pindex + 1),
+        pos.timeLeft
+    );
+    return bezierCurvePoint;
 }
 
 GLuint MobObject::readTexture(const char* filename) {	
