@@ -44,7 +44,7 @@ SillyScene::SillyScene() {
 	// GameGrid grid({{{"xxx", "xSx", "x.x", "xEx", "xxx"}}});
 	GameGrid::GameGridMesh mesh = grid.generateBaseMesh(GameGrid::MESH_V_SECOND);
 	std::cerr << "n of mesh vertices: " << mesh.vertices.size() << std::endl;
-	auto objGrid = std::make_shared<GridObject>(mesh);
+	auto objGrid = std::make_shared<GridObject>(mesh, Plane({0.f, 0.f, 0.f}, {0.f, 1.f, 0.f}));
 	Instantiate(std::move(objGrid));
 
 	Instantiate(std::move(std::make_shared<Skybox>()));
@@ -67,21 +67,10 @@ void SillyScene::Update(double dt) {
 
 void SillyScene::OnKey(GLFWwindow* window, int key, int scancode, int action, int mod) {
     if (action == GLFW_PRESS) {
-		// if (key == GLFW_KEY_LEFT) {
-		// 	pitch = PI;
-		// }
-		// if (key == GLFW_KEY_RIGHT) {
-		// 	pitch = -PI;
-		// }
-		// if (key == GLFW_KEY_UP) {
-		// 	yaw = PI;
-		// }
-		// if (key == GLFW_KEY_DOWN) {
-		// 	yaw = -PI;
-		// }
 		if(key == GLFW_KEY_C) {
 			activeCamera.SetCameraHeightCap(true, cameraHeightCap);
 			freeFlight = !freeFlight;
+			updateCursorState(window);
 		}
 		if (key == GLFW_KEY_W)
 		{
@@ -102,8 +91,8 @@ void SillyScene::OnKey(GLFWwindow* window, int key, int scancode, int action, in
 		if (key == GLFW_KEY_ESCAPE)
 		{
 			focus = false;
-			activeCamera.SetCameraRotationBlock(true); 
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); 
+			activeCamera.SetCameraRotationBlock(true);
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 		}
 		
 	}
@@ -131,12 +120,13 @@ void SillyScene::OnMouse(GLFWwindow* window, double xpos, double ypos) {
         firstMouse = false;
     }
 
-	if (focus == true) 
+	if (!focus)
+		return;
+	
+	if (doCameraRotation || freeFlight) 
 	{
 		float xoffset = xpos - lastX;
 		float yoffset = lastY - ypos; // reversed since y-coordinates range from bottom to top
-		lastX = xpos;
-		lastY = ypos;
 		
 		xoffset *= mouseSensitivity;
 		yoffset *= mouseSensitivity;
@@ -152,14 +142,33 @@ void SillyScene::OnMouse(GLFWwindow* window, double xpos, double ypos) {
 				pitch = pitchLowerBound;
 		}
 	}
+
+	lastX = xpos;
+	lastY = ypos;
 }
 
 void SillyScene::OnMouseButton(GLFWwindow* window, int button, int action, int mods) {
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-		firstMouse = true;
-		focus = true;
-		activeCamera.SetCameraRotationBlock(false); //unblock
+		if (!focus)
+		{
+			firstMouse = true;
+			focus = true;
+			activeCamera.SetCameraRotationBlock(false); //unblock
+			updateCursorState(window);
+			return;
+		}
+
+		// do mouse pick
+	}
+	else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+	{
+		doCameraRotation = true;
+		updateCursorState(window); 
+	}
+	else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE)
+	{
+		doCameraRotation = false;
+		updateCursorState(window);
 	}
 }
 
@@ -170,4 +179,11 @@ void SillyScene::OnScroll(GLFWwindow* window, double xoffset, double yoffset) {
     if (fov > 90.0f)
         fov = 90.0f; 
 	activeCamera.ZoomCamera(fov);
+}
+
+void SillyScene::updateCursorState(GLFWwindow* window) {
+	if (freeFlight || doCameraRotation)
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	else
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); 
 }

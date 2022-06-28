@@ -5,6 +5,14 @@
 
 #include <vector>
 
+struct Plane
+{
+    glm::vec3 point;
+    glm::vec3 normal;
+
+    Plane(glm::vec3 point, glm::vec3 normal) : point(point), normal(normal) {}
+};
+
 // Initialize empty matrix made of std::vector 
 // Example usage: (initialize 5x4 matrix of one's)
 // 1. std::vector<std::vector<int>> matrix; 

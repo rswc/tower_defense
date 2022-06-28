@@ -21,7 +21,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	scene->OnKey(window, key, scancode, action, mod);
 }
 
-
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 	scene->OnMouse(window, xpos, ypos);
 }
@@ -92,7 +91,6 @@ int main(void)
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetMouseButtonCallback(window, mouse_button_callback);
 	glfwSetScrollCallback(window, scroll_callback);
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  
 
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
