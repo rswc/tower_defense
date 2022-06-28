@@ -16,12 +16,7 @@ class MobObject : public GameObject
     friend MobManager;
 
 private:
-    GLuint texture, textSpecular, textDiffuse;
-    void importMesh();
 
-    // Struct made for holding position on GamePath
-    // This model allows for easy calculation of feature positions 
-    
     using GamePosition = glm::vec3;
     using PathIndex = int;
     // Segment is a triple (i - 1, i, i + 1) where i is a PathIndex
@@ -40,7 +35,9 @@ private:
     GameGrid * gameGrid = nullptr;
     MobPosition currentPos = startingPosition;
     bool active = false;
-    int m_id;
+    int m_id = -1;
+    BaseMesh *mesh = nullptr;
+    GLuint tex, texSpecular;
     
 public:
 
@@ -68,12 +65,8 @@ public:
     
     inline int id() const { return m_id; }
 
-    std::vector<BaseMesh> meshes;
     MobObject(GameGrid * gameGridPointer, int id);
-    ~MobObject();
     void Draw(const Camera& camera) const override;
     void Update(double deltaTime)  override;
-    void loadModel(std::string filename);
-    GLuint readTexture(const char* filename);
 };
 

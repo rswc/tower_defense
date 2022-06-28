@@ -10,9 +10,14 @@
 #include "assimploader.h"
 #include "utility.h"
 
+#include "resources.h"
+
 MobObject::MobObject(GameGrid *gameGridPtr, int id) {
     gameGrid = gameGridPtr;
     m_id = id;
+    tex = Resources::GetModelTexture(Resources::MOBOBJECT_TEXTURE);
+    texSpecular = Resources::GetModelTexture(Resources::MOBOBJECT_TEXTURE_SPECULAR);
+    mesh = Resources::GetAssimpModelMesh(Resources::MOBOBJECT_MODEL, 0);
 
     Rotate(-AI_MATH_PI/2, glm::vec3(1.0f, 0.0f, 0.0f));
     // Rotate(30.0f, glm::vec3(1.0f, 0.0f, 0.0f));
@@ -20,20 +25,6 @@ MobObject::MobObject(GameGrid *gameGridPtr, int id) {
     auto pos = GetPosition();
     pos += glm::vec3(0, 1.f, 0.f);
     SetPosition(pos);
-
-    texture = readTexture("assets/baloon_color.png");
-    textSpecular = readTexture("assets/baloon_metal.png");
-
-    auto loader = AssimpLoader();
-    loader.loadModel("assets/baloon.fbx");
-    meshes = loader.getMeshes();
-    
-}
-
-MobObject::~MobObject() {
-    glDeleteTextures(1, &texture);
-    glDeleteTextures(1, &textSpecular);
-    glDeleteTextures(1, &textDiffuse);
 }
 
 void MobObject::Draw(const Camera& camera) const {
@@ -50,26 +41,26 @@ void MobObject::Draw(const Camera& camera) const {
 
     //TODO: pass to Material class?? make separate Mesh class for holding attributes??
 	glEnableVertexAttribArray(spLambertTextured->a("vertex"));
-	glVertexAttribPointer(spLambertTextured->a("vertex"), 4, GL_FLOAT, false, 0, meshes[0].vertices.data()); 
+	glVertexAttribPointer(spLambertTextured->a("vertex"), 4, GL_FLOAT, false, 0, mesh->vertices.data()); 
 
         
 	glEnableVertexAttribArray(spLambertTextured->a("texCoord"));
-	glVertexAttribPointer(spLambertTextured->a("texCoord"), 2, GL_FLOAT, false, 0, meshes[0].textures.data()); 
+	glVertexAttribPointer(spLambertTextured->a("texCoord"), 2, GL_FLOAT, false, 0, mesh->textures.data()); 
 
        
 	glEnableVertexAttribArray(spLambertTextured->a("normal"));
-	glVertexAttribPointer(spLambertTextured->a("normal"), 4, GL_FLOAT, false, 0, meshes[0].normals.data()); 
+	glVertexAttribPointer(spLambertTextured->a("normal"), 4, GL_FLOAT, false, 0, mesh->normals.data()); 
 
 
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture);
+    glBindTexture(GL_TEXTURE_2D, tex);
     glUniform1i(spLambertTextured->u("tex"), 0);
 
     // glActiveTexture(GL_TEXTURE1);
     // glBindTexture(GL_TEXTURE_2D, textSpecular);
     // glUniform1i(spTexturedSpecular->u("textureMap1"), 1);
 
-    glDrawElements(GL_TRIANGLES, meshes[0].indices.size(), GL_UNSIGNED_INT, meshes[0].indices.data());
+    glDrawElements(GL_TRIANGLES, mesh->indices.size(), GL_UNSIGNED_INT, mesh->indices.data());
 
     //Disable vertex attribute array
 	glDisableVertexAttribArray(spLambertTextured->a("vertex"));
@@ -118,9 +109,6 @@ MobObject::GamePosition MobObject::getModelHitCoordinates(float afterTime = 0.0f
 // -> timeLeft c [0, 1], segment c [0, pathSegments]
 MobObject::GamePosition MobObject::translateToGamePosition(MobObject::MobPosition pos) {
     PathIndex pindex = translateToPathIndex(pos.segment);
-    // std::cerr << "Translating: " << pos.segment << " (seg) => " << pindex - 1 << " " << pindex << " " << pindex + 1 << std::endl;
-    auto first = gameGrid->gamePathNode(pindex - 1);
-    // std::cerr << "First: " << first.x << " " << first.y << " " << first.z << std::endl;
     GamePosition bezierCurvePoint = quadraticBezierCurve(
 
         gameGrid->gamePathNode(pindex - 1),
@@ -130,26 +118,3 @@ MobObject::GamePosition MobObject::translateToGamePosition(MobObject::MobPositio
     );
     return bezierCurvePoint;
 }
-
-GLuint MobObject::readTexture(const char* filename) {	
-  GLuint tex;	
-  glActiveTexture(GL_TEXTURE0); 	
-
-  //Wczytanie do pamięci komputera
-  std::vector<unsigned char> image;   //Alokuj wektor do wczytania obrazka
-  unsigned width, height;   //Zmienne do których wczytamy wymiary obrazka
-  //Wczytaj obrazek
-  unsigned error = lodepng::decode(image, width, height, filename);
- 
-  //Import do pamięci karty graficznej
-  glGenTextures(1,&tex); //Zainicjuj jeden uchwyt
-  glBindTexture(GL_TEXTURE_2D, tex); //Uaktywnij uchwyt
-  //Wczytaj obrazek do pamięci KG skojarzonej z uchwytem
-  glTexImage2D(GL_TEXTURE_2D, 0, 4, width, height, 0,
-    GL_RGBA, GL_UNSIGNED_BYTE, (unsigned char*) image.data());	
-
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);	
-
-  return tex;
-} 

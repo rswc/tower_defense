@@ -14,7 +14,7 @@ void MobManager::reactivateMob() {
     for (auto mob_ptr : mobs) { 
         if (mob_ptr->active) continue;
 
-        std::cerr << "Reactivating mob with id: " << nextMobId << std::endl;
+        std::cerr << "Reactivating mob with id: " << mob_ptr->m_id << ", assign new id: " << nextMobId << std::endl;
 
         mob_ptr->m_id = nextMobId++;
         mob_ptr->restart();
@@ -23,7 +23,7 @@ void MobManager::reactivateMob() {
 }
 
 std::unique_ptr<MobObject> MobManager::createMob(GameGrid* gameGridPtr) {
-    std::cerr << "Creating mob with id: " << nextMobId << std::endl;
+    std::cerr << "Creating mob with new id: " << nextMobId << std::endl;
     std::unique_ptr<MobObject> new_mob = std::make_unique<MobObject>(gameGridPtr, nextMobId++);
     mobs.push_back(new_mob.get());
     new_mob->restart();
