@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include "scene.h"
+#include "gridobject.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -11,7 +12,9 @@ private:
     float yaw = -90, pitch = -45, speed_fwd = 0, speed_right = 0;
     float lastX = 0, lastY = 0;
     float fov = 50.0f;
-    bool firstMouse = true, focus = true, freeFlight = false;
+    bool firstMouse = true, focus = true, freeFlight = false, doCameraRotation = false;
+    void updateCursorState(GLFWwindow* window);
+    std::shared_ptr<GridObject> gridObj;
 public:
     SillyScene();
     SillyScene(const SillyScene&) = delete;

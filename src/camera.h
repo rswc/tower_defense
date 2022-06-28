@@ -2,15 +2,18 @@
 
 #include <glm/matrix.hpp>
 #include "transform.h"
+#include "utility.h"
 
 
 class Camera : public Transformable
 {
-private:
+protected:
     constexpr static glm::vec4 FORWARD = glm::vec4(0.0f, 0.0f, -1.0f, 0.0f);
     constexpr static glm::vec3 UP = glm::vec3(0.0f, 1.0f, 0.0f);
-    glm::mat4 p;
+    glm::mat4 p, inverseP;
     glm::vec2 screenSize;
+
+    void SetP(glm::mat4 matrix);
 public:
     Camera();
 
@@ -37,6 +40,8 @@ public:
     void SetScreenSize(float width, float height);
     glm::vec2 GetScreenSize() const;
     glm::mat4 GetOrtho() const;
+
+    Ray ViewportToRay(float x, float y) const;
 
 };
 

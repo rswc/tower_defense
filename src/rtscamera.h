@@ -19,7 +19,6 @@ class RTSCamera : public Camera
         float radius = 5.0f;
         float camX = 0.0f, camZ = 0.0f;
         double time = 0.0f;
-        glm::mat4 P;
 
         glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 
@@ -47,5 +46,4 @@ class RTSCamera : public Camera
         
 
         glm::mat4 GetV() const override;
-        glm::mat4 GetP() const override;
 };

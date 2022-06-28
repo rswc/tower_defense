@@ -7,7 +7,7 @@
 #include "text.h"
 #include "skybox.h"
 
-#define PI 2.141592f // close enough
+#define PI 3.141592f // close enough
 
 #define cameraMoveSpeed 2.5f
 #define mouseSensitivity 0.25f
@@ -20,11 +20,11 @@ SillyScene::SillyScene() {
   activeCamera = RTSCamera(startCameraPosition);
   activeCamera.SetCameraHeightCap(true, cameraHeightCap);
 
-	auto objAssimp = std::make_unique<AssimpObject>();
+	auto objAssimp = std::make_shared<AssimpObject>();
 	Instantiate(std::move(objAssimp));
 
 	// remove if annoying
-	auto txt = std::make_unique<Text>("Graphics programming\nis my passion");
+	auto txt = std::make_shared<Text>("Graphics programming\nis my passion");
 	txt->SetOrigin(glm::vec2(0.02f, 0.5f));
 	txt->SetColor(glm::vec4(1.0f, 0.2f, 0.3f, 0.7f));
 	txt->SetScale(0.8f);
@@ -44,10 +44,16 @@ SillyScene::SillyScene() {
 	// GameGrid grid({{{"xxx", "xSx", "x.x", "xEx", "xxx"}}});
 	GameGrid::GameGridMesh mesh = grid.generateBaseMesh(GameGrid::MESH_V_SECOND);
 	std::cerr << "n of mesh vertices: " << mesh.vertices.size() << std::endl;
-	auto objGrid = std::make_unique<GridObject>(mesh);
-	Instantiate(std::move(objGrid));
 
-	Instantiate(std::move(std::make_unique<Skybox>()));
+	gridObj = std::make_shared<GridObject>(
+		mesh,
+		grid.GetMousePickPlane(),
+		grid.GetLogical()
+	);
+
+	Instantiate(gridObj);
+
+	Instantiate(std::move(std::make_shared<Skybox>()));
 
 	// HACK: We can get away with only doing this at scene init, SO LONG AS:
 	//     1) No transparent objects exist in the scene besides Text objects
@@ -67,21 +73,10 @@ void SillyScene::Update(double dt) {
 
 void SillyScene::OnKey(GLFWwindow* window, int key, int scancode, int action, int mod) {
     if (action == GLFW_PRESS) {
-		// if (key == GLFW_KEY_LEFT) {
-		// 	pitch = PI;
-		// }
-		// if (key == GLFW_KEY_RIGHT) {
-		// 	pitch = -PI;
-		// }
-		// if (key == GLFW_KEY_UP) {
-		// 	yaw = PI;
-		// }
-		// if (key == GLFW_KEY_DOWN) {
-		// 	yaw = -PI;
-		// }
 		if(key == GLFW_KEY_C) {
 			activeCamera.SetCameraHeightCap(true, cameraHeightCap);
 			freeFlight = !freeFlight;
+			updateCursorState(window);
 		}
 		if (key == GLFW_KEY_W)
 		{
@@ -102,8 +97,8 @@ void SillyScene::OnKey(GLFWwindow* window, int key, int scancode, int action, in
 		if (key == GLFW_KEY_ESCAPE)
 		{
 			focus = false;
-			activeCamera.SetCameraRotationBlock(true); 
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); 
+			activeCamera.SetCameraRotationBlock(true);
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 		}
 		
 	}
@@ -131,12 +126,13 @@ void SillyScene::OnMouse(GLFWwindow* window, double xpos, double ypos) {
         firstMouse = false;
     }
 
-	if (focus == true) 
+	if (!focus)
+		return;
+	
+	if (doCameraRotation || freeFlight) 
 	{
 		float xoffset = xpos - lastX;
 		float yoffset = lastY - ypos; // reversed since y-coordinates range from bottom to top
-		lastX = xpos;
-		lastY = ypos;
 		
 		xoffset *= mouseSensitivity;
 		yoffset *= mouseSensitivity;
@@ -152,14 +148,50 @@ void SillyScene::OnMouse(GLFWwindow* window, double xpos, double ypos) {
 				pitch = pitchLowerBound;
 		}
 	}
+
+	lastX = xpos;
+	lastY = ypos;
 }
 
 void SillyScene::OnMouseButton(GLFWwindow* window, int button, int action, int mods) {
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-		firstMouse = true;
-		focus = true;
-		activeCamera.SetCameraRotationBlock(false); //unblock
+		if (!focus)
+		{
+			firstMouse = true;
+			focus = true;
+			activeCamera.SetCameraRotationBlock(false); //unblock
+			updateCursorState(window);
+			return;
+		}
+
+		// do mouse pick
+		Ray ray = activeCamera.ViewportToRay(lastX, lastY);
+		glm::vec3 hit;
+		if (ray.Intersect(gridObj->GetMousePickPlane(), hit))
+		{
+			std::cerr << "Hit: X: " << hit.x << " Y: " << hit.y << " Z: " << hit.z << std::endl;
+			
+			// gridObj->GetLogical()
+			// world to grid position
+			// Check money/whatever
+			// Place tower
+		}
+		else
+		{
+			std::cerr << "No hit!\n";
+		}
+		
+
+	}
+	else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+	{
+		doCameraRotation = true;
+		updateCursorState(window); 
+	}
+	else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE)
+	{
+		doCameraRotation = false;
+		updateCursorState(window);
 	}
 }
 
@@ -170,4 +202,11 @@ void SillyScene::OnScroll(GLFWwindow* window, double xoffset, double yoffset) {
     if (fov > 90.0f)
         fov = 90.0f; 
 	activeCamera.ZoomCamera(fov);
+}
+
+void SillyScene::updateCursorState(GLFWwindow* window) {
+	if (freeFlight || doCameraRotation)
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	else
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); 
 }
