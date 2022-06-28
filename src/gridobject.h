@@ -3,11 +3,22 @@
 #include "gameobject.h"
 #include "gamegrid.h"
 #include "camera.h"
+#include "utility.h"
 
 class GridObject : public GameObject {
-public:
+private:
+    Grid m_grid;
     GameGrid::GameGridMesh m_mesh;
-    GridObject(const GameGrid::GameGridMesh &mesh) : m_mesh(mesh) {}
+    Plane m_plane;
+public:
+    GridObject(
+        const GameGrid::GameGridMesh &mesh,
+        const Plane& pickPlane,
+        const Grid& logicalGrid
+    ) : m_mesh(mesh), m_plane(pickPlane), m_grid(logicalGrid) {}
+
     void Draw(const Camera& camera) const override;
     void Update(double deltaTime) override;
+    Grid& GetLogical();
+    Plane GetMousePickPlane() const;
 };

@@ -8,6 +8,11 @@ float radius = 3.0f;
 
 glm::vec3 cameraDirection; 
 
+void Camera::SetP(glm::mat4 matrix) {
+    p = matrix;
+    inverseP = glm::inverse(matrix);
+}
+
 Camera::Camera() {
     // placeholder
     // v = glm::lookAt(glm::vec3(0.0f, 1.5f, -1.5f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -55,7 +60,24 @@ glm::vec3 Camera::GetRight() const {
     return glm::normalize(glm::cross(UP, cameraDirection));
 }
 
-
 glm::mat4 Camera::GetOrtho() const {
     return glm::ortho(0.0f, screenSize.x, 0.0f, screenSize.y);
+}
+
+Ray Camera::ViewportToRay(float x, float y) const {
+    // viewport -> nds -> clip space
+    // ignore perspective division -- ray has no depth
+    glm::vec4 clip = glm::vec4(
+        (2.f * x) / screenSize.x - 1.f,
+        1.f - (2.f * y) / screenSize.y,
+        -1.f,
+        1.f
+    );
+
+    glm::vec4 eye = inverseP * clip;
+    
+    return Ray(
+        GetPosition(),
+        glm::normalize(glm::inverse(GetV()) * glm::vec4(eye.x, eye.y, -1.f, 0.f))
+    );
 }

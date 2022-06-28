@@ -2,6 +2,7 @@
 
 #include "grid.h"
 #include "BaseMesh.h"
+#include "utility.h"
 
 #include <vector>
 #include <glm/glm.hpp>
@@ -65,8 +66,8 @@ private:
 
     static constexpr GameGridPosition depthVector = { 0.f, -elevationStep, 0.f};
     
-    GameGridPosition gridToModelPosition(Grid::GridPosition p);
-    inline float cellElevation(Grid::GridPosition p);
+    GameGridPosition gridToModelPosition(Grid::GridPosition p) const;
+    inline float cellElevation(Grid::GridPosition p) const;
     float cornerElevation(Grid::GridPosition a, Grid::GridPosition b, Grid::GridPosition c);
 
     void appendTriangle(std::vector<glm::vec4>& vertexArray, GameGridPosition a, GameGridPosition b, GameGridPosition c);
@@ -117,4 +118,7 @@ public:
         return gamePath.size();
     }
     
+
+    Plane GetMousePickPlane() const;
+    Grid& GetLogical();
 };
