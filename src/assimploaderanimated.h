@@ -1,21 +1,15 @@
 #pragma once
-
 #include "AnimatedMesh.h"
 
-
-#include <assimp/postprocess.h>
 #include <assimp/scene.h>
 #include <vector>
 #include <map>
-#include <iostream>
 
 
 class AnimatedAssimpLoader
 {
     private:
         std::vector<AnimatedMesh> meshes;
-
-
 
     public:
         std::vector<AnimatedMesh> getMeshes();
@@ -24,6 +18,6 @@ class AnimatedAssimpLoader
         //From tutorial Model class
         std::map<std::string, BoneInfo> m_BoneInfoMap; 
         int m_BoneCounter = 0;
-        auto& GetBoneInfoMap() { return m_BoneInfoMap; }
-        int& GetBoneCount() { return m_BoneCounter; }   
+        std::map<std::string, BoneInfo>& GetBoneInfoMap() { return m_BoneInfoMap; }
+        int GetBoneCount() { return m_BoneCounter; }   
 };

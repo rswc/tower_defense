@@ -1,6 +1,5 @@
 #include "sillyscene.h"
 #include "sillyobject.h"
-#include "sillyanimatedobject.h"
 #include "animatedobject.h"
 #include "gamegrid.h"
 #include "gridobject.h"

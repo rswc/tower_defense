@@ -1,6 +1,8 @@
 #include "assimploaderanimated.h"
-
 #include <assimp/Importer.hpp>
+#include <assimp/postprocess.h>
+#include <iostream>
+#include "utility.h"
 
 void SetVertexBoneDataToDefault(Vertex& vertex)
 {
@@ -21,16 +23,6 @@ void SetVertexBoneData(Vertex& vertex, int boneID, float weight)
             break;
         }
     }
-}
-glm::mat4 ConvertMatrixToGLMFormat(const aiMatrix4x4& from)
-{
-    glm::mat4 to;
-    //the a,b,c,d in assimp is the row ; the 1,2,3,4 is the column
-    to[0][0] = from.a1; to[1][0] = from.a2; to[2][0] = from.a3; to[3][0] = from.a4;
-    to[0][1] = from.b1; to[1][1] = from.b2; to[2][1] = from.b3; to[3][1] = from.b4;
-    to[0][2] = from.c1; to[1][2] = from.c2; to[2][2] = from.c3; to[3][2] = from.c4;
-    to[0][3] = from.d1; to[1][3] = from.d2; to[2][3] = from.d3; to[3][3] = from.d4;
-    return to;
 }
 
 void AnimatedAssimpLoader::loadModel(std::string filename){
@@ -107,16 +99,11 @@ void AnimatedAssimpLoader::loadModel(std::string filename){
                     weight[j] = newMesh.vertices_animated[i].m_Weights[j];
                 }
                 newMesh.weights.push_back(weight);
-
-                // newMesh.weights.push_back(newMesh.vertices_animated[i].m_Weights);
-                // newMesh.boneIDs.push_back(newMesh.vertices_animated[i].m_BoneIDs);
             }
 
             meshes.push_back(newMesh);
         }
     }
-    //Get mesh assuming there is only one mesh in the scene
-   // aiMesh* mesh = scene->mMeshes[0]; 
 }
 
 std::vector<AnimatedMesh> AnimatedAssimpLoader::getMeshes(){
@@ -126,21 +113,16 @@ std::vector<AnimatedMesh> AnimatedAssimpLoader::getMeshes(){
 void AnimatedAssimpLoader::ExtractBoneWeightForVertices(std::vector<Vertex>& vertices, aiMesh* mesh, const aiScene* scene)
 {
     std::cout<<"Extracting bone weights"<<std::endl;
-            for(auto p : m_BoneInfoMap){
-            std::cout<<p.first<<std::endl;
-        }
     for (int boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex)
     {
         int boneID = -1;
         std::string boneName = mesh->mBones[boneIndex]->mName.C_Str();
 
         //std::cout<<"Bone name: "<<boneName<<std::endl;
-        if (true)//(m_BoneInfoMap.find(boneName) == m_BoneInfoMap.end())
+        if (m_BoneInfoMap.find(boneName) == m_BoneInfoMap.end())
         {
             BoneInfo newBoneInfo;
             newBoneInfo.id = m_BoneCounter;
-            //std::cout<<"Bone id: "<<newBoneInfo.id<<std::endl;
-            //newBoneInfo.offset = ConvertMatrixToGLMFormat(mesh->mBones[boneIndex]->mOffsetMatrix);
             newBoneInfo.offset = glm::mat4(1.0f);
             aiMatrix4x4t<ai_real> mat4 = (aiMatrix4x4t<float> &&) mesh->mBones[boneIndex]->mOffsetMatrix;
             newBoneInfo.offset[0][0] = mat4.a1;
@@ -159,16 +141,6 @@ void AnimatedAssimpLoader::ExtractBoneWeightForVertices(std::vector<Vertex>& ver
             newBoneInfo.offset[3][1] = mat4.b4;
             newBoneInfo.offset[3][2] = mat4.c4;
             newBoneInfo.offset[3][3] = mat4.d4;
-            // std::cout<<"Bone id "<<newBoneInfo.id<<std::endl;
-            // std::cout<<"Offset matrix"<<std::endl;
-            // for(int i = 0; i < 4; i++)
-            // {
-            //     for(int j = 0; j < 4; j++)
-            //     {
-            //         std::cout<<newBoneInfo.offset[i][j]<<" ";
-            //     }
-            //     std::cout<<std::endl;
-            // }
             m_BoneInfoMap[boneName] = newBoneInfo;
             boneID = m_BoneCounter;
             m_BoneCounter++;

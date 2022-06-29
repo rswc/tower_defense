@@ -3,13 +3,13 @@
 #include "assimploaderanimated.h"
 #include "Animator.h"
 
-
 class AnimatedObject : public AssimpObject
 {
     private: 
         std::vector<AnimatedMesh> meshes;
         //Animation danceAnimation;
         Animator* animator;
+        Animation* danceAnimation;
 
     public: 
         void Draw(const Camera& camera) const override;
@@ -17,5 +17,4 @@ class AnimatedObject : public AssimpObject
         void loadModel(std::string filename) override;
         AnimatedObject();
         ~AnimatedObject();
-
 };
