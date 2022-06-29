@@ -36,8 +36,11 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
-	if (scene)
+	if (scene){
 		scene->SetScreenSize((float)width, (float)height);
+		GlobalConfig::windowWidth = (float)width;
+		GlobalConfig::windowHeight = (float)height;
+	}
 }
 
 void runTests() {
@@ -60,8 +63,8 @@ int main(void)
 		exit(EXIT_FAILURE);
 	}
 
-	window = glfwCreateWindow(500, 500, "OpenGL", NULL, NULL);
-	glViewport(0, 0, 500, 500);
+	window = glfwCreateWindow(GlobalConfig::windowWidth, GlobalConfig::windowHeight, "OpenGL", NULL, NULL);
+	glViewport(0, 0, GlobalConfig::windowWidth, GlobalConfig::windowHeight);
 
 	if (!window) //Jeżeli okna nie udało się utworzyć, to zamknij program
 	{
@@ -87,7 +90,7 @@ int main(void)
 	Resources::Initialize();
 
 	scene = std::make_unique<SillyScene>();
-	scene->SetScreenSize(500.0f, 500.0f);
+	scene->SetScreenSize(GlobalConfig::windowWidth, GlobalConfig::windowHeight);
 
 	glfwSetKeyCallback(window, key_callback);
 
