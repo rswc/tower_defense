@@ -6,6 +6,7 @@
 #include "mobobject.h"
 #include "text.h"
 #include "skybox.h"
+#include "tower.h"
 
 #define PI 3.141592f // close enough
 
@@ -217,6 +218,9 @@ void SillyScene::OnMouseButton(GLFWwindow* window, int button, int action, int m
 			if (gridObj->GetLogical().TryPlaceTower(gp))
 			{
 				std::cerr << "Tower placed!\n";
+				auto tower = std::make_shared<Tower>();
+				tower->SetPosition(gridObj->GridToWorld(gp));
+				Instantiate(tower);
 			}
 			else
 			{

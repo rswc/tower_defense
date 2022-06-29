@@ -9,10 +9,15 @@
 class Scene
 {
 protected:
+    enum DirtyFlag : short {
+        DIRTY_DRAW_ORDER = 1
+    };
+
     std::vector<std::shared_ptr<GameObject>> objects;
     RTSCamera activeCamera;
     bool transitionFlag = false;
     virtual void SceneTransition();
+    short dirtyFlag = 0;
 public:
     Scene() = default;
     Scene(const Scene&) = delete;
