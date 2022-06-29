@@ -18,8 +18,7 @@ SillyScene::SillyScene() {
   activeCamera = RTSCamera(startCameraPosition);
   activeCamera.SetCameraHeightCap(true, cameraHeightCap);
 
-	auto objAssimp = std::make_unique<AnimatedObject>();
-	//objAssimp->SetScale(glm::vec3(0.01f, 0.01f, 0.01f));
+	auto objAssimp = std::make_unique<AnimatedObject>(glm::vec3(0.1f, 0.1f, 0.1f), 20.0f);
 	Instantiate(std::move(objAssimp));
 
 	// remove if annoying

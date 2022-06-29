@@ -6,17 +6,25 @@
 #include "camera.h"
 #include "animatedobject.h"
 
+AnimatedObject::AnimatedObject(glm::vec3 targetModelScale, float targetAnimationSpeed)
+{
+    modelScale = targetModelScale;
+    animationSpeed = targetAnimationSpeed;
+    std::cerr<<"Animation Speed: "<<animationSpeed<<std::endl;
+    startSetup();
+}
 
 AnimatedObject::AnimatedObject(){
-    //Rotate(180.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-     Rotate(5.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-     //Rotate(5.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+    startSetup();
+}
 
+void AnimatedObject::startSetup(){
+    
     std::string dir = "assets/";
-    std::string modelName = "tiger";
+    std::string modelName = "trex";
     std::string stexture =  dir + "/" + modelName + "/" + modelName +".png";
     std::string stextureSpecular =  dir + "/" + modelName + "/" + modelName +"_specular.png";
-    std::string smodelPath = dir + "/" + modelName + "/" + modelName +".fbx";
+    std::string smodelPath = dir + "/" + modelName + "/" + modelName +".glb";
     
     texture = readTexture(stexture.c_str());
     textSpecular = readTexture(stextureSpecular.c_str());
@@ -30,6 +38,7 @@ AnimatedObject::AnimatedObject(){
 
     //Print max bone id and bone count
     std::cerr<<"Num of bones: "<<loader.GetBoneCount()<<std::endl;
+    std::cerr<<"Animation speed: "<<animationSpeed<<std::endl;
 }
 
 AnimatedObject::~AnimatedObject(){
@@ -41,7 +50,7 @@ AnimatedObject::~AnimatedObject(){
 }
 
 void AnimatedObject::Update(double deltaTime){
-    animator->UpdateAnimation((float)deltaTime);
+    animator->UpdateAnimation((float)deltaTime * animationSpeed);
 }
 
 void AnimatedObject::Draw(const Camera& camera) const {
@@ -51,7 +60,7 @@ void AnimatedObject::Draw(const Camera& camera) const {
 	glUniformMatrix4fv(spAnimated->u("V"), 1, false, glm::value_ptr(camera.GetV()));
 
     glm::mat4 M = GetTransformMatrix();
-    M = glm::scale(M, glm::vec3(0.01f, 0.01f, 0.01f));
+    M = glm::scale(M, modelScale);
 	glUniformMatrix4fv(spAnimated->u("M"), 1, false, glm::value_ptr(M));
 
     std::vector<glm::mat4> &transforms = *animator->GetFinalBoneMatrices();

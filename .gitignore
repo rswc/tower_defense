@@ -9,3 +9,4 @@ src/AssimpLoader/
 models/
 
 ta_Test*.png
+bin/assets/
