@@ -52,6 +52,10 @@ namespace Resources
     const std::string MOBOBJECT_TEXTURE = "mobtexture";
     const std::string MOBOBJECT_TEXTURE_SPECULAR = "mobtexturespec";
 
+    const std::string GATEOBJECT_MODEL = "gatemodel";
+    const std::string GATEOBJECT_TEXTURE = "gatetexture";
+    const std::string GATEOBJECT_TEXTURE_SPECULAR = "gatetexturespec";
+
     BaseMesh* GetAssimpModelMesh(const std::string& key, int index);
     GLuint GetModelTexture(const std::string& key);
 

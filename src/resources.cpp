@@ -314,6 +314,12 @@ namespace Resources
         bm_AssimpModels[MOBOBJECT_MODEL] = assimpLoader.getMeshes();
         gl_Textures[MOBOBJECT_TEXTURE] = LoadTexture("assets/trex/trex.png");
         gl_Textures[MOBOBJECT_TEXTURE_SPECULAR] = LoadTexture("assets/trex/trex_specular.png");
+
+        auto assimGateLoader = AssimpLoader();
+        assimGateLoader.loadModel("assets/vampire.dae");
+        bm_AssimpModels[GATEOBJECT_MODEL] = assimGateLoader.getMeshes();
+        gl_Textures[GATEOBJECT_TEXTURE] = LoadTexture("assets/Vampire_diffuse.png");
+        gl_Textures[GATEOBJECT_TEXTURE_SPECULAR] = LoadTexture("assets/Vampire_specular.png");
         
         animatedLoader = AnimatedAssimpLoader();
         std::string mob_anim_model = "assets/trex/trex.glb";

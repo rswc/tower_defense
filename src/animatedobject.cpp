@@ -23,10 +23,10 @@ AnimatedObject::AnimatedObject(){
 void AnimatedObject::startSetup(){
     
     std::string dir = "assets/";
-    std::string modelName = "trex";
+    std::string modelName = "tree";
     std::string stexture =  dir + "/" + modelName + "/" + modelName +".png";
     std::string stextureSpecular =  dir + "/" + modelName + "/" + modelName +"_specular.png";
-    std::string smodelPath = dir + "/" + modelName + "/" + modelName +".glb";
+    std::string smodelPath = dir + "/" + modelName + "/" + modelName +".fbx";
     
     texture = readTexture(stexture.c_str());
     textSpecular = readTexture(stextureSpecular.c_str());
