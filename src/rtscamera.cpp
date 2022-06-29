@@ -4,6 +4,7 @@ Credits:
     Source: https://learnopengl.com/Getting-started/Camera
 */
 #include "rtscamera.h"
+#include "GlobalConfig.h"
 #include <GLFW/glfw3.h>
 #include <iostream>
 
@@ -16,7 +17,11 @@ RTSCamera::RTSCamera(glm::vec3 startPosition){
     cameraRight = glm::normalize(glm::cross(up, cameraDirection));
     cameraUp = glm::cross(cameraDirection, cameraRight);
 
-    SetP(glm::perspective(glm::radians(50.0f), 1.0f, 0.01f, 100.0f));
+    SetP(glm::perspective(
+            glm::radians(50.0f), 
+            (float)GlobalConfig::windowWidth/(float)GlobalConfig::windowHeight, 
+            0.01f, 
+            100.0f));
 
     view = glm::lookAt(
         startPosition, 
@@ -82,5 +87,9 @@ void RTSCamera::SetCameraHeightCap(bool toggle, float cap){
 }
 
 void RTSCamera::ZoomCamera(float fov){
-    SetP(glm::perspective(glm::radians(fov), 1.0f, 0.01f, 100.0f));
+        SetP(glm::perspective(
+            glm::radians(fov), 
+            (float)GlobalConfig::windowWidth/(float)GlobalConfig::windowHeight, 
+            0.01f, 
+            100.0f));
 }

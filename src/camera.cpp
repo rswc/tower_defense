@@ -64,6 +64,17 @@ glm::mat4 Camera::GetOrtho() const {
     return glm::ortho(0.0f, screenSize.x, 0.0f, screenSize.y);
 }
 
+void Camera::PushLight(PointLight light) {
+    if (lights.size() >= numPointLights)
+        return;
+    
+    lights.push_back(light);
+}
+
+std::vector<Camera::PointLight> Camera::GetLights() const {
+    return lights;
+}
+
 Ray Camera::ViewportToRay(float x, float y) const {
     // viewport -> nds -> clip space
     // ignore perspective division -- ray has no depth

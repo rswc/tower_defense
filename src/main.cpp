@@ -3,11 +3,12 @@
 #include <glm/glm.hpp>
 #include <stdio.h>
 #include <memory>
-
+#include "GlobalConfig.h"
 #include "resources.h"
 #include "sillyscene.h"
 #include "sillyobject.h"
 #include "shaderprogram.h"
+
 
 #include "grid_test.h"
 
@@ -35,8 +36,11 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
-	if (scene)
+	if (scene){
 		scene->SetScreenSize((float)width, (float)height);
+		GlobalConfig::windowWidth = (float)width;
+		GlobalConfig::windowHeight = (float)height;
+	}
 }
 
 void runTests() {
@@ -47,6 +51,8 @@ void runTests() {
 int main(void)
 {
 	runTests();
+	GlobalConfig::loadConfigFromFile("config.txt");
+	GlobalConfig::printWholeConfig();
 	
 	GLFWwindow* window; //Wskaźnik na obiekt reprezentujący okno
 
@@ -57,8 +63,8 @@ int main(void)
 		exit(EXIT_FAILURE);
 	}
 
-	window = glfwCreateWindow(500, 500, "OpenGL", NULL, NULL);
-	glViewport(0, 0, 500, 500);
+	window = glfwCreateWindow(GlobalConfig::windowWidth, GlobalConfig::windowHeight, "OpenGL", NULL, NULL);
+	glViewport(0, 0, GlobalConfig::windowWidth, GlobalConfig::windowHeight);
 
 	if (!window) //Jeżeli okna nie udało się utworzyć, to zamknij program
 	{
@@ -84,7 +90,7 @@ int main(void)
 	Resources::Initialize();
 
 	scene = std::make_unique<SillyScene>();
-	scene->SetScreenSize(500.0f, 500.0f);
+	scene->SetScreenSize(GlobalConfig::windowWidth, GlobalConfig::windowHeight);
 
 	glfwSetKeyCallback(window, key_callback);
 
@@ -105,6 +111,18 @@ int main(void)
 		glfwSetTime(0);
 
 		scene->Update(dt);
+
+		if (scene->IsTransitionInitiated())
+		{
+			auto progenitor = std::move(scene);
+
+			scene = progenitor->GetTransitionTarget();
+
+			int width, height;
+			glfwGetWindowSize(window, &width, &height);
+			scene->SetScreenSize(width, height);
+		}	
+
         scene->Draw();
 
         glfwSwapBuffers(window);

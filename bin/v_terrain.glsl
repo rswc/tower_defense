@@ -10,11 +10,15 @@ in vec3 texParams;
 
 out vec4 iNormal;
 out vec3 iTexture;
-out vec2 iUV;
+out vec3 iPosition;
 
 void main(void) {
+    vec4 vertex_world = M * vertex;
+
     iNormal = normalize(M * normal);
     iTexture = texParams; // Used for texture layer selection and blending
-    iUV = (M * vertex).xz;
-    gl_Position = P * V * M * vertex;
+    
+    iPosition = vertex_world.xyz;
+
+    gl_Position = P * V * vertex_world;
 }

@@ -4,6 +4,10 @@
 #include <algorithm>
 
 
+void Scene::SceneTransition() {
+    transitionFlag = true;
+}
+
 void Scene::Update(double dt) {
     for (auto& object : objects)
         object->Update(dt);
