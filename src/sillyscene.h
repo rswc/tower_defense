@@ -12,6 +12,8 @@
 class SillyScene : public Scene
 {
 private:
+    void SceneTransition() override;
+
     float yaw = -90, pitch = -45, speed_fwd = 0, speed_right = 0;
     float lastX = 0, lastY = 0;
     float fov = 50.0f;
@@ -29,6 +31,9 @@ public:
     SillyScene(SillyScene&&) = default;
     SillyScene& operator=(SillyScene&&) = default;
     ~SillyScene() = default;
+
+    std::unique_ptr<Scene> GetTransitionTarget() const override;
+
     void Update(double dt);
     void OnKey(GLFWwindow* window, int key, int scancode, int action, int mod) override;
     void OnMouse(GLFWwindow* window, double xpos, double ypos) override;

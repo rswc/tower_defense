@@ -16,12 +16,20 @@
 #define pitchLowerBound -70.0f
 #define pitchUpperBound -30.0f
 
+// Add arguments if necessary
+void SillyScene::SceneTransition() {
+	// Save any parameters of the target scene here
+
+	// ALWAYS call super at the end
+	Scene::SceneTransition();
+}
+
 SillyScene::SillyScene() {
   activeCamera = RTSCamera(startCameraPosition);
   activeCamera.SetCameraHeightCap(true, cameraHeightCap);
 
 	auto objAssimpAnimated = std::make_unique<AnimatedObject>(glm::vec3(0.1f, 0.1f, 0.1f), 20.0f);
-  Instantiate(std::move(objAssimpAnimated));
+ 	Instantiate(std::move(objAssimpAnimated));
 
 	auto objAssimp = std::make_shared<AssimpObject>();
 	Instantiate(std::move(objAssimp));
@@ -68,12 +76,20 @@ SillyScene::SillyScene() {
 }
 
 
+std::unique_ptr<Scene> SillyScene::GetTransitionTarget() const {
+	// If necessary, use different Scene subtype
+	auto scn = std::make_unique<SillyScene>();
+	
+	// Apply saved parameters
+
+	return scn;
+}
+
 void SillyScene::Update(double dt) {
 	//roll inactive for now
 	activeCamera.MoveCamera(speed_fwd, speed_right, pitch, yaw, 0, (float)dt);
 
-	for (auto &object : objects)
-		object->Update(dt);
+	Scene::Update(dt);
 }
 
 void SillyScene::OnKey(GLFWwindow* window, int key, int scancode, int action, int mod) {
@@ -115,6 +131,9 @@ void SillyScene::OnKey(GLFWwindow* window, int key, int scancode, int action, in
 			}
 		}
 		
+		if (key == GLFW_KEY_X) {
+			SceneTransition();
+		}
 	}
 	if (action == GLFW_RELEASE) {
 		if (key == GLFW_KEY_LEFT || key == GLFW_KEY_RIGHT) {

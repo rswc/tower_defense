@@ -50,8 +50,8 @@ public:
         return reachedPathExit(currentPos);
     }
 
-    inline bool activate() { active  = true; }
-    inline bool deactivate() { active = false; } 
+    inline void activate() { active  = true; }
+    inline void deactivate() { active = false; } 
     
     inline PathIndex translateToPathIndex(SegmentIndex idx) const { return idx * 2 + 1; }
     inline SegmentIndex translateToSegmentIndex(PathIndex idx) const { return (idx - 1) / 2; }
