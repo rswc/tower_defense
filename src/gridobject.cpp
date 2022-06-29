@@ -63,3 +63,24 @@ Grid& GridObject::GetLogical() {
 Plane GridObject::GetMousePickPlane() const {
 	return m_plane.ToWorldSpace(GetTransformMatrix());
 }
+
+Grid::GridPosition GridObject::WorldToGrid(glm::vec3 position) const {
+	auto origin = GetPosition();
+
+	auto gp = Grid::GridPosition(
+		(position.x - origin.x) / (GameGrid::halfRowScale * 2),
+		(position.z - origin.z) / (GameGrid::halfColScale * 2)
+	);
+
+	return m_grid.isInsideGrid(gp) ? gp : Grid::GridPosition(-1, -1 );
+}
+
+glm::vec3 GridObject::GridToWorld(Grid::GridPosition position) const {
+	auto p = GetPosition() + glm::vec3(
+		position.row * GameGrid::halfRowScale * 2 + GameGrid::halfRowScale,
+		0.f,
+		position.col * GameGrid::halfColScale * 2 + GameGrid::halfRowScale
+	);
+
+	return GetTransformMatrix() * glm::vec4(p, 1.0);
+}

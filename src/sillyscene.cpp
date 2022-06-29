@@ -7,6 +7,7 @@
 #include "text.h"
 #include "skybox.h"
 #include "GlobalConfig.h"
+#include "tower.h"
 
 #define PI 3.141592f // close enough
 #define pitchLowerBound -70.0f
@@ -218,12 +219,24 @@ void SillyScene::OnMouseButton(GLFWwindow* window, int button, int action, int m
 		glm::vec3 hit;
 		if (ray.Intersect(gridObj->GetMousePickPlane(), hit))
 		{
-			std::cerr << "Hit: X: " << hit.x << " Y: " << hit.y << " Z: " << hit.z << std::endl;
+			auto gp = gridObj->WorldToGrid(hit);
+			std::cerr << "Hit: R: " << gp.row << " C: " << gp.col <<  std::endl;
 			
-			// gridObj->GetLogical()
-			// world to grid position
 			// Check money/whatever
-			// Place tower
+			
+			if (gridObj->GetLogical().TryPlaceTower(gp))
+			{
+				std::cerr << "Tower placed!\n";
+				auto tower = std::make_shared<Tower>();
+				tower->SetPosition(gridObj->GridToWorld(gp));
+				Instantiate(tower);
+			}
+			else
+			{
+				std::cerr << "Tower not placed!\n";
+			}
+			
+			
 		}
 		else
 		{

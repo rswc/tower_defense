@@ -11,6 +11,9 @@ void Scene::SceneTransition() {
 void Scene::Update(double dt) {
     for (auto& object : objects)
         object->Update(dt);
+    
+    if (dirtyFlag & DIRTY_DRAW_ORDER)
+        UpdateDrawOrder();
 }
 
 void Scene::Draw() const {
@@ -36,6 +39,8 @@ void Scene::OnScroll(GLFWwindow* window, double xoffset, double yoffset) {
 }
 
 void Scene::Instantiate(std::shared_ptr<GameObject> object) {
+    dirtyFlag |= DIRTY_DRAW_ORDER;
+
     objects.push_back(std::move(object));
 }
 
@@ -53,5 +58,7 @@ void Scene::UpdateDrawOrder() {
             return a->GetOrder(camera) > b->GetOrder(camera);
         }
     );
+
+    dirtyFlag &= ~DIRTY_DRAW_ORDER;
 }
 
