@@ -9,6 +9,7 @@ layout(location = 4) in vec4 weights;
 uniform mat4 P;
 uniform mat4 V;
 uniform mat4 M;
+uniform vec3 cameraPos;
 	
 const int MAX_BONES = 100;
 const int MAX_BONE_INFLUENCE = 4;
@@ -17,6 +18,7 @@ uniform mat4 finalBonesMatrices[MAX_BONES];
 out vec2 texCoords;
 out vec3 iNormal;
 out vec3 iPosition;
+out vec3 iViewDir;
 	
 void main()
 {
@@ -41,6 +43,7 @@ void main()
 
     iPosition = totalPosition.xyz;
     iNormal = totalNormal;
+    iViewDir = cameraPos - totalPosition.xyz;
 		
     mat4 viewModel = V * M;
     gl_Position =  P * viewModel * totalPosition;

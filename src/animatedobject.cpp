@@ -74,6 +74,8 @@ void AnimatedObject::Draw(const Camera& camera) const {
 	    glUniformMatrix4fv(spAnimated->u(finalBones.c_str()), 1, false, glm::value_ptr(transforms[i]));
     }
 
+    glUniform3fv(spAnimated->u("cameraPos"), 1, glm::value_ptr(camera.GetPosition()));
+
     glUniform3f(spAnimated->u("dirAmbientColor"), 0.2f, 0.2f, 0.2f);
 	glUniform3f(spAnimated->u("dirDiffuseColor"), 0.5f, 0.5f, 0.5f);
 	glUniform4f(spAnimated->u("lightDir"), 0.2f, -1.0f, 0.0f, 0.0f);
