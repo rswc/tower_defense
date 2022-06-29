@@ -2,8 +2,8 @@
 #include "sillyobject.h"
 #include "sillyanimatedobject.h"
 #include "assimpobject.h"
-#include "gamegrid.h"
 #include "gridobject.h"
+#include "mobobject.h"
 #include "text.h"
 #include "skybox.h"
 
@@ -23,6 +23,7 @@ SillyScene::SillyScene() {
 	auto objAssimp = std::make_shared<AssimpObject>();
 	Instantiate(std::move(objAssimp));
 
+
 	// remove if annoying
 	auto txt = std::make_shared<Text>("Graphics programming\nis my passion");
 	txt->SetOrigin(glm::vec2(0.02f, 0.5f));
@@ -30,8 +31,7 @@ SillyScene::SillyScene() {
 	txt->SetScale(0.8f);
 	Instantiate(std::move(txt));
 	
-	GameGrid grid({{{
-                "xxxxxx",
+	std::vector<std::string> map {{ "xxxxxx",
                 "xS...x",
                 "xxxx.x",
                 "x....x",
@@ -40,15 +40,18 @@ SillyScene::SillyScene() {
                 "x.x.xx",
                 "x...xx",
                 "xxxxxx"
-            }}});
+            }};
+
+	grid = std::make_unique<GameGrid>(map);
+
 	// GameGrid grid({{{"xxx", "xSx", "x.x", "xEx", "xxx"}}});
-	GameGrid::GameGridMesh mesh = grid.generateBaseMesh(GameGrid::MESH_V_SECOND);
+	GameGrid::GameGridMesh mesh = grid->generateBaseMesh(GameGrid::MESH_V_SECOND);
 	std::cerr << "n of mesh vertices: " << mesh.vertices.size() << std::endl;
 
 	gridObj = std::make_shared<GridObject>(
 		mesh,
-		grid.GetMousePickPlane(),
-		grid.GetLogical()
+		grid->GetMousePickPlane(),
+		grid->GetLogical()
 	);
 
 	Instantiate(gridObj);
@@ -99,6 +102,15 @@ void SillyScene::OnKey(GLFWwindow* window, int key, int scancode, int action, in
 			focus = false;
 			activeCamera.SetCameraRotationBlock(true);
 			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		}
+		
+		if (key == GLFW_KEY_M) {
+			
+			if (mobManager.countFreeMobs() > 0) {
+				mobManager.reactivateMob();
+			} else {
+				Instantiate(std::move(mobManager.createMob(grid.get())));
+			}
 		}
 		
 	}

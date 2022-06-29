@@ -23,7 +23,8 @@ public:
     };
 
 private:
-    Grid logicalGrid;
+
+    using GamePath = std::vector<glm::vec3>;
 
     using MeshVersion = int;
     using GameGridPosition = glm::vec3;
@@ -43,16 +44,16 @@ private:
         GAME_DIR_N
     };
 
-    const float halfRowScale = 0.5f;
-    const float halfColScale = 0.5f;
+    static constexpr float halfRowScale = 0.5f;
+    static constexpr float halfColScale = 0.5f;
 
-    const float innerSquareFactor = 0.6f;
-    const float elevationStep = .3f;
+    static constexpr float innerSquareFactor = 0.6f;
+    static constexpr float elevationStep = .3f;
 
-    const float borderExtrusionParallel = .8f;
-    const float borderExtrusionPerpendicular = 1.4f;
+    static constexpr float borderExtrusionParallel = .8f;
+    static constexpr float borderExtrusionPerpendicular = 1.4f;
 
-    const GameGridPosition dirVector[GAME_DIR_N] = {
+    static constexpr GameGridPosition dirVector[GAME_DIR_N] = {
         { 0.f, 0.f, halfColScale }, 
         { -halfRowScale, 0.f, halfColScale }, 
         { -halfRowScale, 0.f, 0.f }, 
@@ -63,7 +64,7 @@ private:
         { halfRowScale, 0.f, halfColScale }, 
     };
 
-    const GameGridPosition depthVector = { 0.f, -elevationStep, 0.f};
+    static constexpr GameGridPosition depthVector = { 0.f, -elevationStep, 0.f};
     
     GameGridPosition gridToModelPosition(Grid::GridPosition p) const;
     inline float cellElevation(Grid::GridPosition p) const;
@@ -85,7 +86,11 @@ private:
     
     GameGridMesh generateSimpleMesh();
     GameGridMesh generateWalledMesh();
+    
+    GamePath generateGamePath(const Grid& grid);
 
+    Grid logicalGrid;
+    GamePath gamePath;
     
 public:
     enum : MeshVersion {
@@ -93,8 +98,26 @@ public:
         MESH_V_SECOND = 2,
         MESH_V_THIRD = 3,
     };
+
     GameGridMesh generateBaseMesh(MeshVersion version);
-    GameGrid(const std::vector<std::string>& map) : logicalGrid(map) {}
+
+    GameGrid(const std::vector<std::string>& map) 
+        : logicalGrid(map), gamePath(generateGamePath(logicalGrid)) {
+    }
+    
+    // User is responsible for in-bonds checking  
+    inline glm::vec3 gamePathNode(int idx) const {
+        if ((unsigned) idx < gamePath.size()) {
+            return gamePath[idx];
+        } else {
+            return gamePath.back();
+        }
+    }
+
+    inline int gamePathSize() const {
+        return gamePath.size();
+    }
+    
 
     Plane GetMousePickPlane() const;
     Grid& GetLogical();

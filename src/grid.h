@@ -43,7 +43,7 @@ class Grid {
 
     // Return DirectionEnum in opposite direction 
     // Assume: dir is one of: DIRECTION_RIGHT, DIRECTION_UP, DIRECTION_LEFT, DIRECTION_DOWN,
-    DirEnum oppositeDirection(DirEnum dir) {
+    DirEnum oppositeDirection(DirEnum dir) const {
         // Because of counter-clockwise ordering, opposite direction is (dir + 2) mod 4
         return (dir < DIRECTION_N/2 ? dir + DIRECTION_N/2 : dir - DIRECTION_N/2);
     }
