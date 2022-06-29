@@ -76,7 +76,7 @@ SillyScene::SillyScene() {
 	Instantiate(gridObj);
 
 	activeCamera.PushLight(Camera::PointLight(
-		{0.f, 0.5f, 0.f},//grid->getExitPoint() + glm::vec3(0.f, .6f, 0.f),
+		grid->getExitPoint() + glm::vec3(0.f, .6f, 0.f),
 		{0.05f, 0.05f, 0.05f},
 		{0.9f, 0.8f, 0.4f},
 		{1.0f, 0.9f, 0.6f},
