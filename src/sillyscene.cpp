@@ -85,6 +85,14 @@ SillyScene::SillyScene() {
 
 	Instantiate(std::move(std::make_shared<Skybox>()));
 
+	for (auto& gp : gridObj->GetLogical().GetTreePositions())
+	{
+		// auto tree = std::make_shared<...>();
+		// tree->SetPosition(gridObj->GridToWorld(gp));
+		// Instantiate(tree);
+	}
+	
+
 	// HACK: We can get away with only doing this at scene init, SO LONG AS:
 	//     1) No transparent objects exist in the scene besides Text objects
 	//        -> world-space distance to camera does not matter

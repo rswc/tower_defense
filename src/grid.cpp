@@ -84,3 +84,19 @@ bool Grid::TryPlaceTower(GridPosition p) {
     }
     return false;
 }
+
+std::vector<Grid::GridPosition> Grid::findTilesOfType(GridMapSymbol symbol) const {
+    std::vector<Grid::GridPosition> tiles;
+    
+    for (int r = 0; r < m_rows; r++) 
+    for (int c = 0; c < m_cols; c++) {
+        if (m_map[r][c] == symbol) 
+            tiles.push_back({ r, c });
+    }
+
+    return tiles;
+}
+
+std::vector<Grid::GridPosition> Grid::GetTreePositions() const {
+    return m_trees;
+}
