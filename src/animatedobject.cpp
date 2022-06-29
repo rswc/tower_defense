@@ -74,6 +74,20 @@ void AnimatedObject::Draw(const Camera& camera) const {
 	    glUniformMatrix4fv(spAnimated->u(finalBones.c_str()), 1, false, glm::value_ptr(transforms[i]));
     }
 
+    glUniform3f(spAnimated->u("dirAmbientColor"), 0.2f, 0.2f, 0.2f);
+	glUniform3f(spAnimated->u("dirDiffuseColor"), 0.5f, 0.5f, 0.5f);
+	glUniform4f(spAnimated->u("lightDir"), 0.2f, -1.0f, 0.0f, 0.0f);
+
+    auto pLight = camera.GetLights()[0];
+	glUniform3fv(spAnimated->u("lights[0].position"), 1, glm::value_ptr(pLight.position));
+	glUniform3fv(spAnimated->u("lights[0].ambient"), 1, glm::value_ptr(pLight.ambient));
+	glUniform3fv(spAnimated->u("lights[0].diffuse"), 1, glm::value_ptr(pLight.diffuse));
+	glUniform3fv(spAnimated->u("lights[0].specular"), 1, glm::value_ptr(pLight.specular));
+	glUniform1f(spAnimated->u("lights[0].A"), pLight.A);
+	glUniform1f(spAnimated->u("lights[0].B"), pLight.B);
+	glUniform1f(spAnimated->u("lights[0].C"), pLight.C);
+
+
 	glEnableVertexAttribArray(spAnimated->a("pos"));
 	glVertexAttribPointer(spAnimated->a("pos"), 3, GL_FLOAT, false, 0, meshes[0].vertices.data()); 
         
