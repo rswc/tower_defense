@@ -24,7 +24,7 @@ void SillyScene::SceneTransition() {
 	Scene::SceneTransition();
 }
 
-SillyScene::SillyScene() {
+SillyScene::SillyScene(int mapID) : currentMap(mapID) {
 	activeCamera = RTSCamera(startCameraPosition);
 	activeCamera.SetCameraHeightCap(true, cameraHeightCap);
 	activeCamera.PushLight(Camera::PointLight(
@@ -34,6 +34,8 @@ SillyScene::SillyScene() {
 		{1.0f, 0.9f, 0.6f},
 		1.4f, 0.6f, 1.f
 	));
+
+	std::cerr << "Loading SillyScene with map #" << currentMap << std::endl;
 
 	auto objAssimpAnimated = std::make_unique<AnimatedObject>(glm::vec3(0.1f, 0.1f, 0.1f), 20.0f);
  	Instantiate(std::move(objAssimpAnimated));
@@ -85,7 +87,7 @@ SillyScene::SillyScene() {
 
 std::unique_ptr<Scene> SillyScene::GetTransitionTarget() const {
 	// If necessary, use different Scene subtype
-	auto scn = std::make_unique<SillyScene>();
+	auto scn = std::make_unique<SillyScene>((currentMap + 1) % numAvailableMaps);
 	
 	// Apply saved parameters
 
