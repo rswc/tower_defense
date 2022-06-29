@@ -8,9 +8,14 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <memory>
 
 #include "assimploader.h"
+#include "assimploaderanimated.h"
+#include "Animator.h" 
 
+#include <assimp/Importer.hpp>
+#include <assimp/postprocess.h>
 
 namespace Resources
 {
@@ -19,6 +24,14 @@ namespace Resources
     Cubemap cmp_Skybox;
     std::unordered_map<std::string, std::vector<BaseMesh>> bm_AssimpModels;
     std::unordered_map<std::string, GLuint> gl_Textures;
+    
+    std::vector<std::unique_ptr<Animation>> mobobjectAnimations;
+    std::vector<std::unique_ptr<Animator>> mobobjectAnimators;
+    std::vector<AnimatedMesh> mobobjectAnimatedMeshes;
+
+    AnimatedAssimpLoader animatedLoader;
+    Assimp::Importer mobobjectImporter;
+    const aiScene* mobobjectScene = nullptr;
     
     // Adapted from https://learnopengl.com/In-Practice/Text-Rendering
     Font LoadFont(const char* path, FT_UInt glyphHeight = 48) {
@@ -299,8 +312,16 @@ namespace Resources
         auto assimpLoader = AssimpLoader();
         assimpLoader.loadModel("assets/baloon.fbx");
         bm_AssimpModels[MOBOBJECT_MODEL] = assimpLoader.getMeshes();
-        gl_Textures[MOBOBJECT_TEXTURE] = LoadTexture("assets/baloon_color.png");
-        gl_Textures[MOBOBJECT_TEXTURE_SPECULAR] = LoadTexture("assets/baloon_metal.png");
+        gl_Textures[MOBOBJECT_TEXTURE] = LoadTexture("assets/trex/trex.png");
+        gl_Textures[MOBOBJECT_TEXTURE_SPECULAR] = LoadTexture("assets/trex/trex_specular.png");
+        
+        animatedLoader = AnimatedAssimpLoader();
+        std::string mob_anim_model = "assets/trex/trex.glb";
+        animatedLoader.loadModel(mob_anim_model);
+        mobobjectAnimatedMeshes = animatedLoader.getMeshes();
+
+        mobobjectScene = mobobjectImporter.ReadFile(mob_anim_model, aiProcess_Triangulate);
+        std::cout << std::hex << mobobjectScene << " Maybe here?" << std::endl;
     }
     
     BaseMesh* GetAssimpModelMesh(const std::string& key, int index) {
@@ -314,6 +335,22 @@ namespace Resources
             return nullptr;
         }
     } 
+
+    AnimatedMesh* GetMobAnimatedMesh(int index) {
+        return &mobobjectAnimatedMeshes[index];
+    }
+    
+    Animator* GetNewMobAnimator() {
+        std::cout << std::hex << mobobjectScene << " Maybe here?" << std::endl;
+        std::cout << "Starting Animation contructor" << std::endl;
+        auto new_anim = std::make_unique<Animation>(mobobjectScene, &animatedLoader);
+        std::cout << "Starting Animator contructor" << std::endl;
+        auto new_animator = std::make_unique<Animator>(new_anim.get());
+        std::cout << "Starting End contructor" << std::endl;
+        mobobjectAnimations.push_back(std::move(new_anim));
+        mobobjectAnimators.push_back(std::move(new_animator));
+        return mobobjectAnimators.back().get();
+    }
 
     GLuint GetModelTexture(const std::string& key) {
         try {
