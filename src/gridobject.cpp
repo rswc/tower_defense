@@ -18,12 +18,21 @@ void GridObject::Draw(const Camera& camera) const {
 	glUniformMatrix4fv(spTerrain->u("V"), 1, false, glm::value_ptr(camera.GetV()));
 	glUniformMatrix4fv(spTerrain->u("M"), 1, false, glm::value_ptr(GetTransformMatrix()));
 
-	glUniform4f(spTerrain->u("ambientColor"), 0.2f, 0.2f, 0.2f, 1.0f);
-	glUniform4f(spTerrain->u("diffuseColor"), 0.5f, 0.5f, 0.5f, 1.0f);
+	glUniform3f(spTerrain->u("ambientColor"), 0.2f, 0.2f, 0.2f);
+	glUniform3f(spTerrain->u("diffuseColor"), 0.5f, 0.5f, 0.5f);
 	glUniform4f(spTerrain->u("lightDir"), 0.2f, -1.0f, 0.0f, 0.0f);
 
+	auto pLight = camera.GetLights()[0];
+	glUniform3fv(spTerrain->u("lights[0].position"), 1, glm::value_ptr(pLight.position));
+	glUniform3fv(spTerrain->u("lights[0].ambient"), 1, glm::value_ptr(pLight.ambient));
+	glUniform3fv(spTerrain->u("lights[0].diffuse"), 1, glm::value_ptr(pLight.diffuse));
+	// specular is unused in the terrain shader
+	glUniform1f(spTerrain->u("lights[0].A"), pLight.A);
+	glUniform1f(spTerrain->u("lights[0].B"), pLight.B);
+	glUniform1f(spTerrain->u("lights[0].C"), pLight.C);
 
-    //TODO: pass to Material class?? make separate Mesh class for holding attributes??
+
+
 	glEnableVertexAttribArray(spTerrain->a("vertex"));
 	glVertexAttribPointer(spTerrain->a("vertex"), 4, GL_FLOAT, false, 0, m_mesh.vertices.data()); 
 
