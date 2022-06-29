@@ -10,6 +10,9 @@ Credits:
 
 RTSCamera::RTSCamera(){
     RTSCamera(glm::vec3(0.0f, 0.0f, 3.0f));
+    //Print camera constraints from GlobalConfig
+    std::cout << "Camera Constraints: " << std::endl;
+    std::cout << "Left-Up: " << GlobalConfig::cameraConstraintLU.x << ", " << GlobalConfig::cameraConstraintLU.y << std::endl;
 }
 
 RTSCamera::RTSCamera(glm::vec3 startPosition){
@@ -27,7 +30,50 @@ RTSCamera::RTSCamera(glm::vec3 startPosition){
         startPosition, 
         glm::vec3(0.0f, 0.0f, -1.0f), 
         glm::vec3(0.0f, 0.0f, 1.0f));
+
+    cameraPos = startPosition;
+    SetPosition(startPosition);
 }
+
+void constrainCameraPosition(glm::vec3 &cameraPos){
+
+    if(cameraPos.x < GlobalConfig::cameraConstraintLU.x){
+        cameraPos.x = GlobalConfig::cameraConstraintLU.x;
+        //std::cerr<<"Camera Constraint: Left-Up x"<<std::endl;
+    }
+    if(cameraPos.z < GlobalConfig::cameraConstraintLU.z){
+        cameraPos.z = GlobalConfig::cameraConstraintLU.z;
+        //std::cerr<<"Camera Constraint: Left-Up z"<<std::endl;
+    }
+
+    if(cameraPos.x > GlobalConfig::cameraConstraintRU.x){
+        cameraPos.x = GlobalConfig::cameraConstraintRU.x;
+        //std::cerr<<"Camera Constraint: Right-Up x"<<std::endl;
+    }
+    if(cameraPos.z < GlobalConfig::cameraConstraintRU.z){
+        cameraPos.z = GlobalConfig::cameraConstraintRU.z;
+        //std::cerr<<"Camera Constraint: Right-Up z"<<std::endl;
+    }
+
+    if(cameraPos.x < GlobalConfig::cameraConstraintLD.x){
+        cameraPos.x = GlobalConfig::cameraConstraintLD.x;
+        //std::cerr<<"Camera Constraint: Left-Down x"<<std::endl;
+    }
+    if(cameraPos.z > GlobalConfig::cameraConstraintLD.z){
+        cameraPos.z = GlobalConfig::cameraConstraintLD.z;
+        //std::cerr<<"Camera Constraint: Left-Down z"<<std::endl;
+    }
+
+    if(cameraPos.x > GlobalConfig::cameraConstraintRD.x){
+        cameraPos.x = GlobalConfig::cameraConstraintRD.x;
+        //std::cerr<<"Camera Constraint: Right-Down x"<<std::endl;
+    }
+    if(cameraPos.z > GlobalConfig::cameraConstraintRD.z){
+        cameraPos.z = GlobalConfig::cameraConstraintRD.z;
+        //std::cerr<<"Camera Constraint: Right-Down z"<<std::endl;
+    }
+}
+
 
 void RTSCamera::MoveCamera(
     float frontSpeedMove, 
@@ -52,6 +98,9 @@ void RTSCamera::MoveCamera(
     
         cameraPos += deltaTime * frontSpeedMove * cameraFront;
         cameraPos += deltaTime * rightSpeedMove * glm::normalize(glm::cross(cameraFront, cameraUp));
+
+        if(useHeightCap)
+            constrainCameraPosition(cameraPos);
 
         // HACK: To make this 'workarodund' work with systems reliant on Transform
         SetPosition(cameraPos);

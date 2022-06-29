@@ -6,13 +6,9 @@
 #include "mobobject.h"
 #include "text.h"
 #include "skybox.h"
+#include "GlobalConfig.h"
 
 #define PI 3.141592f // close enough
-
-#define cameraMoveSpeed 2.5f
-#define mouseSensitivity 0.25f
-#define startCameraPosition glm::vec3(0.0f, 3.0f, 3.0f)
-#define cameraHeightCap 3.0f
 #define pitchLowerBound -70.0f
 #define pitchUpperBound -30.0f
 
@@ -25,6 +21,15 @@ void SillyScene::SceneTransition() {
 }
 
 SillyScene::SillyScene() {
+	//Override with data from config file
+	cameraMoveSpeed = GlobalConfig::cameraMoveSpeed;
+	mouseSensitivity = GlobalConfig::mouseSensitivity;
+	cameraHeightCap = GlobalConfig::cameraHeightCap;
+	startCameraPosition.x = GlobalConfig::cameraStartX;
+	startCameraPosition.z = GlobalConfig::cameraStartZ;
+	pitch = GlobalConfig::cameraStartAngle;
+
+	std::cout<<"Camera start position"<<startCameraPosition.x<<" "<<startCameraPosition.z<<std::endl;
 	activeCamera = RTSCamera(startCameraPosition);
 	activeCamera.SetCameraHeightCap(true, cameraHeightCap);
 	activeCamera.PushLight(Camera::PointLight(

@@ -1,6 +1,6 @@
 #Window
-windowWidth 600.0
-windowHeight 600.0
+windowWidth 1920.0
+windowHeight 1080.0
 #Mob
 mobTimePerFrame 1.0
 mobAnimationSpeed 1.0
@@ -11,3 +11,15 @@ mobSpawnTime 1.0
 globalAnimationSpeedMultiplier 1.0
 #Grid
 gridMapFilepath "assets/grid/grid0.txt"
+#Settings
+mouseSensitivity 0.25
+cameraHeightCap 4.0
+cameraMoveSpeed 2.5
+cameraStartX 8.0
+cameraStartZ 7.0 
+cameraStartAngle -50.0
+cameraConstraintLU 2.0 -1.0 
+cameraConstraintLD 2.0 7.0 
+cameraConstraintRU 8.0 -1.0 
+cameraConstraintRD 8.0 7.0 
+
