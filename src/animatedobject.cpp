@@ -112,6 +112,10 @@ void AnimatedObject::Draw(const Camera& camera) const {
     glBindTexture(GL_TEXTURE_2D, texture);
     glUniform1i(spAnimated->u("tex"), 0);
 
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, textSpecular);
+    glUniform1i(spAnimated->u("texSpecular"), 1);
+
     // std::cout<<"Started drawing triangles"<<std::endl;
     glDrawElements(GL_TRIANGLES, meshes[0].indices.size(), GL_UNSIGNED_INT, meshes[0].indices.data());
     // std::cout<<"Finished drawing triangles"<<std::endl;

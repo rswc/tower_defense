@@ -29,7 +29,7 @@ in vec3 iNormal;
 in vec3 iPosition;
 in vec3 iViewDir;
 
-vec3 PointLightComponent(PointLight light, vec3 normal, vec3 viewDir, vec3 lightDir) {
+vec3 PointLightComponent(PointLight light, vec3 normal, vec3 viewDir, vec3 specularColor, vec3 lightDir) {
 	vec3 reflectDir = reflect(-lightDir, normal);
 
     float diffStrength = max(dot(normal, lightDir), 0.0);
@@ -49,11 +49,11 @@ void main(void) {
 
 	vec3 dirDiffuse = dirDiffuseColor * max(dot(vec4(normal, 0.0), lightDir), 0.0);
 
-	vec3 specColor = texture(texSpecular, texCoords);
+	vec3 specColor = texture(texSpecular, texCoords).rgb;
 
 	vec3 lightColor = dirDiffuse + dirAmbientColor;
 	for (int i = 0; i < NUM_POINT_LIGHTS; i++) {
-        lightColor += PointLightComponent(lights[i], normal, viewDir, normalize(iPosition - lights[i].position));
+        lightColor += PointLightComponent(lights[i], normal, viewDir, specColor, normalize(iPosition - lights[i].position));
     }
 
 	pixelColor = texture(tex, texCoords) * vec4(lightColor, 1.0);
