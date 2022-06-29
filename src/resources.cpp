@@ -321,7 +321,6 @@ namespace Resources
         mobobjectAnimatedMeshes = animatedLoader.getMeshes();
 
         mobobjectScene = mobobjectImporter.ReadFile(mob_anim_model, aiProcess_Triangulate);
-        std::cout << std::hex << mobobjectScene << " Maybe here?" << std::endl;
     }
     
     BaseMesh* GetAssimpModelMesh(const std::string& key, int index) {

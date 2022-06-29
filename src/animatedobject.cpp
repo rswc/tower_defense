@@ -5,6 +5,8 @@
 #include "shaderprogram.h"
 #include "camera.h"
 #include "animatedobject.h"
+#include <assimp/Importer.hpp>
+#include <assimp/postprocess.h>
 
 AnimatedObject::AnimatedObject(glm::vec3 targetModelScale, float targetAnimationSpeed)
 {
@@ -33,7 +35,10 @@ void AnimatedObject::startSetup(){
     loader.loadModel(smodelPath);
     meshes = loader.getMeshes();
 
-    danceAnimation = new Animation(smodelPath, &loader);
+    Assimp::Importer importer;
+    const aiScene* scene = importer.ReadFile(smodelPath, aiProcess_Triangulate);
+
+    danceAnimation = new Animation(scene, &loader);
     animator = new Animator(danceAnimation);
 
     //Print max bone id and bone count
