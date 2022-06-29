@@ -1,0 +1,13 @@
+#Window
+windowWidth 600.0
+windowHeight 600.0
+#Mob
+mobTimePerFrame 1.0
+mobAnimationSpeed 1.0
+mobGroupSize 5
+mobGroupSpawnWaitPeriod 20.0
+mobSpawnTime 1.0
+#Global Config
+globalAnimationSpeedMultiplier 1.0
+#Grid
+gridMapFilepath "assets/grid/grid0.txt"

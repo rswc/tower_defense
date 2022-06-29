@@ -3,11 +3,12 @@
 #include <glm/glm.hpp>
 #include <stdio.h>
 #include <memory>
-
+#include "GlobalConfig.h"
 #include "resources.h"
 #include "sillyscene.h"
 #include "sillyobject.h"
 #include "shaderprogram.h"
+
 
 #include "grid_test.h"
 
@@ -47,6 +48,8 @@ void runTests() {
 int main(void)
 {
 	runTests();
+	GlobalConfig::loadConfigFromFile("config.txt");
+	GlobalConfig::printWholeConfig();
 	
 	GLFWwindow* window; //Wskaźnik na obiekt reprezentujący okno
 
