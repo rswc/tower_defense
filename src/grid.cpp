@@ -67,3 +67,20 @@ Grid::GridPath Grid::findGridPath() {
     assert(current == exitPosition);
     return gridPath;
 }
+
+int Grid::GetRows() const {
+    return m_rows;
+}
+
+int Grid::GetCols() const {
+    return m_cols;
+}
+
+bool Grid::TryPlaceTower(GridPosition p) {
+    if (isInsideGrid(p) && isLand(p))
+    {
+        m_map[p.row][p.col] = MAP_TOWER;
+        return true;
+    }
+    return false;
+}
