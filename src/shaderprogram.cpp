@@ -1,4 +1,4 @@
-﻿/*
+/*
 Niniejszy program jest wolnym oprogramowaniem; możesz go
 rozprowadzać dalej i / lub modyfikować na warunkach Powszechnej
 Licencji Publicznej GNU, wydanej przez Fundację Wolnego
@@ -28,7 +28,9 @@ ShaderProgram* spLambertTextured;
 ShaderProgram* spWireframe;
 ShaderProgram* spText;
 ShaderProgram* spTerrain;
+ShaderProgram* spAnimated;
 ShaderProgram* spSkybox;
+
 
 
 void initShaders() {
@@ -40,7 +42,9 @@ void initShaders() {
 	spWireframe = new ShaderProgram("v_wireframe.glsl", "g_wireframe.glsl", "f_wireframe.glsl");
 	spText = new ShaderProgram("v_text.glsl", NULL, "f_text.glsl");
 	spTerrain = new ShaderProgram("v_terrain.glsl", NULL, "f_terrain.glsl");
+	spAnimated = new ShaderProgram("v_animated.glsl", NULL, "f_animated.glsl");
 	spSkybox = new ShaderProgram("v_skybox.glsl", NULL, "f_skybox.glsl");
+
 }
 
 void freeShaders() {
@@ -52,7 +56,9 @@ void freeShaders() {
 	delete spWireframe;
 	delete spText;
 	delete spTerrain;
+	delete spAnimated;
 	delete spSkybox;
+
 }
 
 //Procedura wczytuje plik do tablicy znaków.

@@ -1,7 +1,7 @@
 #include "sillyscene.h"
 #include "sillyobject.h"
-#include "sillyanimatedobject.h"
-#include "assimpobject.h"
+#include "animatedobject.h"
+#include "gamegrid.h"
 #include "gridobject.h"
 #include "mobobject.h"
 #include "text.h"
@@ -20,9 +20,11 @@ SillyScene::SillyScene() {
   activeCamera = RTSCamera(startCameraPosition);
   activeCamera.SetCameraHeightCap(true, cameraHeightCap);
 
+	auto objAssimpAnimated = std::make_unique<AnimatedObject>(glm::vec3(0.1f, 0.1f, 0.1f), 20.0f);
+  Instantiate(std::move(objAssimpAnimated));
+
 	auto objAssimp = std::make_shared<AssimpObject>();
 	Instantiate(std::move(objAssimp));
-
 
 	// remove if annoying
 	auto txt = std::make_shared<Text>("Graphics programming\nis my passion");

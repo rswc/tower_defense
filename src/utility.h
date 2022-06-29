@@ -2,8 +2,8 @@
 #define UTILITY_H_
 
 #include <glm/glm.hpp>
+#include <assimp/scene.h>
 #include <glm/gtx/intersect.hpp>
-
 #include <vector>
 
 struct Plane
@@ -67,6 +67,8 @@ void initializeMatrix(std::vector<std::vector<T>>& matrix, int rows, int cols, T
 // Resulting Vector is a vector starting in A vertex 
 // Assume: A, B,C are given in counter-clockwise order
 glm::vec3 calculateTriangleNormal(glm::vec3 A, glm::vec3 B, glm::vec3 C);
+glm::mat4 ConvertMatrixToGLMFormat(const aiMatrix4x4& from);
+
 
 // Calculate Point on Quadratic Bezier Curve using linear interpolation - glm::mix
 // time argument is in range [0, 1]

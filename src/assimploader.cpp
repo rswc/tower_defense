@@ -1,5 +1,7 @@
 #include "assimploader.h"
-
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 void AssimpLoader::loadModel(std::string filename){
     Assimp::Importer importer;
