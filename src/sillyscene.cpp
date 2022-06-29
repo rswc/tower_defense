@@ -65,6 +65,9 @@ SillyScene::SillyScene() {
             }};
 
 	grid = std::make_unique<GameGrid>(map);
+	
+	std::cout << "GameStart: " << grid->getStartPoint().x << " " << grid->getStartPoint().z << std::endl;
+	std::cout << "GameExit: " << grid->getExitPoint().x << " " << grid->getExitPoint().z << std::endl;
 
 	// GameGrid grid({{{"xxx", "xSx", "x.x", "xEx", "xxx"}}});
 	GameGrid::GameGridMesh mesh = grid->generateBaseMesh(GameGrid::MESH_V_SECOND);

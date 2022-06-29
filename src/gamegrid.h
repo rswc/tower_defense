@@ -118,6 +118,13 @@ public:
         return gamePath.size();
     }
     
+    inline glm::vec3 getExitPoint() const {
+        return gamePath[gamePath.size() - 2];
+    }
+
+    inline glm::vec3 getStartPoint() const {
+        return gamePath[1];
+    }
 
     Plane GetMousePickPlane() const;
     Grid& GetLogical();
