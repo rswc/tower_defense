@@ -105,6 +105,18 @@ int main(void)
 		glfwSetTime(0);
 
 		scene->Update(dt);
+
+		if (scene->IsTransitionInitiated())
+		{
+			auto progenitor = std::move(scene);
+
+			scene = progenitor->GetTransitionTarget();
+
+			int width, height;
+			glfwGetWindowSize(window, &width, &height);
+			scene->SetScreenSize(width, height);
+		}	
+
         scene->Draw();
 
         glfwSwapBuffers(window);

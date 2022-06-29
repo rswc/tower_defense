@@ -8,16 +8,22 @@
 
 class Scene
 {
-  protected:
-      std::vector<std::shared_ptr<GameObject>> objects;
-      RTSCamera activeCamera;
-  public:
+protected:
+    std::vector<std::shared_ptr<GameObject>> objects;
+    RTSCamera activeCamera;
+    bool transitionFlag = false;
+    virtual void SceneTransition();
+public:
     Scene() = default;
     Scene(const Scene&) = delete;
     Scene& operator=(const Scene&) = delete;
     Scene(Scene&&) = default;
     Scene& operator=(Scene&&) = default;
     ~Scene() = default;
+
+    inline bool IsTransitionInitiated() const { return transitionFlag; };
+    virtual std::unique_ptr<Scene> GetTransitionTarget() const = 0;
+
     virtual void Update(double dt);
     virtual void Draw() const;
     virtual void OnKey(GLFWwindow* window, int key, int scancode, int action, int mod);
