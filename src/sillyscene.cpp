@@ -32,13 +32,6 @@ SillyScene::SillyScene() {
 	std::cout<<"Camera start position"<<startCameraPosition.x<<" "<<startCameraPosition.z<<std::endl;
 	activeCamera = RTSCamera(startCameraPosition);
 	activeCamera.SetCameraHeightCap(true, cameraHeightCap);
-	activeCamera.PushLight(Camera::PointLight(
-		{0.5f, 1.0f, 0.5f}, // <-- position; Set to enemy target instead?
-		{0.05f, 0.05f, 0.05f},
-		{0.9f, 0.8f, 0.4f},
-		{1.0f, 0.9f, 0.6f},
-		1.4f, 0.6f, 1.f
-	));
 
 	auto objAssimpAnimated = std::make_unique<AnimatedObject>(glm::vec3(0.1f, 0.1f, 0.1f), 20.0f);
  	Instantiate(std::move(objAssimpAnimated));
@@ -80,6 +73,14 @@ SillyScene::SillyScene() {
 	);
 
 	Instantiate(gridObj);
+
+	activeCamera.PushLight(Camera::PointLight(
+		grid->getExitPoint() + glm::vec3(0.f, .6f, 0.f),
+		{0.05f, 0.05f, 0.05f},
+		{0.9f, 0.8f, 0.4f},
+		{1.0f, 0.9f, 0.6f},
+		1.2f, 0.6f, 1.f
+	));
 
 	Instantiate(std::move(std::make_shared<Skybox>()));
 
