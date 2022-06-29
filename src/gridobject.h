@@ -21,4 +21,6 @@ public:
     void Update(double deltaTime) override;
     Grid& GetLogical();
     Plane GetMousePickPlane() const;
+    Grid::GridPosition WorldToGrid(glm::vec3 position) const;
+    glm::vec3 GridToWorld(Grid::GridPosition position) const;
 };

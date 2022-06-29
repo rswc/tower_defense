@@ -21,6 +21,9 @@ public:
             return baseMesh;
         }
     };
+    
+    static constexpr float halfRowScale = 0.5f;
+    static constexpr float halfColScale = 0.5f;
 
 private:
 
@@ -43,9 +46,6 @@ private:
         GAME_DIR_DOWNRIGHT,
         GAME_DIR_N
     };
-
-    static constexpr float halfRowScale = 0.5f;
-    static constexpr float halfColScale = 0.5f;
 
     static constexpr float innerSquareFactor = 0.6f;
     static constexpr float elevationStep = .3f;
