@@ -17,9 +17,9 @@ AssimpObject::AssimpObject() {
     texture = readTexture("assets/Vampire_diffuse.png");
     textSpecular = readTexture("assets/Vampire_specular.png");
 
-    auto loader = AssimpLoader();
-    loader.loadModel("assets/vampire.dae");
-    meshes = loader.getMeshes();
+    // auto loader = AssimpLoader();
+    // loader.loadModel("assets/vampire.dae");
+    // meshes = loader.getMeshes();
 }
 
 AssimpObject::~AssimpObject() {

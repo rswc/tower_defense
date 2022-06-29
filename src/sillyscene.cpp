@@ -25,14 +25,21 @@ void SillyScene::SceneTransition() {
 }
 
 SillyScene::SillyScene() {
-  activeCamera = RTSCamera(startCameraPosition);
-  activeCamera.SetCameraHeightCap(true, cameraHeightCap);
+	activeCamera = RTSCamera(startCameraPosition);
+	activeCamera.SetCameraHeightCap(true, cameraHeightCap);
+	activeCamera.PushLight(Camera::PointLight(
+		{0.5f, 1.0f, 0.5f}, // <-- position; Set to enemy target instead?
+		{0.05f, 0.05f, 0.05f},
+		{0.9f, 0.8f, 0.4f},
+		{1.0f, 0.9f, 0.6f},
+		1.4f, 0.6f, 1.f
+	));
 
 	auto objAssimpAnimated = std::make_unique<AnimatedObject>(glm::vec3(0.1f, 0.1f, 0.1f), 20.0f);
  	Instantiate(std::move(objAssimpAnimated));
 
-	auto objAssimp = std::make_shared<AssimpObject>();
-	Instantiate(std::move(objAssimp));
+	// auto objAssimp = std::make_shared<AssimpObject>();
+	// Instantiate(std::move(objAssimp));
 
 	// remove if annoying
 	auto txt = std::make_shared<Text>("Graphics programming\nis my passion");
