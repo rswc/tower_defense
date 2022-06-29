@@ -10,6 +10,8 @@
 typedef unsigned int GLuint;
 
 class MobManager;
+class Animator;
+class AnimatedMesh;
 
 class MobObject : public GameObject
 {
@@ -28,15 +30,17 @@ private:
     };
 
     static constexpr float EPS = 1e-9;
-    static constexpr float timePerSegment = 0.2f;
+    static constexpr float timePerSegment = 1.f;
     static constexpr float modelHeight = 1.0f;
     static constexpr MobPosition startingPosition = { 0, 0.5f };
+    static constexpr float animSpeed = 0.5f;
 
     GameGrid * gameGrid = nullptr;
     MobPosition currentPos = startingPosition;
     bool active = false;
     int m_id = -1;
-    BaseMesh *mesh = nullptr;
+    AnimatedMesh *mesh = nullptr;
+    Animator * animator = nullptr;
     GLuint tex, texSpecular;
     
 public:
