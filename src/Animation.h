@@ -29,7 +29,7 @@ class Animation
 
     public:
         Animation() = default;
-        Animation(const std::string& animationPath, AnimatedAssimpLoader* model);
+        Animation(const aiScene* scene, AnimatedAssimpLoader* model);
          ~Animation(){}
         Bone* FindBone(const std::string& name);
         inline float GetTicksPerSecond() { return m_TicksPerSecond; }

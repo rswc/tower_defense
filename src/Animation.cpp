@@ -3,11 +3,10 @@
 #include <assimp/postprocess.h>
 #include <functional>
 #include "utility.h"
+#include <iostream>
 
-Animation::Animation(const std::string& animationPath, AnimatedAssimpLoader* model)
+Animation::Animation(const aiScene *scene, AnimatedAssimpLoader* model)
 {
-    Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(animationPath, aiProcess_Triangulate);
     assert(scene && scene->mRootNode);
     auto animation = scene->mAnimations[0];
     m_Duration = animation->mDuration;
