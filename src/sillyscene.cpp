@@ -65,7 +65,7 @@ SillyScene::SillyScene() {
                 "x....x",
                 "x.xxxx",
                 "x.x.Ex",
-                "x.x.xx",
+                "x.@.xx",
                 "x...xx",
                 "xxxxxx"
             }};

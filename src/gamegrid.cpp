@@ -21,7 +21,7 @@ GameGrid::GameGridPosition GameGrid::gridToModelPosition(Grid::GridPosition p) c
 
 inline float GameGrid::cellElevation(Grid::GridPosition p) const {
     if (logicalGrid.isInsideGrid(p))
-        return logicalGrid.isLand(p) ? elevationStep : 0;
+        return isFlat(p) ? elevationStep : 0;
     return elevationStep;
 }
 
@@ -259,7 +259,7 @@ GameGrid::GameGridMesh GameGrid::generateWalledMesh() {
     
     for (int r = 0; r < logicalGrid.m_rows; r++) 
     for (int c = 0; c < logicalGrid.m_cols; c++) {
-        if (logicalGrid.isLand({r, c}))
+        if (isFlat({r, c}))
         {
             makeFlatCell(mesh, r, c);
         } else {

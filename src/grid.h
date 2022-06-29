@@ -83,6 +83,10 @@ private:
         return m_map[p.row][p.col] == MAP_LAND;
     }
     
+    bool isTree(GridPosition p) const {
+        return m_map[p.row][p.col] == MAP_TREE;
+    }
+    
     bool isTower(GridPosition p) const {
         return m_map[p.row][p.col] == MAP_TOWER;
     }

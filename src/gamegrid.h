@@ -91,6 +91,10 @@ private:
 
     Grid logicalGrid;
     GamePath gamePath;
+
+    inline bool isFlat(Grid::GridPosition p) const {
+        return logicalGrid.isLand(p) || logicalGrid.isTree(p);
+    }
     
 public:
     enum : MeshVersion {

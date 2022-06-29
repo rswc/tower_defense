@@ -12,7 +12,7 @@ Grid::DirMatrix Grid::translateGridMapToDirMatrix(const Grid::GridMap &map) {
 
     for (int r = 0; r < size.row; r++) 
     for (int c = 0; c < size.col; c++) {
-        if (map[r][c] == MAP_LAND) continue;
+        if (map[r][c] == MAP_LAND || map[r][c] == MAP_TREE) continue;
 
         GridPosition current {r, c};
 
@@ -20,7 +20,7 @@ Grid::DirMatrix Grid::translateGridMapToDirMatrix(const Grid::GridMap &map) {
             GridPosition adjacent = moveInDirection(current, dir);
 
             if ((unsigned) adjacent.row < (unsigned) size.row && (unsigned) adjacent.col < (unsigned) size.col 
-                && map[adjacent.row][adjacent.col] != MAP_LAND) {
+                && map[adjacent.row][adjacent.col] != MAP_LAND && map[adjacent.row][adjacent.col] != MAP_TREE) {
                 available_dirs[r][c] |= (1 << dir);
             }
         }
