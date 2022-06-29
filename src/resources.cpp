@@ -302,12 +302,12 @@ namespace Resources
         ft_OpenSans = LoadFont("assets\\OpenSans\\OpenSans-Regular.ttf");
         ta_Terrain = LoadTextureArray({"assets\\ta_Terrain_0.png", "assets\\ta_Terrain_1.png"});
         cmp_Skybox = LoadCubemap({
-            "assets\\DaylightBox\\Right.png",
-            "assets\\DaylightBox\\Left.png",
-            "assets\\DaylightBox\\Top.png",
-            "assets\\DaylightBox\\Bottom.png",
-            "assets\\DaylightBox\\Front.png",
-            "assets\\DaylightBox\\Back.png",
+            "assets\\envmap_stormydays\\stormydays_ft.png",
+            "assets\\envmap_stormydays\\stormydays_bk.png",
+            "assets\\envmap_stormydays\\stormydays_up.png",
+            "assets\\envmap_stormydays\\stormydays_dn.png",
+            "assets\\envmap_stormydays\\stormydays_rt.png",
+            "assets\\envmap_stormydays\\stormydays_lf.png",
         });
         auto assimpLoader = AssimpLoader();
         assimpLoader.loadModel("assets/baloon.fbx");
