@@ -8,6 +8,8 @@
 #include "skybox.h"
 #include "GlobalConfig.h"
 #include "tower.h"
+#include "StaticObject.h"
+
 
 #define PI 3.141592f // close enough
 #define pitchLowerBound -70.0f
@@ -34,8 +36,18 @@ SillyScene::SillyScene() {
 	activeCamera = RTSCamera(startCameraPosition);
 	activeCamera.SetCameraHeightCap(true, cameraHeightCap);
 
-	auto objAssimpAnimated = std::make_unique<AnimatedObject>(glm::vec3(0.1f, 0.1f, 0.1f), 20.0f);
+	auto objAssimpAnimated = std::make_unique<AnimatedObject>(glm::vec3(0.03f, 0.03f, 0.03f), 1.0f);
+	objAssimpAnimated->SetRotation(glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)));
+	objAssimpAnimated->SetPosition(glm::vec3(2.0f, 0.2f, 0.0f));
  	Instantiate(std::move(objAssimpAnimated));
+
+	//auto objStatic = std::make_unique<StaticObject>(Resources::GATEOBJECT_MODEL, Resources::GATEOBJECT_TEXTURE, Resources::GATEOBJECT_TEXTURE_SPECULAR);
+	// auto objStatic = std::make_unique<StaticObject>(
+	// 	"gatemodel", 
+	// 	"gatetexture", 
+	// 	"gatetexturespec");
+	// objStatic->SetScale(glm::vec3(0.001f, 0.001f, 0.001f));
+	// Instantiate(std::move(objStatic));
 
 	// auto objAssimp = std::make_shared<AssimpObject>();
 	// Instantiate(std::move(objAssimp));
@@ -75,6 +87,8 @@ SillyScene::SillyScene() {
 
 	Instantiate(gridObj);
 
+
+
 	activeCamera.PushLight(Camera::PointLight(
 		grid->getExitPoint() + glm::vec3(0.f, .6f, 0.f),
 		{0.05f, 0.05f, 0.05f},
@@ -90,6 +104,10 @@ SillyScene::SillyScene() {
 		// auto tree = std::make_shared<...>();
 		// tree->SetPosition(gridObj->GridToWorld(gp));
 		// Instantiate(tree);
+		auto objAssimpAnimated1 = std::make_shared<AnimatedObject>(glm::vec3(0.03f, 0.03f, 0.03f), 1.0f);
+		objAssimpAnimated1->SetRotation(glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)));
+		objAssimpAnimated1->SetPosition(gridObj->GridToWorld(gp));
+		Instantiate(objAssimpAnimated1);
 	}
 	
 
