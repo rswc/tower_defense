@@ -19,6 +19,18 @@ namespace GlobalConfig{
 
     //Animations
         float globalAnimationSpeedMultiplier;
+    
+    //Settings
+        float mouseSensitivity;
+        float cameraHeightCap;
+        float cameraMoveSpeed;
+        float cameraStartX;
+        float cameraStartZ;
+        float cameraStartAngle;
+        glm::vec3 cameraConstraintLU;
+        glm::vec3 cameraConstraintRU;
+        glm::vec3 cameraConstraintLD;
+        glm::vec3 cameraConstraintRD;
 
     //Parse config.txt file into maps of proper variable types
     //Examples of use:
@@ -63,8 +75,38 @@ namespace GlobalConfig{
                 else if(key == "globalAnimationSpeedMultiplier"){
                     globalAnimationSpeedMultiplier = std::stof(value);
                 }
+                else if(key == "mouseSensitivity"){
+                    mouseSensitivity = std::stof(value);
+                }
+                else if(key == "cameraHeightCap"){
+                    cameraHeightCap = std::stof(value);
+                }
+                else if(key == "cameraMoveSpeed"){
+                    cameraMoveSpeed = std::stof(value);
+                }
+                else if(key == "cameraStartX"){
+                    cameraStartX = std::stof(value);
+                }
+                else if(key == "cameraStartZ"){
+                    cameraStartZ = std::stof(value);
+                }
+                else if(key == "cameraStartAngle"){
+                    cameraStartAngle = std::stof(value);
+                }
+                else if(key == "cameraConstraintLU"){
+                    cameraConstraintLU = glm::vec3(std::stof(value.substr(0, value.find(' '))), 0.0f, std::stof(value.substr(value.find(' ') + 1, value.find(' '))));
+                }
+                else if(key == "cameraConstraintRU"){
+                    cameraConstraintRU = glm::vec3(std::stof(value.substr(0, value.find(' '))), 0.0f, std::stof(value.substr(value.find(' ') + 1, value.find(' '))));
+                }
+                else if(key == "cameraConstraintLD"){
+                    cameraConstraintLD = glm::vec3(std::stof(value.substr(0, value.find(' '))), 0.0f, std::stof(value.substr(value.find(' ') + 1, value.find(' '))));
+                }
+                else if(key == "cameraConstraintRD"){
+                    cameraConstraintRD = glm::vec3(std::stof(value.substr(0, value.find(' '))), 0.0f, std::stof(value.substr(value.find(' ') + 1, value.find(' '))));
+                }           
                 else{
-                    std::cout << "Error: Unknown key in config file: " << key << std::endl;
+                    std::cout << "Error: key " << key << " not found in config file" << std::endl;
                 }
             }
         }
