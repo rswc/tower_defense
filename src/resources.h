@@ -9,6 +9,8 @@
 #include <unordered_map>
 
 class BaseMesh;
+class AnimatedMesh;
+class Animator;
 
 namespace Resources
 {
@@ -56,6 +58,9 @@ namespace Resources
     GLuint LoadTexture(const char* filename);
     void Initialize();
     void Free();
+
+    AnimatedMesh* GetMobAnimatedMesh(int index);
+    Animator* GetNewMobAnimator();
 
 } // namespace Resources
 

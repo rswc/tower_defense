@@ -10,24 +10,75 @@
 #include "assimploader.h"
 #include "utility.h"
 
+#include "Animator.h"
 #include "resources.h"
+
 
 MobObject::MobObject(GameGrid *gameGridPtr, int id) {
     gameGrid = gameGridPtr;
     m_id = id;
     tex = Resources::GetModelTexture(Resources::MOBOBJECT_TEXTURE);
-    texSpecular = Resources::GetModelTexture(Resources::MOBOBJECT_TEXTURE_SPECULAR);
-    mesh = Resources::GetAssimpModelMesh(Resources::MOBOBJECT_MODEL, 0);
+    // texSpecular = Resources::GetModelTexture(Resources::MOBOBJECT_TEXTURE_SPECULAR);
+    mesh = Resources::GetMobAnimatedMesh(0);
+    animator = Resources::GetNewMobAnimator();
+    std::cout << "animator loaded? " << std::endl;
 
-    Rotate(-AI_MATH_PI/2, glm::vec3(1.0f, 0.0f, 0.0f));
+    // Rotate(-AI_MATH_PI/2, glm::vec3(1.0f, 0.0f, 0.0f));
     // Rotate(30.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-    SetScale(glm::vec3(0.05, 0.05f, 0.05f));
+    SetScale(glm::vec3(0.1, 0.1, 0.1));
     auto pos = GetPosition();
     pos += glm::vec3(0, 1.f, 0.f);
     SetPosition(pos);
 }
 
 void MobObject::Draw(const Camera& camera) const {
+    if (!active) return;
+
+    spAnimated->use();
+
+	glUniformMatrix4fv(spAnimated->u("P"), 1, false, glm::value_ptr(camera.GetP()));
+	glUniformMatrix4fv(spAnimated->u("V"), 1, false, glm::value_ptr(camera.GetV()));
+	glUniformMatrix4fv(spAnimated->u("M"), 1, false, glm::value_ptr(GetTransformMatrix()));
+
+    std::vector<glm::mat4> &transforms = *animator->GetFinalBoneMatrices();
+    for (int i = 0; i < transforms.size(); ++i){
+        std::string finalBones = "finalBonesMatrices[" + std::to_string(i) + "]";
+	    glUniformMatrix4fv(spAnimated->u(finalBones.c_str()), 1, false, glm::value_ptr(transforms[i]));
+    }
+
+	glEnableVertexAttribArray(spAnimated->a("pos"));
+	glVertexAttribPointer(spAnimated->a("pos"), 3, GL_FLOAT, false, 0, mesh->vertices.data()); 
+        
+	glEnableVertexAttribArray(spAnimated->a("tex"));
+	glVertexAttribPointer(spAnimated->a("tex"), 2, GL_FLOAT, false, 0, mesh->textures.data()); 
+
+	glEnableVertexAttribArray(spAnimated->a("norm"));
+	glVertexAttribPointer(spAnimated->a("norm"), 3, GL_FLOAT, false, 0, mesh->normals.data()); 
+
+    glEnableVertexAttribArray(spAnimated->a("boneIds"));
+    //glVertexAttribIPointer(spAnimated->a("boneIds"), 4, GL_BYTE, 0, meshes[0].boneIDs.data());
+    glVertexAttribPointer(spAnimated->a("boneIds"), 4, GL_FLOAT, false, 0, mesh->boneIDs.data());
+    //GL_UNSIGNED_SHORT
+    glEnableVertexAttribArray(spAnimated->a("weights"));
+    //glVertexAttribIPointer(spAnimated->a("weights"), 4, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, m_BoneIDs));
+    glVertexAttribPointer(spAnimated->a("weights"), 4, GL_FLOAT, false, 0, mesh->weights.data());
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glUniform1i(spAnimated->u("tex"), 0);
+
+    glDrawElements(GL_TRIANGLES, mesh->indices.size(), GL_UNSIGNED_INT, mesh->indices.data());
+    
+    //Disable vertex attribute array
+	glDisableVertexAttribArray(spAnimated->a("pos"));
+	glDisableVertexAttribArray(spAnimated->a("tex"));
+	glDisableVertexAttribArray(spAnimated->a("norm"));   
+    glDisableVertexAttribArray(spAnimated->a("boneIds"));
+    glDisableVertexAttribArray(spAnimated->a("weights"));
+}
+
+/*
+void MobObject::OldDraw(const Camera& camera) const {
     if (!active) return;
 
     //Activate the shader
@@ -68,9 +119,13 @@ void MobObject::Draw(const Camera& camera) const {
 	glDisableVertexAttribArray(spLambertTextured->a("normal"));
 
 }
+*/
+
 
 void MobObject::Update(double deltaTime) {
     if (!active) return;
+    
+    animator->UpdateAnimation(deltaTime * animSpeed);
 
     // std::cerr << "Current Pos: " << currentPos.segment << " " << currentPos.timeLeft << std::endl;
     currentPos = advanceInTime(currentPos, deltaTime);
@@ -79,7 +134,7 @@ void MobObject::Update(double deltaTime) {
     // std::cerr << "Game Pos: " << nextGamePos.x << " " << nextGamePos.y << " " << nextGamePos.z << std::endl;
     SetPosition(nextGamePos);
 
-    Rotate(AI_MATH_PI * deltaTime, glm::vec3(0, 0, 1));
+    //Rotate(AI_MATH_PI * deltaTime, glm::vec3(0, 0, 1));
 
     if (finished()) {
         // restart();

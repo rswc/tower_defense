@@ -7,13 +7,9 @@
 #include "text.h"
 #include "skybox.h"
 #include "tower.h"
+#include "GlobalConfig.h"
 
 #define PI 3.141592f // close enough
-
-#define cameraMoveSpeed 2.5f
-#define mouseSensitivity 0.25f
-#define startCameraPosition glm::vec3(0.0f, 3.0f, 3.0f)
-#define cameraHeightCap 3.0f
 #define pitchLowerBound -70.0f
 #define pitchUpperBound -30.0f
 
@@ -26,6 +22,15 @@ void SillyScene::SceneTransition() {
 }
 
 SillyScene::SillyScene(int mapID) : currentMap(mapID) {
+	//Override with data from config file
+	cameraMoveSpeed = GlobalConfig::cameraMoveSpeed;
+	mouseSensitivity = GlobalConfig::mouseSensitivity;
+	cameraHeightCap = GlobalConfig::cameraHeightCap;
+	startCameraPosition.x = GlobalConfig::cameraStartX;
+	startCameraPosition.z = GlobalConfig::cameraStartZ;
+	pitch = GlobalConfig::cameraStartAngle;
+
+	std::cout<<"Camera start position"<<startCameraPosition.x<<" "<<startCameraPosition.z<<std::endl;
 	activeCamera = RTSCamera(startCameraPosition);
 	activeCamera.SetCameraHeightCap(true, cameraHeightCap);
 	activeCamera.PushLight(Camera::PointLight(
@@ -63,6 +68,9 @@ SillyScene::SillyScene(int mapID) : currentMap(mapID) {
             }};
 
 	grid = std::make_unique<GameGrid>(map);
+	
+	std::cout << "GameStart: " << grid->getStartPoint().x << " " << grid->getStartPoint().z << std::endl;
+	std::cout << "GameExit: " << grid->getExitPoint().x << " " << grid->getExitPoint().z << std::endl;
 
 	// GameGrid grid({{{"xxx", "xSx", "x.x", "xEx", "xxx"}}});
 	GameGrid::GameGridMesh mesh = grid->generateBaseMesh(GameGrid::MESH_V_SECOND);

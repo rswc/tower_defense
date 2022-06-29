@@ -14,12 +14,14 @@ AssimpObject::AssimpObject() {
     Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
     Rotate(30.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 
+    /*
     texture = readTexture("assets/Vampire_diffuse.png");
     textSpecular = readTexture("assets/Vampire_specular.png");
 
-    // auto loader = AssimpLoader();
-    // loader.loadModel("assets/vampire.dae");
-    // meshes = loader.getMeshes();
+    auto loader = AssimpLoader();
+    loader.loadModel("assets/vampire.dae");
+    meshes = loader.getMeshes();
+    */
 }
 
 AssimpObject::~AssimpObject() {

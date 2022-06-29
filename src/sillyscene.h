@@ -20,6 +20,10 @@ private:
     float yaw = -90, pitch = -45, speed_fwd = 0, speed_right = 0;
     float lastX = 0, lastY = 0;
     float fov = 50.0f;
+    float cameraMoveSpeed = 2.5f;
+    float  mouseSensitivity =  0.25f;
+    glm::vec3 startCameraPosition = glm::vec3(0.0f, 12.0f, 3.0f);
+    float cameraHeightCap = 3.0f;
 
     bool firstMouse = true, focus = true, freeFlight = false, doCameraRotation = false;
     void updateCursorState(GLFWwindow* window);
