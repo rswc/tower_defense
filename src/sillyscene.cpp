@@ -217,9 +217,9 @@ void SillyScene::OnMouseButton(GLFWwindow* window, int button, int action, int m
 			
 			if (gridObj->GetLogical().TryPlaceTower(gp))
 			{
-				std::cerr << "Tower placed!\n";
 				auto tower = std::make_shared<Tower>();
 				tower->SetPosition(gridObj->GridToWorld(gp));
+				std::cout << "Tower placed! (" << tower->GetPosition().x << " " << tower->GetPosition().z << ")" << std::endl; 
 				Instantiate(tower);
 			}
 			else
