@@ -3,6 +3,7 @@
 #include "utility.h"
 #include "grid.h"
 #include "BaseMesh.h"
+#include "gridobject.h"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -10,7 +11,7 @@
 
 #include <vector>
 
-GameGrid::GameGridPosition GameGrid::gridToModelPosition(Grid::GridPosition p) {
+GameGrid::GameGridPosition GameGrid::gridToModelPosition(Grid::GridPosition p) const {
     if (!logicalGrid.isInsideGrid(p)) {
         return {-1, -1, -1};
     }
@@ -18,7 +19,7 @@ GameGrid::GameGridPosition GameGrid::gridToModelPosition(Grid::GridPosition p) {
     return { p.row + halfRowScale, cellElevation(p), p.col + halfColScale };
 }
 
-inline float GameGrid::cellElevation(Grid::GridPosition p) {
+inline float GameGrid::cellElevation(Grid::GridPosition p) const {
     if (logicalGrid.isInsideGrid(p))
         return logicalGrid.isLand(p) ? elevationStep : 0;
     return elevationStep;
@@ -280,4 +281,46 @@ GameGrid::GameGridMesh GameGrid::generateBaseMesh(GameGrid::MeshVersion version)
     }
     
     return mesh;
+}
+
+GameGrid::GamePath GameGrid::generateGamePath(const Grid& grid) {
+    GamePath path;
+    
+    GameDirEnum last_dir = GAME_DIR_NONE;
+    GameDirEnum next_dir = GAME_DIR_NONE;
+    for (auto &p : grid.m_path) {
+        Grid::GridPosition logical_pos = p.first;
+        Grid::DirEnum logical_dir = p.second;
+
+        GameGridPosition center = gridToModelPosition(logical_pos);
+        next_dir = (logical_dir == Grid::DIRECTION_NONE ? GAME_DIR_NONE : logical_dir * 2);
+
+        if (last_dir == GAME_DIR_NONE)  {
+            GameDirEnum opp_dir = grid.oppositeDirection(logical_dir) * 2;
+            path.emplace_back(center + dirVector[opp_dir]);
+        }
+
+        path.emplace_back(center);
+        
+        if (next_dir == GAME_DIR_NONE) { 
+            path.emplace_back(center + dirVector[last_dir]);
+        }
+        else {
+            path.emplace_back(center + dirVector[next_dir]);
+        }
+        
+        last_dir = next_dir;
+    }
+
+    return path;
+}
+Plane GameGrid::GetMousePickPlane() const {
+    return Plane(
+        gridToModelPosition({0, 0}),
+        glm::normalize(-depthVector)
+    );
+}
+
+Grid& GameGrid::GetLogical() {
+    return logicalGrid;
 }

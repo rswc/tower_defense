@@ -4,6 +4,11 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <map>
+#include <vector>
+#include <string>
+#include <unordered_map>
+
+class BaseMesh;
 
 namespace Resources
 {
@@ -24,15 +29,31 @@ namespace Resources
         std::map<unsigned char, Character> characters;
     };
 
-    extern Font ft_OpenSans;
     struct TextureArray
     {
         GLuint id;
         unsigned int width, height, layers;
     };
 
-    extern TextureArray ta_Terrain;
+    struct Cubemap
+    {
+        GLuint id;
+    };
 
+    extern Font ft_OpenSans;
+    extern TextureArray ta_Terrain;
+    extern Cubemap cmp_Skybox;
+    extern std::unordered_map<std::string, std::vector<BaseMesh>> bm_AssimpModels;
+    extern std::unordered_map<std::string, GLuint> gl_Textures;
+    
+    const std::string MOBOBJECT_MODEL = "mobmodel";
+    const std::string MOBOBJECT_TEXTURE = "mobtexture";
+    const std::string MOBOBJECT_TEXTURE_SPECULAR = "mobtexturespec";
+
+    BaseMesh* GetAssimpModelMesh(const std::string& key, int index);
+    GLuint GetModelTexture(const std::string& key);
+
+    GLuint LoadTexture(const char* filename);
     void Initialize();
     void Free();
 

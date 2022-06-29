@@ -3,7 +3,6 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
-
 #include <vector>
 
 
@@ -15,6 +14,7 @@ glm::vec3 calculateTriangleNormal(glm::vec3 A, glm::vec3 B, glm::vec3 C) {
     return normalize(crossProduct);
 }
 
+
 glm::mat4 ConvertMatrixToGLMFormat(const aiMatrix4x4& from)
 {
     glm::mat4 to;
@@ -25,3 +25,17 @@ glm::mat4 ConvertMatrixToGLMFormat(const aiMatrix4x4& from)
     to[0][3] = from.d1; to[1][3] = from.d2; to[2][3] = from.d3; to[3][3] = from.d4;
     return to;
 }
+
+// Calculate Point on Quadratic Bezier Curve using linear interpolation - glm::mix
+// time argument is in range [0, 1]
+// Assume: A, B, C are given in correct order -> Bezier Curve between A - C with B as point inbetween
+glm::vec3 quadraticBezierCurve(glm::vec3 A, glm::vec3 B, glm::vec3 C, float time) {
+    // glm::vec3 interAB = A * (1.0f - time) + B * time;
+    // glm::vec3 interBC = B * (1.0f - time) + C * time;
+    // return interAB * (1.0f - time) + interBC * time;
+
+    glm::vec3 interAB = glm::mix(A, B, time); 
+    glm::vec3 interBC = glm::mix(B, C, time); 
+    return glm::mix(interAB, interBC, time);
+}
+

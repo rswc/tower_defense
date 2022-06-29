@@ -1,18 +1,25 @@
 #include "resources.h"
 
-#include <iostream>
-#include <vector>
-#include <string>
 #include "lodepng.h"
 #include <freetype2/ft2build.h>
 #include FT_FREETYPE_H
+
+#include <unordered_map>
+#include <iostream>
+#include <vector>
+#include <string>
+
+#include "assimploader.h"
 
 
 namespace Resources
 {
     Font ft_OpenSans;
     TextureArray ta_Terrain;
-
+    Cubemap cmp_Skybox;
+    std::unordered_map<std::string, std::vector<BaseMesh>> bm_AssimpModels;
+    std::unordered_map<std::string, GLuint> gl_Textures;
+    
     // Adapted from https://learnopengl.com/In-Practice/Text-Rendering
     Font LoadFont(const char* path, FT_UInt glyphHeight = 48) {
         Font font;
@@ -216,14 +223,113 @@ namespace Resources
         return ta;
     }
 
+    Cubemap LoadCubemap(std::vector<std::string> images) {
+        Cubemap cmp;
+        glGenTextures(1, &cmp.id);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, cmp.id);
+        glActiveTexture(GL_TEXTURE0);
+
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+        for (int i = 0; i < images.size(); i++)
+        {
+            std::vector<unsigned char> image;
+            unsigned width, height;
+
+            unsigned error = lodepng::decode(image, width, height, images[i].c_str());
+            if (error != 0) {
+                std::cerr << "ERROR: Lodepng: " << lodepng_error_text(error) << std::endl;
+                return cmp;
+            } else {
+                glTexImage2D(
+                    GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+                    0,
+                    GL_RGB,
+                    width,
+                    height,
+                    0,
+                    GL_RGBA,
+                    GL_UNSIGNED_BYTE,
+                    image.data() 
+                );
+            }
+        }
+
+        return cmp;
+    }
+
+    GLuint LoadTexture(const char* filename) {	
+      GLuint tex;	
+      glActiveTexture(GL_TEXTURE0); 	
+
+      //Wczytanie do pamięci komputera
+      std::vector<unsigned char> image;   //Alokuj wektor do wczytania obrazka
+      unsigned width, height;   //Zmienne do których wczytamy wymiary obrazka
+      //Wczytaj obrazek
+      unsigned error = lodepng::decode(image, width, height, filename);
+     
+      //Import do pamięci karty graficznej
+      glGenTextures(1,&tex); //Zainicjuj jeden uchwyt
+      glBindTexture(GL_TEXTURE_2D, tex); //Uaktywnij uchwyt
+      //Wczytaj obrazek do pamięci KG skojarzonej z uchwytem
+      glTexImage2D(GL_TEXTURE_2D, 0, 4, width, height, 0,
+        GL_RGBA, GL_UNSIGNED_BYTE, (unsigned char*) image.data());	
+
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);	
+
+      return tex;
+    } 
+
     void Initialize() {
         ft_OpenSans = LoadFont("assets\\OpenSans\\OpenSans-Regular.ttf");
-        ta_Terrain = LoadTextureArray({"assets/ta_Test_0.png", "assets/ta_Test_1.png"});
+        ta_Terrain = LoadTextureArray({"assets\\ta_Terrain_0.png", "assets\\ta_Terrain_1.png"});
+        cmp_Skybox = LoadCubemap({
+            "assets\\DaylightBox\\Right.png",
+            "assets\\DaylightBox\\Left.png",
+            "assets\\DaylightBox\\Top.png",
+            "assets\\DaylightBox\\Bottom.png",
+            "assets\\DaylightBox\\Front.png",
+            "assets\\DaylightBox\\Back.png",
+        });
+        auto assimpLoader = AssimpLoader();
+        assimpLoader.loadModel("assets/baloon.fbx");
+        bm_AssimpModels[MOBOBJECT_MODEL] = assimpLoader.getMeshes();
+        gl_Textures[MOBOBJECT_TEXTURE] = LoadTexture("assets/baloon_color.png");
+        gl_Textures[MOBOBJECT_TEXTURE_SPECULAR] = LoadTexture("assets/baloon_metal.png");
+    }
+    
+    BaseMesh* GetAssimpModelMesh(const std::string& key, int index) {
+        try {
+            std::vector<BaseMesh>& ref = bm_AssimpModels.at(key);
+            if ((unsigned) index < ref.size()) {
+                return &ref[index];
+            }
+            else return nullptr;
+        } catch (const std::out_of_range& e) {
+            return nullptr;
+        }
+    } 
+
+    GLuint GetModelTexture(const std::string& key) {
+        try {
+            return gl_Textures.at(key);
+        } catch (const std::out_of_range& e) {
+            return 0;
+        }
     }
 
     void Free() {
         glDeleteTextures(1, &ft_OpenSans.texture);
         glDeleteTextures(1, &ta_Terrain.id);
+        glDeleteTextures(1, &cmp_Skybox.id);
+        for (auto& p : gl_Textures) {
+            glDeleteTextures(1, &p.second);
+        } 
     }
 
 } // namespace Resources

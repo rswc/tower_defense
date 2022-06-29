@@ -1,4 +1,4 @@
-﻿/*
+/*
 Niniejszy program jest wolnym oprogramowaniem; możesz go
 rozprowadzać dalej i / lub modyfikować na warunkach Powszechnej
 Licencji Publicznej GNU, wydanej przez Fundację Wolnego
@@ -29,6 +29,8 @@ ShaderProgram* spWireframe;
 ShaderProgram* spText;
 ShaderProgram* spTerrain;
 ShaderProgram* spAnimated;
+ShaderProgram* spSkybox;
+
 
 
 void initShaders() {
@@ -41,6 +43,8 @@ void initShaders() {
 	spText = new ShaderProgram("v_text.glsl", NULL, "f_text.glsl");
 	spTerrain = new ShaderProgram("v_terrain.glsl", NULL, "f_terrain.glsl");
 	spAnimated = new ShaderProgram("v_animated.glsl", NULL, "f_animated.glsl");
+	spSkybox = new ShaderProgram("v_skybox.glsl", NULL, "f_skybox.glsl");
+
 }
 
 void freeShaders() {
@@ -53,6 +57,8 @@ void freeShaders() {
 	delete spText;
 	delete spTerrain;
 	delete spAnimated;
+	delete spSkybox;
+
 }
 
 //Procedura wczytuje plik do tablicy znaków.

@@ -3,7 +3,54 @@
 
 #include <glm/glm.hpp>
 #include <assimp/scene.h>
+#include <glm/gtx/intersect.hpp>
 #include <vector>
+
+struct Plane
+{
+    glm::vec3 point;
+    glm::vec3 normal;
+
+    Plane(glm::vec3 point, glm::vec3 normal) : point(point), normal(normal) {}
+
+    Plane ToWorldSpace(glm::mat4 model) const {
+        return Plane(
+            model * glm::vec4(point, 1.f),
+            model * glm::vec4(normal, 0.f)
+        );
+    }
+};
+
+struct Ray
+{
+    glm::vec3 origin;
+    glm::vec3 direction;
+
+    Ray(glm::vec3 origin, glm::vec3 direction) : origin(origin), direction(direction) {}
+
+    Ray ToWorldSpace(glm::mat4 model) const {
+        return Ray(
+            model * glm::vec4(origin, 1.f),
+            model * glm::vec4(direction, 0.f)
+        );
+    }
+
+    bool Intersect(Plane plane, glm::vec3& hit) const {
+        float t;
+
+        bool didHit = glm::intersectRayPlane(
+            origin,
+            direction,
+            plane.point,
+            plane.normal,
+            t
+        );
+
+        hit = origin + t * direction;
+
+        return didHit;
+    }
+};
 
 // Initialize empty matrix made of std::vector 
 // Example usage: (initialize 5x4 matrix of one's)
@@ -22,5 +69,10 @@ void initializeMatrix(std::vector<std::vector<T>>& matrix, int rows, int cols, T
 glm::vec3 calculateTriangleNormal(glm::vec3 A, glm::vec3 B, glm::vec3 C);
 glm::mat4 ConvertMatrixToGLMFormat(const aiMatrix4x4& from);
 
+
+// Calculate Point on Quadratic Bezier Curve using linear interpolation - glm::mix
+// time argument is in range [0, 1]
+// Assume: A, B, C are given in correct order -> Bezier Curve between A - C with B as point inbetween
+glm::vec3 quadraticBezierCurve(glm::vec3 A, glm::vec3 B, glm::vec3 C, float time);
 
 #endif

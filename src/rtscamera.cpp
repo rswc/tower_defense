@@ -1,3 +1,8 @@
+/*
+Credits:
+    Math in RTSCamera class is inspired by learnopengl tutorial. 
+    Source: https://learnopengl.com/Getting-started/Camera
+*/
 #include "rtscamera.h"
 #include <GLFW/glfw3.h>
 #include <iostream>
@@ -11,7 +16,7 @@ RTSCamera::RTSCamera(glm::vec3 startPosition){
     cameraRight = glm::normalize(glm::cross(up, cameraDirection));
     cameraUp = glm::cross(cameraDirection, cameraRight);
 
-    P = glm::perspective(glm::radians(50.0f), 1.0f, 0.01f, 100.0f);
+    SetP(glm::perspective(glm::radians(50.0f), 1.0f, 0.01f, 100.0f));
 
     view = glm::lookAt(
         startPosition, 
@@ -42,6 +47,9 @@ void RTSCamera::MoveCamera(
     
         cameraPos += deltaTime * frontSpeedMove * cameraFront;
         cameraPos += deltaTime * rightSpeedMove * glm::normalize(glm::cross(cameraFront, cameraUp));
+
+        // HACK: To make this 'workarodund' work with systems reliant on Transform
+        SetPosition(cameraPos);
         
             //Mouse camera rotation
             glm::vec3 direction;
@@ -52,10 +60,6 @@ void RTSCamera::MoveCamera(
         
         view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
     }
-}
-
-glm::mat4 RTSCamera::GetP() const{
-    return P;
 }
 
 glm::mat4 RTSCamera::GetV() const{
@@ -71,10 +75,12 @@ void RTSCamera::SetCameraHeightCap(bool toggle, float cap){
     if(toggle){
         useHeightCap = !useHeightCap;
         cameraPos.y = heightCap;
+        
+        // HACK: To make this 'workarodund' work with systems reliant on Transform
+        SetPosition(cameraPos);
     }
 }
 
 void RTSCamera::ZoomCamera(float fov){
-    std::cerr<<"Zoom: "<<fov<<std::endl;
-    P = glm::perspective(glm::radians(fov), 1.0f, 0.01f, 100.0f);
+    SetP(glm::perspective(glm::radians(fov), 1.0f, 0.01f, 100.0f));
 }

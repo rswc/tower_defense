@@ -31,7 +31,7 @@ void Scene::OnScroll(GLFWwindow* window, double xoffset, double yoffset) {
     // ???
 }
 
-void Scene::Instantiate(std::unique_ptr<GameObject> object) {
+void Scene::Instantiate(std::shared_ptr<GameObject> object) {
     objects.push_back(std::move(object));
 }
 
@@ -45,7 +45,7 @@ void Scene::UpdateDrawOrder() {
     std::sort(
         objects.begin(),
         objects.end(),
-        [camera](const std::unique_ptr<GameObject>& a, const std::unique_ptr<GameObject>& b) -> bool {
+        [camera](const std::shared_ptr<GameObject>& a, const std::shared_ptr<GameObject>& b) -> bool {
             return a->GetOrder(camera) > b->GetOrder(camera);
         }
     );

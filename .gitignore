@@ -2,11 +2,13 @@
 
 lib/*
 include/*
-
-*.exe
-*.dll
+bin/assets/
 src/AssimpLoader/
 models/
 
+*.exe
+*.dll
+
 ta_Test*.png
-bin/assets/
+baloon*
+
