@@ -31,7 +31,7 @@ private:
 
     static constexpr float EPS = 1e-9;
     static constexpr float timePerSegment = 1.f;
-    static constexpr float modelHeight = 1.0f;
+    static constexpr float modelHeight = 0.3f;
     static constexpr MobPosition startingPosition = { 0, 0.5f };
     static constexpr float animSpeed = 0.5f;
 

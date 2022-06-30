@@ -163,7 +163,7 @@ MobObject::MobPosition MobObject::advanceInTime(MobObject::MobPosition curr, flo
 glm::vec3 MobObject::getModelHitCoordinates(float afterTime = 0.0f) {
     MobPosition futurePosition = (afterTime < EPS ? currentPos : advanceInTime(currentPos, afterTime));
     GamePosition futureInGame = translateToGamePosition(futurePosition);
-    futureInGame.z += modelHeight;
+    futureInGame.y += modelHeight;
     return futureInGame;
 }
 
