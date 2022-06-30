@@ -1,21 +1,29 @@
 #version 330
 
-//Zmienne jednorodne
+	
 uniform mat4 P;
 uniform mat4 V;
 uniform mat4 M;
-
-
+uniform vec3 cameraPos;
 
 //Atrybuty
-layout (location=0) in vec4 vertex; //wspolrzedne wierzcholka w przestrzeni modelu
-layout (location=2) in vec2 texCoord; //wspó³rzêdne teksturowania
-
+in vec4 vertex; //wspolrzedne wierzcholka w przestrzeni modelu
+in vec2 texCoord; //wspï¿½rzï¿½dne teksturowania
+in vec4 normal;
 
 //Zmienne interpolowane
-out vec2 i_tc;
+out vec2 iTexCoords;
+out vec3 iNormal;
+out vec3 iPosition;
+out vec3 iViewDir;
 
 void main(void) {
-    gl_Position=P*V*M*vertex;
-    i_tc=texCoord;
+    vec4 worldPosition = M * vertex;
+
+    iPosition = worldPosition.xyz;
+    iNormal = (M * normal).xyz;
+    iViewDir = cameraPos - worldPosition.xyz;
+    iTexCoords = texCoord;
+
+    gl_Position = P * V * worldPosition;
 }

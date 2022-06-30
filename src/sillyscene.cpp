@@ -66,7 +66,7 @@ SillyScene::SillyScene(int mapID) : currentMap(mapID), bulletManager(this) {
 	// Instantiate(std::move(objAssimp));
 
 	// remove if annoying
-	auto txt = std::make_shared<Text>("Level 1");
+	auto txt = std::make_shared<Text>("Level " + std::to_string(mapID));
 	txt->SetOrigin(glm::vec2(0.005f, 0.95f));
 	txt->SetColor(glm::vec4(1.0f, 1.9f, 1.0f, 0.9f));
 	txt->SetScale(0.8f);

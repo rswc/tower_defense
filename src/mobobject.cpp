@@ -166,7 +166,7 @@ void MobObject::Update(double deltaTime) {
 
     float rot_y = rotY - AI_MATH_PI;
     auto heading = glm::vec3(sin(rot_y), 0.f, cos(rot_y));
-    auto diff = nextGamePos - GetPosition();
+    auto diff = GetPosition() - nextGamePos;
     
 
     float dot = diff.x * heading.x + diff.z * heading.z;
@@ -174,8 +174,8 @@ void MobObject::Update(double deltaTime) {
 
     float angle = atan2(det, dot);
 
-    std::cout << "Rotated: " << rot_y << ", heading: " << heading.x << ", " << heading.z; 
-    std::cout << " " << diff.x << " " << diff.z << ", rotateBY: " << angle << std::endl;
+    // std::cout << "Rotated: " << rot_y << ", heading: " << heading.x << ", " << heading.z; 
+    // std::cout << " " << diff.x << " " << diff.z << ", rotateBY: " << angle << std::endl;
 
     if (fabs(angle) > EPS && fabs(angle - AI_MATH_PI) > EPS) CumulativeRotation(angle, glm::vec3(0, 1, 0));
 
