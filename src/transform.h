@@ -29,6 +29,7 @@ class Transformable
 {
 private:
     Transform transform;
+public: // quickfix
     float rotX =0.0f, rotY=0.0f;
 public:
     Transformable() : transform() {};
