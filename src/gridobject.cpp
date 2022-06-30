@@ -22,14 +22,20 @@ void GridObject::Draw(const Camera& camera) const {
 	glUniform3f(spTerrain->u("diffuseColor"), 0.5f, 0.5f, 0.5f);
 	glUniform4f(spTerrain->u("lightDir"), 0.2f, -1.0f, 0.0f, 0.0f);
 
-	auto pLight = camera.GetLights()[0];
-	glUniform3fv(spTerrain->u("lights[0].position"), 1, glm::value_ptr(pLight.position));
-	glUniform3fv(spTerrain->u("lights[0].ambient"), 1, glm::value_ptr(pLight.ambient));
-	glUniform3fv(spTerrain->u("lights[0].diffuse"), 1, glm::value_ptr(pLight.diffuse));
-	// specular is unused in the terrain shader
-	glUniform1f(spTerrain->u("lights[0].A"), pLight.A);
-	glUniform1f(spTerrain->u("lights[0].B"), pLight.B);
-	glUniform1f(spTerrain->u("lights[0].C"), pLight.C);
+	auto pLights = camera.GetLights();
+    for (int i = 0; i < pLights.size(); ++i) {
+        std::string attrPrefix = "lights[" + std::to_string(i) + "].";
+
+        auto& pLight = pLights[i];
+
+        glUniform3fv(spAnimated->u((attrPrefix + "position").c_str()), 1, glm::value_ptr(pLight.position));
+        glUniform3fv(spAnimated->u((attrPrefix + "ambient").c_str()), 1, glm::value_ptr(pLight.ambient));
+        glUniform3fv(spAnimated->u((attrPrefix + "diffuse").c_str()), 1, glm::value_ptr(pLight.diffuse));
+        glUniform3fv(spAnimated->u((attrPrefix + "specular").c_str()), 1, glm::value_ptr(pLight.specular));
+        glUniform1f(spAnimated->u((attrPrefix + "A").c_str()), pLight.A);
+        glUniform1f(spAnimated->u((attrPrefix + "B").c_str()), pLight.B);
+        glUniform1f(spAnimated->u((attrPrefix + "C").c_str()), pLight.C);
+    }
 
 
 
