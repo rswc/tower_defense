@@ -17,6 +17,16 @@ namespace GlobalConfig{
         extern float mobGroupSpawnWaitPeriod;
         extern float mobSpawnTime;
 
+    // Tower
+        extern float towerRefreshTime;
+        extern float towerShootTime;
+        extern float towerModelHeight;
+        extern float towerRadius;
+    
+    // Bullet 
+        extern float bulletTowerMobRatio;
+        extern float bulletMidPointHeight;
+
     //Animations
         extern float globalAnimationSpeedMultiplier;
 

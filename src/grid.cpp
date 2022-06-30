@@ -85,6 +85,15 @@ bool Grid::TryPlaceTower(GridPosition p) {
     return false;
 }
 
+bool Grid::TryTakeTower(GridPosition p) {
+    if (isInsideGrid(p) && isTower(p))
+    {
+        m_map[p.row][p.col] = MAP_LAND;
+        return true;
+    }
+    return false;
+}
+
 std::vector<Grid::GridPosition> Grid::findTilesOfType(GridMapSymbol symbol) const {
     std::vector<Grid::GridPosition> tiles;
     

@@ -23,7 +23,7 @@ void SillyScene::SceneTransition() {
 	Scene::SceneTransition();
 }
 
-SillyScene::SillyScene() {
+SillyScene::SillyScene(int mapID) : currentMap(mapID), bulletManager(this) {
 	//Override with data from config file
 	cameraMoveSpeed = GlobalConfig::cameraMoveSpeed;
 	mouseSensitivity = GlobalConfig::mouseSensitivity;
@@ -35,6 +35,8 @@ SillyScene::SillyScene() {
 	std::cout<<"Camera start position"<<startCameraPosition.x<<" "<<startCameraPosition.z<<std::endl;
 	activeCamera = RTSCamera(startCameraPosition);
 	activeCamera.SetCameraHeightCap(true, cameraHeightCap);
+
+	std::cerr << "Loading SillyScene with map #" << currentMap << std::endl;
 
 	// auto objAssimpAnimated = std::make_unique<AnimatedObject>(glm::vec3(0.03f, 0.03f, 0.03f), 1.0f);
 	// objAssimpAnimated->SetRotation(glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)));
@@ -68,6 +70,13 @@ SillyScene::SillyScene() {
 	txt->SetColor(glm::vec4(1.0f, 0.2f, 0.3f, 0.7f));
 	txt->SetScale(0.8f);
 	Instantiate(std::move(txt));
+	
+	/*
+	auto rockObj = std::make_shared<BulletObject>();
+	rockObj->restart(glm::vec3(0,0,0), glm::vec3(0,0,0), 100.f);
+	Instantiate(std::move(rockObj));
+	*/
+
 	
 	std::vector<std::string> map {{ "xxxxxx",
                 "xS...x",
@@ -131,7 +140,7 @@ SillyScene::SillyScene() {
 
 std::unique_ptr<Scene> SillyScene::GetTransitionTarget() const {
 	// If necessary, use different Scene subtype
-	auto scn = std::make_unique<SillyScene>();
+	auto scn = std::make_unique<SillyScene>((currentMap + 1) % numAvailableMaps);
 	
 	// Apply saved parameters
 
@@ -259,20 +268,22 @@ void SillyScene::OnMouseButton(GLFWwindow* window, int button, int action, int m
 			std::cerr << "Hit: R: " << gp.row << " C: " << gp.col <<  std::endl;
 			
 			// Check money/whatever
-			
-			if (gridObj->GetLogical().TryPlaceTower(gp))
+			// 
+			if (mods != GLFW_MOD_SHIFT && gridObj->GetLogical().TryPlaceTower(gp))
 			{
-				std::cerr << "Tower placed!\n";
-				auto tower = std::make_shared<Tower>();
-				tower->SetPosition(gridObj->GridToWorld(gp));
-				Instantiate(tower);
+				if (towerManager.countFreeTowers() > 0) {
+					towerManager.reactivateTower(gridObj->GridToWorld(gp) + grid->getHeightVector());
+					std::cout << "Pool tower placed!" << std::endl;
+				} else {
+					auto tower =  towerManager.createTower(&bulletManager, &mobManager, gridObj->GridToWorld(gp) + grid->getHeightVector());
+					std::cout << "New tower placed! (" << tower->GetPosition().x << " " << tower->GetPosition().z << ")" << std::endl; 
+					Instantiate(std::move(tower));
+				}
 			}
-			else
-			{
-				std::cerr << "Tower not placed!\n";
+			if (mods == GLFW_MOD_SHIFT && gridObj->GetLogical().TryTakeTower(gp)) {
+				towerManager.deactivateTower(gridObj->GridToWorld(gp));
+				std::cout << "Pool tower taken down!" << std::endl;
 			}
-			
-			
 		}
 		else
 		{

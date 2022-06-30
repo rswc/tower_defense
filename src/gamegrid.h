@@ -130,6 +130,10 @@ public:
         return gamePath[1];
     }
 
+    inline glm::vec3 getHeightVector() const {
+        return -depthVector;
+    }
+
     Plane GetMousePickPlane() const;
     Grid& GetLogical();
 };
