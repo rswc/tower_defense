@@ -42,6 +42,7 @@ namespace Resources
         GLuint id;
     };
 
+    extern int killcount;
     extern Font ft_OpenSans;
     extern TextureArray ta_Terrain;
     extern Cubemap cmp_Skybox;
