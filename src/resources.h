@@ -49,8 +49,11 @@ namespace Resources
     extern std::unordered_map<std::string, GLuint> gl_Textures;
     
     const std::string MOB_TEXTURE = "mobtexture";
+    const std::string MOB_TEXTURE_SPECULAR = "mobtexturespec";
     const std::string TOWER_MODEL = "towermodel";
     const std::string TOWER_TEXTURE = "towertexture";
+    // const std::string TOWER_TEXTURE_SPECULAR = "towertexturespec";
+    const std::string BULLET_TEXTURE_SPECULAR = "bullettexturespec";
     const std::string BULLET_TEXTURE = "bullettexture";
     const std::string BULLET_MODEL = "bulletmodel";
 

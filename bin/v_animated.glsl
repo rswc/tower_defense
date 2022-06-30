@@ -41,12 +41,13 @@ void main()
         totalNormal += localNormal;
     }
 
-    iPosition = totalPosition.xyz;
-    iNormal = totalNormal;
-    iViewDir = cameraPos - totalPosition.xyz;
+    vec4 worldPosition = M * totalPosition;
+
+    iPosition = worldPosition.xyz;
+    iNormal = (M * vec4(totalNormal, 0.0)).xyz;
+    iViewDir = cameraPos - worldPosition.xyz;
 		
-    mat4 viewModel = V * M;
-    gl_Position =  P * viewModel * totalPosition;
+    gl_Position =  P * V * worldPosition;
 
     texCoords = tex;
 

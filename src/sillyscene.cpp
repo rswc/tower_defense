@@ -109,7 +109,7 @@ SillyScene::SillyScene(int mapID) : currentMap(mapID), bulletManager(this) {
 
 
 	activeCamera.PushLight(Camera::PointLight(
-		grid->getExitPoint() + glm::vec3(0.f, .6f, 0.f),
+		grid->getStartPoint() + glm::vec3(0.f, .6f, 0.f),
 		{0.05f, 0.05f, 0.05f},
 		{0.9f, 0.8f, 0.4f},
 		{1.0f, 0.9f, 0.6f},
