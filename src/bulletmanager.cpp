@@ -28,7 +28,7 @@ std::unique_ptr<BulletObject> BulletManager::createBullet(glm::vec3 src, glm::ve
 }
 
 void BulletManager::shootBullet(glm::vec3 src, glm::vec3 dst, float time) {
-    std::cout << "Spawning new Bullet that will hit: " << dst.x << " " << dst.y << " " << dst.z << " after " << time << " from " << src.x << " " << src.y << " " << src.z << std::endl;
+    // std::cout << "Spawning new Bullet that will hit: " << dst.x << " " << dst.y << " " << dst.z << " after " << time << " from " << src.x << " " << src.y << " " << src.z << std::endl;
     if (countFreeBullets() > 0) {
         reactivateBullet(src, dst, time);
     } else {

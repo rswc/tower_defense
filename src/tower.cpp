@@ -41,7 +41,7 @@ void Tower::shoot() {
             continue;
         }
 
-        std::cout << "Shooting that mob " << mob->id() << std::endl;
+        // std::cout << "Shooting that mob " << mob->id() << std::endl;
         mob->markDead(shootTime);
         timeLeft = refreshTime;
         ready = false;
