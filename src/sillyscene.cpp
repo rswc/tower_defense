@@ -224,20 +224,22 @@ void SillyScene::OnMouseButton(GLFWwindow* window, int button, int action, int m
 			std::cerr << "Hit: R: " << gp.row << " C: " << gp.col <<  std::endl;
 			
 			// Check money/whatever
-			
-			if (gridObj->GetLogical().TryPlaceTower(gp))
+			// 
+			if (mods != GLFW_MOD_SHIFT && gridObj->GetLogical().TryPlaceTower(gp))
 			{
-				auto tower = std::make_shared<Tower>();
-				tower->SetPosition(gridObj->GridToWorld(gp));
-				std::cout << "Tower placed! (" << tower->GetPosition().x << " " << tower->GetPosition().z << ")" << std::endl; 
-				Instantiate(tower);
+				if (towerManager.countFreeTowers() > 0) {
+					towerManager.reactivateTower(gridObj->GridToWorld(gp) + grid->getHeightVector());
+					std::cout << "Pool tower placed!" << std::endl;
+				} else {
+					auto tower =  towerManager.createTower(nullptr, &mobManager, gridObj->GridToWorld(gp) + grid->getHeightVector());
+					std::cout << "New tower placed! (" << tower->GetPosition().x << " " << tower->GetPosition().z << ")" << std::endl; 
+					Instantiate(std::move(tower));
+				}
 			}
-			else
-			{
-				std::cerr << "Tower not placed!\n";
+			if (mods == GLFW_MOD_SHIFT && gridObj->GetLogical().TryTakeTower(gp)) {
+				towerManager.deactivateTower(gridObj->GridToWorld(gp));
+				std::cout << "Pool tower taken down!" << std::endl;
 			}
-			
-			
 		}
 		else
 		{

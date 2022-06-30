@@ -8,6 +8,7 @@
 
 #include "gamegrid.h"
 #include "mobmanager.h"
+#include "towermanager.h"
 
 class SillyScene : public Scene
 {
@@ -30,6 +31,7 @@ private:
     std::shared_ptr<GridObject> gridObj;
 
     MobManager mobManager; 
+    TowerManager towerManager;
     std::unique_ptr<GameGrid> grid;
 public:
     SillyScene(int mapID = 0);
