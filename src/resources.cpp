@@ -19,6 +19,7 @@
 
 namespace Resources
 {
+    int killcount = 0;
     Font ft_OpenSans;
     TextureArray ta_Terrain;
     Cubemap cmp_Skybox;
