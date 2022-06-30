@@ -6,6 +6,8 @@
 #include <memory>
 
 class MobManager {
+    friend class Tower;
+
     int nextMobId = 0;
 
     std::vector<MobObject*> mobs;

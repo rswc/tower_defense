@@ -1,9 +1,9 @@
-#include "tower.h"
+#include "bulletobject.h"
 
 #include "resources.h"
 #include "shaderprogram.h"
 #include "GlobalConfig.h"
-#include "bulletmanager.h"
+#include "BaseMesh.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -11,47 +11,19 @@
 
 #include <iostream>
 
-Tower::Tower(BulletManager * bman, MobManager * mman) {
-    bulletman = bman;
-    mobman = mman;
+BulletObject::BulletObject() {
+    tex = Resources::GetModelTexture(Resources::BULLET_TEXTURE);
+    mesh = Resources::GetAssimpModelMesh(Resources::BULLET_MODEL, 0);
 
-    tex = Resources::GetModelTexture(Resources::TOWER_TEXTURE);
-    mesh = Resources::GetAssimpModelMesh(Resources::TOWER_MODEL, 0);
-    
-    refreshTime = GlobalConfig::towerRefreshTime;
-    shootTime = GlobalConfig::towerShootTime;
-    radius = GlobalConfig::towerRadius;
-    towerHeight = GlobalConfig::towerModelHeight;
+    towerMobRatio = GlobalConfig::bulletTowerMobRatio;
+    midPointHeight = GlobalConfig::bulletMidPointHeight;
 
     Rotate(-AI_MATH_PI/2, glm::vec3(1.0f, 0.0f, 0.0f));
     // Rotate(30.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-    SetScale(glm::vec3(0.2, 0.2f, 0.2f));
+    SetScale(glm::vec3(0.05, 0.05f, 0.05f));
 }
 
-void Tower::shoot() {
-    if (!ready) return;
-
-    for (MobObject * mob : mobman->mobs) {
-        if (!mob->isActive()) continue;
-
-        if (!mob->shootable(shootTime)) { 
-            continue;
-        }
-        if (!inRange(mob->getModelHitCoordinates(shootTime))) { 
-            continue;
-        }
-
-        std::cout << "Shooting that mob " << mob->id() << std::endl;
-        mob->markDead(shootTime);
-        timeLeft = refreshTime;
-        ready = false;
-        bulletman->shootBullet(getShootPoint(), mob->getModelHitCoordinates(shootTime), shootTime);
-        return;
-    }
-}
-
-
-void Tower::Draw(const Camera& camera) const {
+void BulletObject::Draw(const Camera& camera) const {
     if (!active) return;
 
     //Activate the shader

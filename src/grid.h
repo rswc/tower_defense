@@ -126,6 +126,7 @@ public:
     }
 
     bool TryPlaceTower(GridPosition p);
+    bool TryTakeTower(GridPosition p);
     std::vector<GridPosition> GetTreePositions() const;
 };
 

@@ -31,7 +31,7 @@ private:
 
     static constexpr float EPS = 1e-9;
     static constexpr float timePerSegment = 1.f;
-    static constexpr float modelHeight = 1.0f;
+    static constexpr float modelHeight = 0.3f;
     static constexpr MobPosition startingPosition = { 0, 0.5f };
     static constexpr float animSpeed = 0.5f;
 
@@ -42,12 +42,36 @@ private:
     AnimatedMesh *mesh = nullptr;
     Animator * animator = nullptr;
     GLuint tex, texSpecular;
-    
+    bool markOfDead = false;
+    float timeToDie = -1.0f;
 public:
+    
+    inline void markDead(float time) {
+        markOfDead = true;
+        timeToDie = time;
+    }
+
+    inline bool shootable(float time) const {
+        if (!active || died() || willDie()) return false;
+        else return !reachedPathExit(advanceInTime(currentPos, time));
+    }
+    
+    inline bool willDie() const {
+        return markOfDead && timeToDie > 0.0f;
+    }
+    
+    inline bool died() const {
+        return markOfDead && timeToDie <= 0.0f;
+    }
+    inline bool isActive() const {
+        return active;
+    }
 
     inline void restart() {
         currentPos = startingPosition;
         active = true;
+        markOfDead = false;
+        timeToDie = -1.0f;
     }
 
     inline bool finished() const {
@@ -63,8 +87,8 @@ public:
     inline int getPathSegments() const { return translateToSegmentIndex(gameGrid->gamePathSize()); }
     bool reachedPathExit(MobPosition pos) const { return pos.segment >= getPathSegments() || (pos.segment + 1 == getPathSegments() && pos.timeLeft > 0.5f); }
     
-    MobPosition advanceInTime(MobPosition curr, float time);
-    GamePosition getModelHitCoordinates(float afterTime);
+    MobPosition advanceInTime(MobPosition curr, float time) const;
+    glm::vec3 getModelHitCoordinates(float afterTime);
     GamePosition translateToGamePosition(MobPosition pos);
     
     inline int id() const { return m_id; }

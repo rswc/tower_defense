@@ -17,7 +17,7 @@
 MobObject::MobObject(GameGrid *gameGridPtr, int id) {
     gameGrid = gameGridPtr;
     m_id = id;
-    tex = Resources::GetModelTexture(Resources::MOBOBJECT_TEXTURE);
+    tex = Resources::GetModelTexture(Resources::MOB_TEXTURE);
     // texSpecular = Resources::GetModelTexture(Resources::MOBOBJECT_TEXTURE_SPECULAR);
     mesh = Resources::GetMobAnimatedMesh(0);
     animator = Resources::GetNewMobAnimator();
@@ -124,6 +124,13 @@ void MobObject::OldDraw(const Camera& camera) const {
 
 void MobObject::Update(double deltaTime) {
     if (!active) return;
+    else if (died()) {
+        deactivate();
+        return;
+    }
+    else if (willDie()) {
+        timeToDie -= deltaTime;
+    }
     
     animator->UpdateAnimation(deltaTime * animSpeed);
 
@@ -143,7 +150,7 @@ void MobObject::Update(double deltaTime) {
 }
 
 // Truncates to last + 1 segment
-MobObject::MobPosition MobObject::advanceInTime(MobObject::MobPosition curr, float time) {
+MobObject::MobPosition MobObject::advanceInTime(MobObject::MobPosition curr, float time) const {
     int pathSegments = getPathSegments();
 
     MobPosition next;
@@ -153,10 +160,10 @@ MobObject::MobPosition MobObject::advanceInTime(MobObject::MobPosition curr, flo
     return next;
 }
 
-MobObject::GamePosition MobObject::getModelHitCoordinates(float afterTime = 0.0f) {
+glm::vec3 MobObject::getModelHitCoordinates(float afterTime = 0.0f) {
     MobPosition futurePosition = (afterTime < EPS ? currentPos : advanceInTime(currentPos, afterTime));
     GamePosition futureInGame = translateToGamePosition(futurePosition);
-    futureInGame.z += modelHeight;
+    futureInGame.y += modelHeight;
     return futureInGame;
 }
 

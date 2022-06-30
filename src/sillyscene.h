@@ -8,11 +8,17 @@
 
 #include "gamegrid.h"
 #include "mobmanager.h"
+#include "towermanager.h"
+#include "bulletmanager.h"
 
 class SillyScene : public Scene
 {
 private:
     void SceneTransition() override;
+    int currentMap;
+    BulletManager bulletManager;
+
+    static const int numAvailableMaps = 4;
 
     float yaw = -90, pitch = -45, speed_fwd = 0, speed_right = 0;
     float lastX = 0, lastY = 0;
@@ -27,9 +33,11 @@ private:
     std::shared_ptr<GridObject> gridObj;
 
     MobManager mobManager; 
+    TowerManager towerManager;
+
     std::unique_ptr<GameGrid> grid;
 public:
-    SillyScene();
+    SillyScene(int mapID = 0);
     SillyScene(const SillyScene&) = delete;
     SillyScene& operator=(const SillyScene&) = delete;
     SillyScene(SillyScene&&) = default;

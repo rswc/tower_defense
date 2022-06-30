@@ -16,6 +16,17 @@ namespace GlobalConfig{
         int mobGroupSize;
         float mobGroupSpawnWaitPeriod;
         float mobSpawnTime;
+    
+    // Tower
+
+        float towerRefreshTime;
+        float towerShootTime;
+        float towerModelHeight;
+        float towerRadius;
+        
+    // Bullet 
+        float bulletTowerMobRatio;
+        float bulletMidPointHeight;
 
     //Animations
         float globalAnimationSpeedMultiplier;
@@ -68,9 +79,27 @@ namespace GlobalConfig{
                 }
                 else if(key == "mobGroupSpawnWaitPeriod"){
                     mobGroupSpawnWaitPeriod = std::stof(value);
-                }
+                } 
                 else if(key == "mobSpawnTime"){
                     mobSpawnTime = std::stof(value);
+                }
+                else if (key == "towerRefreshTime") {
+                    towerRefreshTime = std::stof(value);
+                }
+                else if (key == "towerShootTime") {
+                    towerShootTime = std::stof(value);
+                }
+                else if (key == "towerRadius") {
+                    towerRadius = std::stof(value);
+                }
+                else if (key == "towerModelHeight") {
+                    towerModelHeight = std::stof(value);
+                }
+                else if (key == "bulletTowerMobRatio") {
+                    bulletTowerMobRatio = std::stof(value);
+                }
+                else if (key == "bulletMidPointHeight") {
+                    bulletMidPointHeight = std::stof(value);
                 }
                 else if(key == "globalAnimationSpeedMultiplier"){
                     globalAnimationSpeedMultiplier = std::stof(value);
