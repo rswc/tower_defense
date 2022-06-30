@@ -44,30 +44,8 @@ public:
         glm::vec3 diff = position - getShootPoint();
         return diff.length() < radius;
     }
+    void shoot();
     
-    void shoot() {
-        if (!ready) return;
-
-        for (MobObject * mob : mobman->mobs) {
-            if (!mob->isActive()) continue;
-
-            std::cout << "Checking mob with id: " << mob->id() << std::endl;
-            if (!mob->shootable(shootTime)) { 
-                std::cout << "Mob is not shootable..." << std::endl; 
-                continue;
-            }
-            if (!inRange(mob->getModelHitCoordinates(shootTime))) { 
-                std::cout << "Mob not in range.." << std::endl;
-                continue;
-            }
-            std::cout << "Shooting that mob " << mob->id() << std::endl;
-            mob->markDead(shootTime);
-            timeLeft = refreshTime;
-            ready = false;
-            return;
-        }
-    }
-
     void Draw(const Camera& camera) const override;
 
     void Update(double deltaTime)  override {
