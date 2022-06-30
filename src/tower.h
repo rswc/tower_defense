@@ -11,10 +11,10 @@ class Tower : public GameObject {
 private:
     
     static constexpr float EPS = 1e-9;
-    static constexpr float refreshTime = 5.0f;
-    static constexpr float shootTime = 1.0f;
-    static constexpr float radius = 10.0f;
-    static constexpr float towerHeight = 1.0f;
+    float refreshTime = 5.0f;
+    float shootTime = 1.0f;
+    float radius = 10.0f;
+    float towerHeight = 1.0f;
 
     float timeLeft = 0;
     bool active = false;
@@ -60,7 +60,7 @@ public:
                 std::cout << "Mob not in range.." << std::endl;
                 continue;
             }
-            std::cout << "Shooting that naggers " << mob->id() << std::endl;
+            std::cout << "Shooting that mob " << mob->id() << std::endl;
             mob->markDead(shootTime);
             timeLeft = refreshTime;
             ready = false;

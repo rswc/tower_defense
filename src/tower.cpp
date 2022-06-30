@@ -2,6 +2,7 @@
 
 #include "resources.h"
 #include "shaderprogram.h"
+#include "GlobalConfig.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -15,6 +16,11 @@ Tower::Tower(BulletManager * bman, MobManager * mman) {
 
     tex = Resources::GetModelTexture(Resources::TOWER_TEXTURE);
     mesh = Resources::GetAssimpModelMesh(Resources::TOWER_MODEL, 0);
+    
+    refreshTime = GlobalConfig::towerRefreshTime;
+    shootTime = GlobalConfig::towerShootTime;
+    radius = GlobalConfig::towerRadius;
+    towerHeight = GlobalConfig::towerModelHeight;
 
     Rotate(-AI_MATH_PI/2, glm::vec3(1.0f, 0.0f, 0.0f));
     // Rotate(30.0f, glm::vec3(1.0f, 0.0f, 0.0f));
