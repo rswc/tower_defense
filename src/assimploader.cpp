@@ -6,6 +6,8 @@
 void AssimpLoader::loadModel(std::string filename){
     Assimp::Importer importer;
 
+    std::cout<<"Loading model from " << filename << std::endl;
+
     //aiProcess_triangulate -> make triangles
     //aiProcess_FlipUVs -> flip y coordinate on textures 
     //[opengl format is different than everywhere else] v = 1 - v 
@@ -21,7 +23,7 @@ void AssimpLoader::loadModel(std::string filename){
         {
             aiMesh* mesh = scene->mMeshes[i]; //Get specific mesh
             BaseMesh newMesh;
-            std::cout<<"Loading mesh"<<std::endl;
+            std::cout<<"Loading mesh..." << std::endl;
 
             for(int i = 0; i< mesh->mNumVertices; i++){ 
                 aiVector3D vertex = mesh->mVertices[i];

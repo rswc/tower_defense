@@ -12,7 +12,7 @@ Grid::DirMatrix Grid::translateGridMapToDirMatrix(const Grid::GridMap &map) {
 
     for (int r = 0; r < size.row; r++) 
     for (int c = 0; c < size.col; c++) {
-        if (map[r][c] == MAP_LAND) continue;
+        if (map[r][c] == MAP_LAND || map[r][c] == MAP_TREE) continue;
 
         GridPosition current {r, c};
 
@@ -20,7 +20,7 @@ Grid::DirMatrix Grid::translateGridMapToDirMatrix(const Grid::GridMap &map) {
             GridPosition adjacent = moveInDirection(current, dir);
 
             if ((unsigned) adjacent.row < (unsigned) size.row && (unsigned) adjacent.col < (unsigned) size.col 
-                && map[adjacent.row][adjacent.col] != MAP_LAND) {
+                && map[adjacent.row][adjacent.col] != MAP_LAND && map[adjacent.row][adjacent.col] != MAP_TREE) {
                 available_dirs[r][c] |= (1 << dir);
             }
         }
@@ -92,4 +92,20 @@ bool Grid::TryTakeTower(GridPosition p) {
         return true;
     }
     return false;
+}
+
+std::vector<Grid::GridPosition> Grid::findTilesOfType(GridMapSymbol symbol) const {
+    std::vector<Grid::GridPosition> tiles;
+    
+    for (int r = 0; r < m_rows; r++) 
+    for (int c = 0; c < m_cols; c++) {
+        if (m_map[r][c] == symbol) 
+            tiles.push_back({ r, c });
+    }
+
+    return tiles;
+}
+
+std::vector<Grid::GridPosition> Grid::GetTreePositions() const {
+    return m_trees;
 }

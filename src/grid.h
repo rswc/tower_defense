@@ -69,7 +69,8 @@ private:
         MAP_PATH = '.',
         MAP_LAND = 'x',
         MAP_EXIT = 'E',
-        MAP_TOWER = 'T'
+        MAP_TOWER = 'T',
+        MAP_TREE = '@',
     };
 
     // Return direction advanced by one cell in specified direction
@@ -80,6 +81,10 @@ private:
     
     bool isLand(GridPosition p) const {
         return m_map[p.row][p.col] == MAP_LAND;
+    }
+    
+    bool isTree(GridPosition p) const {
+        return m_map[p.row][p.col] == MAP_TREE;
     }
     
     bool isTower(GridPosition p) const {
@@ -95,9 +100,11 @@ private:
     int m_rows, m_cols;
     DirMatrix m_available_dirs;
     GridPath m_path;
+    std::vector<GridPosition> m_trees;
     
     DirMatrix translateGridMapToDirMatrix(const GridMap &map);
     GridPath findGridPath();
+    std::vector<GridPosition> findTilesOfType(GridMapSymbol symbol) const;
 
 public:
     Grid(const std::vector<std::string>& map) { 
@@ -107,6 +114,7 @@ public:
         m_available_dirs = translateGridMapToDirMatrix(map);
 
         m_path = findGridPath();
+        m_trees = findTilesOfType(MAP_TREE);
     }
 
     int GetRows() const;
@@ -119,5 +127,6 @@ public:
 
     bool TryPlaceTower(GridPosition p);
     bool TryTakeTower(GridPosition p);
+    std::vector<GridPosition> GetTreePositions() const;
 };
 

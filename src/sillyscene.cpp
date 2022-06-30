@@ -6,8 +6,10 @@
 #include "mobobject.h"
 #include "text.h"
 #include "skybox.h"
-#include "tower.h"
 #include "GlobalConfig.h"
+#include "tower.h"
+#include "StaticObject.h"
+
 
 #define PI 3.141592f // close enough
 #define pitchLowerBound -70.0f
@@ -33,18 +35,31 @@ SillyScene::SillyScene(int mapID) : currentMap(mapID), bulletManager(this) {
 	std::cout<<"Camera start position"<<startCameraPosition.x<<" "<<startCameraPosition.z<<std::endl;
 	activeCamera = RTSCamera(startCameraPosition);
 	activeCamera.SetCameraHeightCap(true, cameraHeightCap);
-	activeCamera.PushLight(Camera::PointLight(
-		{0.5f, 1.0f, 0.5f}, // <-- position; Set to enemy target instead?
-		{0.05f, 0.05f, 0.05f},
-		{0.9f, 0.8f, 0.4f},
-		{1.0f, 0.9f, 0.6f},
-		1.4f, 0.6f, 1.f
-	));
 
 	std::cerr << "Loading SillyScene with map #" << currentMap << std::endl;
 
-	auto objAssimpAnimated = std::make_unique<AnimatedObject>(glm::vec3(0.1f, 0.1f, 0.1f), 20.0f);
- 	Instantiate(std::move(objAssimpAnimated));
+	// auto objAssimpAnimated = std::make_unique<AnimatedObject>(glm::vec3(0.03f, 0.03f, 0.03f), 1.0f);
+	// objAssimpAnimated->SetRotation(glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)));
+	// objAssimpAnimated->SetPosition(glm::vec3(2.0f, 0.2f, 0.0f));
+ 	// Instantiate(std::move(objAssimpAnimated));
+
+	auto objStatic1 = std::make_unique<StaticObject>(
+		"assets/gate3/gate3.fbx", 
+		"assets/gate3/gate3.png", 
+		"assets/gate3/gate3.occlusion.png");
+	objStatic1->SetScale(glm::vec3(0.0013f, 0.0013f, 0.0013f));
+	objStatic1->SetRotation(glm::quat(glm::vec3(-1.57079633f, 0.0f, 0.0f)));
+	objStatic1->SetPosition(glm::vec3(1.50f, 0.0f, 1.27f));
+	Instantiate(std::move(objStatic1));
+
+	auto objStatic2 = std::make_unique<StaticObject>(
+		"assets/gate3/gate3.fbx", 
+		"assets/gate3/gate3.png", 
+		"assets/gate3/gate3.occlusion.png");
+	objStatic2->SetScale(glm::vec3(0.0013f, 0.0013f, 0.0013f));
+	objStatic2->SetRotation(glm::quat(glm::vec3(-PI/2, PI, 0.0f)));
+	objStatic2->SetPosition(glm::vec3(5.52f, 0.0f, 4.70f));
+	Instantiate(std::move(objStatic2));
 
 	// auto objAssimp = std::make_shared<AssimpObject>();
 	// Instantiate(std::move(objAssimp));
@@ -65,13 +80,13 @@ SillyScene::SillyScene(int mapID) : currentMap(mapID), bulletManager(this) {
 	
 	std::vector<std::string> map {{ "xxxxxx",
                 "xS...x",
-                "xxxx.x",
+                "@xxx.x",
                 "x....x",
                 "x.xxxx",
                 "x.x.Ex",
-                "x.x.xx",
+                "x.@.xx",
                 "x...xx",
-                "xxxxxx"
+                "xxxx@x"
             }};
 
 	grid = std::make_unique<GameGrid>(map);
@@ -91,7 +106,29 @@ SillyScene::SillyScene(int mapID) : currentMap(mapID), bulletManager(this) {
 
 	Instantiate(gridObj);
 
+
+
+	activeCamera.PushLight(Camera::PointLight(
+		grid->getExitPoint() + glm::vec3(0.f, .6f, 0.f),
+		{0.05f, 0.05f, 0.05f},
+		{0.9f, 0.8f, 0.4f},
+		{1.0f, 0.9f, 0.6f},
+		1.2f, 0.6f, 1.f
+	));
+
 	Instantiate(std::move(std::make_shared<Skybox>()));
+
+	for (auto& gp : gridObj->GetLogical().GetTreePositions())
+	{
+		// auto tree = std::make_shared<...>();
+		// tree->SetPosition(gridObj->GridToWorld(gp));
+		// Instantiate(tree);
+		auto objAssimpAnimated1 = std::make_shared<AnimatedObject>(glm::vec3(0.02f, 0.02f, 0.02f), 1.0f);
+		objAssimpAnimated1->SetRotation(glm::quat(glm::vec3(0.0f, (float)(rand() % 6), 0.0f)));
+		objAssimpAnimated1->SetPosition(gridObj->GridToWorld(gp));
+		Instantiate(objAssimpAnimated1);
+	}
+	
 
 	// HACK: We can get away with only doing this at scene init, SO LONG AS:
 	//     1) No transparent objects exist in the scene besides Text objects

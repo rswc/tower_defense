@@ -23,10 +23,10 @@ AnimatedObject::AnimatedObject(){
 void AnimatedObject::startSetup(){
     
     std::string dir = "assets/";
-    std::string modelName = "trex";
+    std::string modelName = "tree";
     std::string stexture =  dir + "/" + modelName + "/" + modelName +".png";
     std::string stextureSpecular =  dir + "/" + modelName + "/" + modelName +"_specular.png";
-    std::string smodelPath = dir + "/" + modelName + "/" + modelName +".glb";
+    std::string smodelPath = dir + "/" + modelName + "/" + modelName +".fbx";
     
     texture = readTexture(stexture.c_str());
     textSpecular = readTexture(stextureSpecular.c_str());
@@ -74,6 +74,28 @@ void AnimatedObject::Draw(const Camera& camera) const {
 	    glUniformMatrix4fv(spAnimated->u(finalBones.c_str()), 1, false, glm::value_ptr(transforms[i]));
     }
 
+    glUniform3fv(spAnimated->u("cameraPos"), 1, glm::value_ptr(camera.GetPosition()));
+
+    glUniform3f(spAnimated->u("dirAmbientColor"), 0.2f, 0.2f, 0.2f);
+	glUniform3f(spAnimated->u("dirDiffuseColor"), 0.5f, 0.5f, 0.5f);
+	glUniform4f(spAnimated->u("lightDir"), 0.2f, -1.0f, 0.0f, 0.0f);
+
+    auto pLights = camera.GetLights();
+    for (int i = 0; i < pLights.size(); ++i) {
+        std::string attrPrefix = "lights[" + std::to_string(i) + "].";
+
+        auto& pLight = pLights[i];
+
+        glUniform3fv(spAnimated->u((attrPrefix + "position").c_str()), 1, glm::value_ptr(pLight.position));
+        glUniform3fv(spAnimated->u((attrPrefix + "ambient").c_str()), 1, glm::value_ptr(pLight.ambient));
+        glUniform3fv(spAnimated->u((attrPrefix + "diffuse").c_str()), 1, glm::value_ptr(pLight.diffuse));
+        glUniform3fv(spAnimated->u((attrPrefix + "specular").c_str()), 1, glm::value_ptr(pLight.specular));
+        glUniform1f(spAnimated->u((attrPrefix + "A").c_str()), pLight.A);
+        glUniform1f(spAnimated->u((attrPrefix + "B").c_str()), pLight.B);
+        glUniform1f(spAnimated->u((attrPrefix + "C").c_str()), pLight.C);
+    }
+
+
 	glEnableVertexAttribArray(spAnimated->a("pos"));
 	glVertexAttribPointer(spAnimated->a("pos"), 3, GL_FLOAT, false, 0, meshes[0].vertices.data()); 
         
@@ -95,6 +117,10 @@ void AnimatedObject::Draw(const Camera& camera) const {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
     glUniform1i(spAnimated->u("tex"), 0);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, textSpecular);
+    glUniform1i(spAnimated->u("texSpecular"), 1);
 
     // std::cout<<"Started drawing triangles"<<std::endl;
     glDrawElements(GL_TRIANGLES, meshes[0].indices.size(), GL_UNSIGNED_INT, meshes[0].indices.data());

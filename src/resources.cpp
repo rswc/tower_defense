@@ -322,7 +322,12 @@ namespace Resources
         gl_Textures[TOWER_TEXTURE] = LoadTexture("assets/tower/tower.png");
         gl_Textures[MOB_TEXTURE] = LoadTexture("assets/trex/trex.png");
         gl_Textures[BULLET_TEXTURE] = LoadTexture("assets/rock/rock.png");
-        // gl_Textures[MOBOBJECT_TEXTURE_SPECULAR] = LoadTexture("assets/trex/trex_specular.png");
+
+        auto assimGateLoader = AssimpLoader();
+        // assimGateLoader.loadModel("assets/vampire.dae");
+        // bm_AssimpModels[GATEOBJECT_MODEL] = assimGateLoader.getMeshes();
+        gl_Textures[GATEOBJECT_TEXTURE] = LoadTexture("assets/Vampire_diffuse.png");
+        gl_Textures[GATEOBJECT_TEXTURE_SPECULAR] = LoadTexture("assets/Vampire_specular.png");
         
         animatedLoader = AnimatedAssimpLoader();
         std::string mob_anim_model = "assets/trex/trex.glb";
