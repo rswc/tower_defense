@@ -18,7 +18,7 @@ MobObject::MobObject(GameGrid *gameGridPtr, int id) {
     gameGrid = gameGridPtr;
     m_id = id;
     tex = Resources::GetModelTexture(Resources::MOB_TEXTURE);
-    // texSpecular = Resources::GetModelTexture(Resources::MOBOBJECT_TEXTURE_SPECULAR);
+    texSpecular = Resources::GetModelTexture(Resources::MOB_TEXTURE_SPECULAR);
     mesh = Resources::GetMobAnimatedMesh(0);
     animator = Resources::GetNewMobAnimator();
     std::cout << "animator loaded? " << std::endl;
@@ -46,6 +46,27 @@ void MobObject::Draw(const Camera& camera) const {
 	    glUniformMatrix4fv(spAnimated->u(finalBones.c_str()), 1, false, glm::value_ptr(transforms[i]));
     }
 
+    glUniform3fv(spAnimated->u("cameraPos"), 1, glm::value_ptr(camera.GetPosition()));
+
+    glUniform3f(spAnimated->u("dirAmbientColor"), 0.2f, 0.2f, 0.2f);
+	glUniform3f(spAnimated->u("dirDiffuseColor"), 0.5f, 0.5f, 0.5f);
+	glUniform4f(spAnimated->u("lightDir"), 0.2f, -1.0f, 0.0f, 0.0f);
+
+    auto pLights = camera.GetLights();
+    for (int i = 0; i < pLights.size(); ++i) {
+        std::string attrPrefix = "lights[" + std::to_string(i) + "].";
+
+        auto& pLight = pLights[i];
+
+        glUniform3fv(spAnimated->u((attrPrefix + "position").c_str()), 1, glm::value_ptr(pLight.position));
+        glUniform3fv(spAnimated->u((attrPrefix + "ambient").c_str()), 1, glm::value_ptr(pLight.ambient));
+        glUniform3fv(spAnimated->u((attrPrefix + "diffuse").c_str()), 1, glm::value_ptr(pLight.diffuse));
+        glUniform3fv(spAnimated->u((attrPrefix + "specular").c_str()), 1, glm::value_ptr(pLight.specular));
+        glUniform1f(spAnimated->u((attrPrefix + "A").c_str()), pLight.A);
+        glUniform1f(spAnimated->u((attrPrefix + "B").c_str()), pLight.B);
+        glUniform1f(spAnimated->u((attrPrefix + "C").c_str()), pLight.C);
+    }
+
 	glEnableVertexAttribArray(spAnimated->a("pos"));
 	glVertexAttribPointer(spAnimated->a("pos"), 3, GL_FLOAT, false, 0, mesh->vertices.data()); 
         
@@ -66,6 +87,10 @@ void MobObject::Draw(const Camera& camera) const {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, tex);
     glUniform1i(spAnimated->u("tex"), 0);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, texSpecular);
+    glUniform1i(spAnimated->u("texSpecular"), 1);
 
     glDrawElements(GL_TRIANGLES, mesh->indices.size(), GL_UNSIGNED_INT, mesh->indices.data());
     

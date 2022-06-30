@@ -19,6 +19,7 @@
 
 namespace Resources
 {
+    int killcount = 0;
     Font ft_OpenSans;
     TextureArray ta_Terrain;
     Cubemap cmp_Skybox;
@@ -322,6 +323,8 @@ namespace Resources
         gl_Textures[TOWER_TEXTURE] = LoadTexture("assets/tower/tower.png");
         gl_Textures[MOB_TEXTURE] = LoadTexture("assets/trex/trex.png");
         gl_Textures[BULLET_TEXTURE] = LoadTexture("assets/rock/rock.png");
+        gl_Textures[MOB_TEXTURE_SPECULAR] = LoadTexture("assets/trex/trex_specular.png");
+        gl_Textures[BULLET_TEXTURE_SPECULAR] = LoadTexture("assets/rock/rock_specular.png");
 
         auto assimGateLoader = AssimpLoader();
         // assimGateLoader.loadModel("assets/vampire.dae");

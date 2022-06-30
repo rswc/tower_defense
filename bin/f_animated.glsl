@@ -32,13 +32,16 @@ in vec3 iViewDir;
 vec3 PointLightComponent(PointLight light, vec3 normal, vec3 viewDir, vec3 specularColor, vec3 lightDir) {
 	vec3 reflectDir = reflect(-lightDir, normal);
 
-    float diffStrength = max(dot(normal, lightDir), 0.0);
+    float diffStrength = max(dot(-normal, lightDir), 0.0);
 	float specStrength = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+
 
     float r = distance(light.position, iPosition);
     float att = 1 / (r * r * light.A + r * light.B + light.C);
 
     vec3 total = light.ambient + light.diffuse * diffStrength + light.specular * specStrength;
+
+    // pixelColor = vec4(vec3(diffStrength), 1.0);
 
     return total * att;
 }
@@ -57,4 +60,5 @@ void main(void) {
     }
 
 	pixelColor = texture(tex, texCoords) * vec4(lightColor, 1.0);
+    // pixelColor = vec4(normal, 1.0);
 }
