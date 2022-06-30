@@ -118,5 +118,6 @@ public:
     }
 
     bool TryPlaceTower(GridPosition p);
+    bool TryTakeTower(GridPosition p);
 };
 
