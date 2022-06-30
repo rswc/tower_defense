@@ -1,9 +1,9 @@
 xxxxxx
-xS...x
-@xxx.x
-x....x
+xSxxxx
+@.xxxx
+x.xx@x
 x.xxxx
-x.x.Ex
-x.@.xx
-x...xx
+x.xxEx
+x.xx.x
+x....x
 xxxx@x
