@@ -316,8 +316,8 @@ namespace Resources
         gl_Textures[MOBOBJECT_TEXTURE_SPECULAR] = LoadTexture("assets/trex/trex_specular.png");
 
         auto assimGateLoader = AssimpLoader();
-        assimGateLoader.loadModel("assets/vampire.dae");
-        bm_AssimpModels[GATEOBJECT_MODEL] = assimGateLoader.getMeshes();
+        // assimGateLoader.loadModel("assets/vampire.dae");
+        // bm_AssimpModels[GATEOBJECT_MODEL] = assimGateLoader.getMeshes();
         gl_Textures[GATEOBJECT_TEXTURE] = LoadTexture("assets/Vampire_diffuse.png");
         gl_Textures[GATEOBJECT_TEXTURE_SPECULAR] = LoadTexture("assets/Vampire_specular.png");
         
