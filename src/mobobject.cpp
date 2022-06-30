@@ -160,13 +160,29 @@ void MobObject::Update(double deltaTime) {
     animator->UpdateAnimation(deltaTime * animSpeed);
 
     // std::cerr << "Current Pos: " << currentPos.segment << " " << currentPos.timeLeft << std::endl;
-    currentPos = advanceInTime(currentPos, deltaTime);
+    MobPosition nextPos = advanceInTime(currentPos, deltaTime);
     // std::cerr << "Next Pos: " << currentPos.segment << " " << currentPos.timeLeft << std::endl;
-    GamePosition nextGamePos = translateToGamePosition(currentPos); 
+    GamePosition nextGamePos = translateToGamePosition(nextPos); 
+
+    float rot_y = rotY - AI_MATH_PI;
+    auto heading = glm::vec3(sin(rot_y), 0.f, cos(rot_y));
+    auto diff = nextGamePos - GetPosition();
+    
+
+    float dot = diff.x * heading.x + diff.z * heading.z;
+    float det = diff.x * heading.z - diff.z * heading.x;
+
+    float angle = atan2(det, dot);
+
+    std::cout << "Rotated: " << rot_y << ", heading: " << heading.x << ", " << heading.z; 
+    std::cout << " " << diff.x << " " << diff.z << ", rotateBY: " << angle << std::endl;
+
+    if (fabs(angle) > EPS && fabs(angle - AI_MATH_PI) > EPS) CumulativeRotation(angle, glm::vec3(0, 1, 0));
+
     // std::cerr << "Game Pos: " << nextGamePos.x << " " << nextGamePos.y << " " << nextGamePos.z << std::endl;
+    currentPos = nextPos;
     SetPosition(nextGamePos);
 
-    //Rotate(AI_MATH_PI * deltaTime, glm::vec3(0, 0, 1));
 
     if (finished()) {
         // restart();
