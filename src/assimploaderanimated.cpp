@@ -43,7 +43,7 @@ void AnimatedAssimpLoader::loadModel(std::string filename){
         {
             aiMesh* mesh = scene->mMeshes[k]; //Get specific mesh
             AnimatedMesh newMesh;
-            std::cout<<"Loading mesh"<<std::endl;
+            std::cout<<"Loading animated mesh from " << filename << std::endl;
 
             for(int i = 0; i< mesh->mNumVertices; i++){ 
                 Vertex vertex;

@@ -28,13 +28,13 @@ void GridObject::Draw(const Camera& camera) const {
 
         auto& pLight = pLights[i];
 
-        glUniform3fv(spAnimated->u((attrPrefix + "position").c_str()), 1, glm::value_ptr(pLight.position));
-        glUniform3fv(spAnimated->u((attrPrefix + "ambient").c_str()), 1, glm::value_ptr(pLight.ambient));
-        glUniform3fv(spAnimated->u((attrPrefix + "diffuse").c_str()), 1, glm::value_ptr(pLight.diffuse));
-        glUniform3fv(spAnimated->u((attrPrefix + "specular").c_str()), 1, glm::value_ptr(pLight.specular));
-        glUniform1f(spAnimated->u((attrPrefix + "A").c_str()), pLight.A);
-        glUniform1f(spAnimated->u((attrPrefix + "B").c_str()), pLight.B);
-        glUniform1f(spAnimated->u((attrPrefix + "C").c_str()), pLight.C);
+        glUniform3fv(spTerrain->u((attrPrefix + "position").c_str()), 1, glm::value_ptr(pLight.position));
+        glUniform3fv(spTerrain->u((attrPrefix + "ambient").c_str()), 1, glm::value_ptr(pLight.ambient));
+        glUniform3fv(spTerrain->u((attrPrefix + "diffuse").c_str()), 1, glm::value_ptr(pLight.diffuse));
+        glUniform3fv(spTerrain->u((attrPrefix + "specular").c_str()), 1, glm::value_ptr(pLight.specular));
+        glUniform1f(spTerrain->u((attrPrefix + "A").c_str()), pLight.A);
+        glUniform1f(spTerrain->u((attrPrefix + "B").c_str()), pLight.B);
+        glUniform1f(spTerrain->u((attrPrefix + "C").c_str()), pLight.C);
     }
 
 
