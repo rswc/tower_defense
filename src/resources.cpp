@@ -309,11 +309,19 @@ namespace Resources
             "assets\\envmap_stormydays\\stormydays_rt.png",
             "assets\\envmap_stormydays\\stormydays_lf.png",
         });
-        auto assimpLoader = AssimpLoader();
-        assimpLoader.loadModel("assets/tower.blend");
-        bm_AssimpModels[TOWER_MODEL] = assimpLoader.getMeshes();
-        gl_Textures[TOWER_TEXTURE] = LoadTexture("assets/tower_diffuse.tga");
+        {
+            auto assimpLoader = AssimpLoader();
+            assimpLoader.loadModel("assets/tower/tower.blend");
+            bm_AssimpModels[TOWER_MODEL] = assimpLoader.getMeshes();
+        }
+        {
+            auto assimpLoader = AssimpLoader();
+            assimpLoader.loadModel("assets/rock/rock.obj");
+            bm_AssimpModels[BULLET_MODEL] = assimpLoader.getMeshes();
+        }
+        gl_Textures[TOWER_TEXTURE] = LoadTexture("assets/tower/tower.png");
         gl_Textures[MOB_TEXTURE] = LoadTexture("assets/trex/trex.png");
+        gl_Textures[BULLET_TEXTURE] = LoadTexture("assets/rock/rock.png");
         // gl_Textures[MOBOBJECT_TEXTURE_SPECULAR] = LoadTexture("assets/trex/trex_specular.png");
         
         animatedLoader = AnimatedAssimpLoader();
@@ -332,8 +340,9 @@ namespace Resources
             }
             else return nullptr;
         } catch (const std::out_of_range& e) {
+            std::cout << "INVALID MODEL KEY" << std::endl;
             return nullptr;
-        }
+        } 
     } 
 
     AnimatedMesh* GetMobAnimatedMesh(int index) {
@@ -356,6 +365,7 @@ namespace Resources
         try {
             return gl_Textures.at(key);
         } catch (const std::out_of_range& e) {
+            std::cout << "INVALID MODEL TEXTURE KEY" << std::endl;
             return 0;
         }
     }

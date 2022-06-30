@@ -51,6 +51,8 @@ namespace Resources
     const std::string MOB_TEXTURE = "mobtexture";
     const std::string TOWER_MODEL = "towermodel";
     const std::string TOWER_TEXTURE = "towertexture";
+    const std::string BULLET_TEXTURE = "bullettexture";
+    const std::string BULLET_MODEL = "bulletmodel";
 
     BaseMesh* GetAssimpModelMesh(const std::string& key, int index);
     GLuint GetModelTexture(const std::string& key);
