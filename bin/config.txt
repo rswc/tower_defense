@@ -15,9 +15,9 @@ gridMapFilepath "assets/grid/grid0.txt"
 mouseSensitivity 0.25
 cameraHeightCap 4.0
 cameraMoveSpeed 2.5
-cameraStartX 8.0
+cameraStartX 2.0
 cameraStartZ 7.0 
-cameraStartAngle -50.0
+cameraStartAngle -40.0
 cameraConstraintLU 1.0 -1.0 
 cameraConstraintLD 1.0 7.0 
 cameraConstraintRU 9.0 -1.0 

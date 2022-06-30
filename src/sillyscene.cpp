@@ -36,18 +36,28 @@ SillyScene::SillyScene() {
 	activeCamera = RTSCamera(startCameraPosition);
 	activeCamera.SetCameraHeightCap(true, cameraHeightCap);
 
-	auto objAssimpAnimated = std::make_unique<AnimatedObject>(glm::vec3(0.03f, 0.03f, 0.03f), 1.0f);
-	objAssimpAnimated->SetRotation(glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)));
-	objAssimpAnimated->SetPosition(glm::vec3(2.0f, 0.2f, 0.0f));
- 	Instantiate(std::move(objAssimpAnimated));
+	// auto objAssimpAnimated = std::make_unique<AnimatedObject>(glm::vec3(0.03f, 0.03f, 0.03f), 1.0f);
+	// objAssimpAnimated->SetRotation(glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)));
+	// objAssimpAnimated->SetPosition(glm::vec3(2.0f, 0.2f, 0.0f));
+ 	// Instantiate(std::move(objAssimpAnimated));
 
-	//auto objStatic = std::make_unique<StaticObject>(Resources::GATEOBJECT_MODEL, Resources::GATEOBJECT_TEXTURE, Resources::GATEOBJECT_TEXTURE_SPECULAR);
-	// auto objStatic = std::make_unique<StaticObject>(
-	// 	"gatemodel", 
-	// 	"gatetexture", 
-	// 	"gatetexturespec");
-	// objStatic->SetScale(glm::vec3(0.001f, 0.001f, 0.001f));
-	// Instantiate(std::move(objStatic));
+	auto objStatic1 = std::make_unique<StaticObject>(
+		"assets/gate3/gate3.fbx", 
+		"assets/gate3/gate3.png", 
+		"assets/gate3/gate3.occlusion.png");
+	objStatic1->SetScale(glm::vec3(0.0013f, 0.0013f, 0.0013f));
+	objStatic1->SetRotation(glm::quat(glm::vec3(-1.57079633f, 0.0f, 0.0f)));
+	objStatic1->SetPosition(glm::vec3(1.50f, 0.0f, 1.27f));
+	Instantiate(std::move(objStatic1));
+
+	auto objStatic2 = std::make_unique<StaticObject>(
+		"assets/gate3/gate3.fbx", 
+		"assets/gate3/gate3.png", 
+		"assets/gate3/gate3.occlusion.png");
+	objStatic2->SetScale(glm::vec3(0.0013f, 0.0013f, 0.0013f));
+	objStatic2->SetRotation(glm::quat(glm::vec3(-PI/2, PI, 0.0f)));
+	objStatic2->SetPosition(glm::vec3(5.52f, 0.0f, 4.70f));
+	Instantiate(std::move(objStatic2));
 
 	// auto objAssimp = std::make_shared<AssimpObject>();
 	// Instantiate(std::move(objAssimp));
@@ -61,13 +71,13 @@ SillyScene::SillyScene() {
 	
 	std::vector<std::string> map {{ "xxxxxx",
                 "xS...x",
-                "xxxx.x",
+                "@xxx.x",
                 "x....x",
                 "x.xxxx",
                 "x.x.Ex",
                 "x.@.xx",
                 "x...xx",
-                "xxxxxx"
+                "xxxx@x"
             }};
 
 	grid = std::make_unique<GameGrid>(map);
@@ -104,8 +114,8 @@ SillyScene::SillyScene() {
 		// auto tree = std::make_shared<...>();
 		// tree->SetPosition(gridObj->GridToWorld(gp));
 		// Instantiate(tree);
-		auto objAssimpAnimated1 = std::make_shared<AnimatedObject>(glm::vec3(0.03f, 0.03f, 0.03f), 1.0f);
-		objAssimpAnimated1->SetRotation(glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)));
+		auto objAssimpAnimated1 = std::make_shared<AnimatedObject>(glm::vec3(0.02f, 0.02f, 0.02f), 1.0f);
+		objAssimpAnimated1->SetRotation(glm::quat(glm::vec3(0.0f, (float)(rand() % 6), 0.0f)));
 		objAssimpAnimated1->SetPosition(gridObj->GridToWorld(gp));
 		Instantiate(objAssimpAnimated1);
 	}
