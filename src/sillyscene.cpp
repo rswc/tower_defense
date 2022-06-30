@@ -70,6 +70,7 @@ SillyScene::SillyScene(int mapID) : currentMap(mapID), bulletManager(this) {
 	txt->SetColor(glm::vec4(1.0f, 0.2f, 0.3f, 0.7f));
 	txt->SetScale(0.8f);
 	Instantiate(std::move(txt));
+
 	
 	/*
 	auto rockObj = std::make_shared<BulletObject>();
@@ -125,7 +126,9 @@ SillyScene::SillyScene(int mapID) : currentMap(mapID), bulletManager(this) {
 		// Instantiate(tree);
 		auto objAssimpAnimated1 = std::make_shared<AnimatedObject>(glm::vec3(0.02f, 0.02f, 0.02f), 1.0f);
 		objAssimpAnimated1->SetRotation(glm::quat(glm::vec3(0.0f, (float)(rand() % 6), 0.0f)));
-		objAssimpAnimated1->SetPosition(gridObj->GridToWorld(gp));
+		glm::vec3 tmp = gridObj->GridToWorld(gp);
+		tmp.y = 0.31f;
+		objAssimpAnimated1->SetPosition(tmp);
 		Instantiate(objAssimpAnimated1);
 	}
 	
