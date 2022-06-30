@@ -21,7 +21,7 @@ void AssimpLoader::loadModel(std::string filename){
         {
             aiMesh* mesh = scene->mMeshes[i]; //Get specific mesh
             BaseMesh newMesh;
-            std::cout<<"Loading mesh"<<std::endl;
+            std::cout<<"Loading mesh from " << filename << std::endl;
 
             for(int i = 0; i< mesh->mNumVertices; i++){ 
                 aiVector3D vertex = mesh->mVertices[i];
