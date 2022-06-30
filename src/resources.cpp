@@ -310,10 +310,11 @@ namespace Resources
             "assets\\envmap_stormydays\\stormydays_lf.png",
         });
         auto assimpLoader = AssimpLoader();
-        assimpLoader.loadModel("assets/baloon.fbx");
-        bm_AssimpModels[MOBOBJECT_MODEL] = assimpLoader.getMeshes();
-        gl_Textures[MOBOBJECT_TEXTURE] = LoadTexture("assets/trex/trex.png");
-        gl_Textures[MOBOBJECT_TEXTURE_SPECULAR] = LoadTexture("assets/trex/trex_specular.png");
+        assimpLoader.loadModel("assets/tower.blend");
+        bm_AssimpModels[TOWER_MODEL] = assimpLoader.getMeshes();
+        gl_Textures[TOWER_TEXTURE] = LoadTexture("assets/tower_diffuse.tga");
+        gl_Textures[MOB_TEXTURE] = LoadTexture("assets/trex/trex.png");
+        // gl_Textures[MOBOBJECT_TEXTURE_SPECULAR] = LoadTexture("assets/trex/trex_specular.png");
         
         animatedLoader = AnimatedAssimpLoader();
         std::string mob_anim_model = "assets/trex/trex.glb";

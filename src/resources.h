@@ -48,9 +48,9 @@ namespace Resources
     extern std::unordered_map<std::string, std::vector<BaseMesh>> bm_AssimpModels;
     extern std::unordered_map<std::string, GLuint> gl_Textures;
     
-    const std::string MOBOBJECT_MODEL = "mobmodel";
-    const std::string MOBOBJECT_TEXTURE = "mobtexture";
-    const std::string MOBOBJECT_TEXTURE_SPECULAR = "mobtexturespec";
+    const std::string MOB_TEXTURE = "mobtexture";
+    const std::string TOWER_MODEL = "towermodel";
+    const std::string TOWER_TEXTURE = "towertexture";
 
     BaseMesh* GetAssimpModelMesh(const std::string& key, int index);
     GLuint GetModelTexture(const std::string& key);
