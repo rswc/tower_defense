@@ -19,6 +19,7 @@ bulletMidPointHeight 2.1
 globalAnimationSpeedMultiplier 1.0
 #Grid
 gridMapFilepath "assets/grid/grid0.txt"
+gridMapDirectory "assets/grid/"
 #Settings
 mouseSensitivity 0.25
 cameraHeightCap 4.0

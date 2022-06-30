@@ -9,6 +9,7 @@
 #include "GlobalConfig.h"
 #include "tower.h"
 #include "StaticObject.h"
+#include <fstream>
 
 
 #define PI 3.141592f // close enough
@@ -78,17 +79,30 @@ SillyScene::SillyScene(int mapID) : currentMap(mapID), bulletManager(this) {
 	Instantiate(std::move(rockObj));
 	*/
 
-	
-	std::vector<std::string> map {{ "xxxxxx",
-                "xS...x",
-                "@xxx.x",
-                "x....x",
-                "x.xxxx",
-                "x.x.Ex",
-                "x.@.xx",
-                "x...xx",
-                "xxxx@x"
-            }};
+	std::string gridmapdir = "assets/grid/";
+    std::vector<std::string> map;
+   
+	std::string mapFilepath = gridmapdir + "grid" + std::to_string(mapID) + ".txt";
+	std::ifstream mapFile(mapFilepath);
+	std::string line;
+	while(std::getline(mapFile, line)){
+		map.push_back(line);
+	}
+	//print map
+	for(auto line : map){
+		std::cout << line << std::endl;
+	}
+    
+	// std::vector<std::string> map {{ "xxxxxx",
+    //             "xS...x",
+    //             "@xxx.x",
+    //             "x....x",
+    //             "x.xxxx",
+    //             "x.x.Ex",
+    //             "x.@.xx",
+    //             "x...xx",
+    //             "xxxx@x"
+    //         }};
 
 	grid = std::make_unique<GameGrid>(map);
 	
@@ -111,6 +125,13 @@ SillyScene::SillyScene(int mapID) : currentMap(mapID), bulletManager(this) {
 
 	activeCamera.PushLight(Camera::PointLight(
 		grid->getStartPoint() + glm::vec3(0.f, .6f, 0.f),
+		{0.05f, 0.05f, 0.05f},
+		{0.9f, 0.8f, 0.4f},
+		{1.0f, 0.9f, 0.6f},
+		1.2f, 0.6f, 1.f
+	));
+		activeCamera.PushLight(Camera::PointLight(
+		grid->getStartPoint() + glm::vec3(4.0f, .6f, 3.1f),
 		{0.05f, 0.05f, 0.05f},
 		{0.9f, 0.8f, 0.4f},
 		{1.0f, 0.9f, 0.6f},

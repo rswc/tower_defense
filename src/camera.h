@@ -43,7 +43,7 @@ protected:
 
     void SetP(glm::mat4 matrix);
 public:
-    static constexpr int numPointLights = 1;
+    static constexpr int numPointLights = 2;
 
     Camera();
 

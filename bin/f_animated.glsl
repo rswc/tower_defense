@@ -12,7 +12,7 @@ struct PointLight {
     float C;
 };
 
-#define NUM_POINT_LIGHTS 1
+#define NUM_POINT_LIGHTS 2
 
 uniform vec3 dirAmbientColor;
 uniform vec3 dirDiffuseColor;
