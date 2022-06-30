@@ -23,6 +23,10 @@ namespace GlobalConfig{
         float towerShootTime;
         float towerModelHeight;
         float towerRadius;
+        
+    // Bullet 
+        float bulletTowerMobRatio;
+        float bulletMidPointHeight;
 
     //Animations
         float globalAnimationSpeedMultiplier;
@@ -90,6 +94,12 @@ namespace GlobalConfig{
                 }
                 else if (key == "towerModelHeight") {
                     towerModelHeight = std::stof(value);
+                }
+                else if (key == "bulletTowerMobRatio") {
+                    bulletTowerMobRatio = std::stof(value);
+                }
+                else if (key == "bulletMidPointHeight") {
+                    bulletMidPointHeight = std::stof(value);
                 }
                 else if(key == "globalAnimationSpeedMultiplier"){
                     globalAnimationSpeedMultiplier = std::stof(value);

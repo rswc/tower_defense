@@ -9,9 +9,12 @@ mobGroupSpawnWaitPeriod 20.0
 mobSpawnTime 1.0
 #Tower
 towerRefreshTime 3.0
-towerShootTime 1.5
-towerRadius 10.0
-towerModelHeight 1.0
+towerShootTime 0.5
+towerRadius 5.0
+towerModelHeight 1.5
+#Bullet 
+bulletTowerMobRatio 0.8
+bulletMidPointHeight 2.1
 #Global Config
 globalAnimationSpeedMultiplier 1.0
 #Grid

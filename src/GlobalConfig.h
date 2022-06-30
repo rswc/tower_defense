@@ -22,6 +22,10 @@ namespace GlobalConfig{
         extern float towerShootTime;
         extern float towerModelHeight;
         extern float towerRadius;
+    
+    // Bullet 
+        extern float bulletTowerMobRatio;
+        extern float bulletMidPointHeight;
 
     //Animations
         extern float globalAnimationSpeedMultiplier;
